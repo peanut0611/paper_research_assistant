@@ -1,0 +1,25 @@
+[project]
+name = "paper-research-assistant"
+version = "0.1.0"
+description = "Evidence-grounded research assistant for academic papers"
+requires-python = ">=3.11"
+dependencies = [
+    "pypdf>=6.0,<7.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0,<10.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/paper_assistant"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
