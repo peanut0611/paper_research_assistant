@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Evidence-grounded research assistant for academic papers"
 requires-python = ">=3.11"
 dependencies = [
+    "numpy>=2.0,<3.0",
     "pypdf>=6.0,<7.0",
+    "sentence-transformers>=6.0,<7.0",
 ]
 
 [dependency-groups]
@@ -22,4 +24,3 @@ packages = ["src/paper_assistant"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-
