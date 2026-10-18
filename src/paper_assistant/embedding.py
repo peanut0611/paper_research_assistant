@@ -10,10 +10,10 @@ from typing import Protocol
 import numpy as np
 from numpy.typing import NDArray
 
-from paper_assistant.chunking import TextChunk
+from paper_assistant.chunking import OffsetTokenizer, TextChunk
 
 
-DEFAULT_MODEL_NAME = "intfloat/e5-small-v2"
+DEFAULT_MODEL_NAME = "intfloat/multilingual-e5-small"
 
 
 class TextEmbedder(Protocol):
@@ -66,6 +66,11 @@ class SentenceTransformerEmbedder:
             device=device,
         )
         self.max_sequence_length = int(self._model.max_seq_length)
+
+    @property
+    def tokenizer(self) -> OffsetTokenizer:
+        """The same tokenizer used for chunking and embedding length checks."""
+        return self._model.tokenizer
 
     @property
     def dimension(self) -> int:

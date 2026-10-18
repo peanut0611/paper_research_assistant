@@ -9,15 +9,11 @@ from paper_assistant.corpus_ingestion import (
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PAPER_DIRECTORY = PROJECT_ROOT / "paper"
-
-
-def test_ingest_pdf_directory_reads_sample_corpus() -> None:
-    report = ingest_pdf_directory(PAPER_DIRECTORY)
+def test_ingest_pdf_directory_reads_sample_corpus(sample_pdf: Path) -> None:
+    report = ingest_pdf_directory(sample_pdf.parent)
 
     assert len(report.processed_files) == 1
-    assert len(report.pages) == 4
+    assert len(report.pages) == 2
     assert report.blank_pages == ()
     assert report.failures == ()
 
@@ -39,8 +35,8 @@ def test_ingest_pdf_directory_rejects_missing_directory(tmp_path: Path) -> None:
         ingest_pdf_directory(tmp_path / "missing")
 
 
-def test_write_pages_jsonl_preserves_page_metadata(tmp_path: Path) -> None:
-    report = ingest_pdf_directory(PAPER_DIRECTORY)
+def test_write_pages_jsonl_preserves_page_metadata(tmp_path: Path, sample_pdf: Path) -> None:
+    report = ingest_pdf_directory(sample_pdf.parent)
     output_path = write_pages_jsonl(report.pages, tmp_path / "pages.jsonl")
 
     records = [
@@ -48,7 +44,7 @@ def test_write_pages_jsonl_preserves_page_metadata(tmp_path: Path) -> None:
         for line in output_path.read_text(encoding="utf-8").splitlines()
     ]
 
-    assert len(records) == 4
+    assert len(records) == 2
     assert records[0]["page_number"] == 1
     assert records[0]["filename"].endswith(".pdf")
     assert records[0]["text"]

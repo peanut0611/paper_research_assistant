@@ -39,6 +39,20 @@ def remove_page_boilerplate(text: str, *, tail_line_count: int = 8) -> str:
 
     normalized = text.replace("\r\n", "\n").replace("\r", "\n")
     lines = normalized.splitlines()
+    # Some exporters append a dense watermark block with clipped word fragments.
+    # Only strip a terminal block made entirely of WATERMARK and its fragments,
+    # with enough repetition to avoid removing ordinary mentions in the body.
+    watermark_start = len(lines)
+    for index in range(len(lines) - 1, -1, -1):
+        fragments = lines[index].split()
+        if fragments and not all(fragment in "WATERMARK" for fragment in fragments):
+            break
+        watermark_start = index
+    watermark_lines = lines[watermark_start:]
+    if len(watermark_lines) >= 3 and sum(
+        line.split().count("WATERMARK") for line in watermark_lines
+    ) >= 6:
+        lines = lines[:watermark_start]
     non_empty_indexes = [index for index, line in enumerate(lines) if line.strip()]
     if not non_empty_indexes:
         return ""

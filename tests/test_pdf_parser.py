@@ -5,24 +5,17 @@ import pytest
 from paper_assistant.pdf_parser import parse_pdf
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SAMPLE_PDF = PROJECT_ROOT / "paper" / (
-    "SLM-based_Hybrid_Retrieval_for_Resource_Constrained_"
-    "Retrieval-Augmented_Generation_on_Open_Super-Large_Crawled_Data.pdf"
-)
+def test_parse_pdf_preserves_page_metadata(sample_pdf: Path) -> None:
+    pages = parse_pdf(sample_pdf)
+
+    assert len(pages) == 2
+    assert [page.page_number for page in pages] == [1, 2]
+    assert all(page.filename == sample_pdf.name for page in pages)
+    assert all(page.document_id == sample_pdf.stem for page in pages)
 
 
-def test_parse_pdf_preserves_page_metadata() -> None:
-    pages = parse_pdf(SAMPLE_PDF)
-
-    assert len(pages) == 4
-    assert [page.page_number for page in pages] == [1, 2, 3, 4]
-    assert all(page.filename == SAMPLE_PDF.name for page in pages)
-    assert all(page.document_id == SAMPLE_PDF.stem for page in pages)
-
-
-def test_parse_pdf_extracts_non_empty_text() -> None:
-    pages = parse_pdf(SAMPLE_PDF)
+def test_parse_pdf_extracts_non_empty_text(sample_pdf: Path) -> None:
+    pages = parse_pdf(sample_pdf)
 
     assert all(page.text for page in pages)
     assert "Hybrid Retrieval" in pages[0].text
@@ -31,9 +24,9 @@ def test_parse_pdf_extracts_non_empty_text() -> None:
     assert all("Downloaded on" not in page.text for page in pages)
 
 
-def test_parse_pdf_can_return_raw_text() -> None:
-    cleaned_page = parse_pdf(SAMPLE_PDF)[0]
-    raw_page = parse_pdf(SAMPLE_PDF, clean=False)[0]
+def test_parse_pdf_can_return_raw_text(sample_pdf: Path) -> None:
+    cleaned_page = parse_pdf(sample_pdf)[0]
+    raw_page = parse_pdf(sample_pdf, clean=False)[0]
 
     assert cleaned_page.text != raw_page.text
     assert len(cleaned_page.text.splitlines()) < len(raw_page.text.splitlines())

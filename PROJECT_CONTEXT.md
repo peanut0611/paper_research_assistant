@@ -1,5 +1,16 @@
 # Paper Research Assistant 项目交接说明
 
+> 2026-10-18 更新：默认模型已改为 `intfloat/multilingual-e5-small`。
+> 两个分块/索引 CLI 默认按 token 切分（384 tokens，正文重叠 64 tokens），
+> 使用模型 tokenizer，最大长度包含前缀及特殊 token；新增清洗后页内字符范围。
+> CLI 参数改为 `--max-tokens` / `--overlap-tokens`，旧按词 Python 接口保留。
+> 测试改用自动生成的临时 PDF，不再依赖用户可替换的 `paper/` 语料。
+> 当前语料已替换为中文 `paper/paper.pdf`，旧英文论文已由用户移除。
+> 最新验证：41 项单元测试通过；真实多语言模型已下载，默认索引已重建。
+> 当前中文 PDF 为 2 页、4 chunks、384 维；完整输入 token 数为 384/384/344/218。
+> 两个中文问题及英文检索样例已做冒烟验证，这不等于完成正式检索评测。
+> 运行说明以 README.md 为准；下文的英文模型、19 chunks、29 passed 等为旧基线记录。
+
 请接手并继续开发以下项目。请先阅读本说明和现有代码，不要重新从零搭建。
 
 ## 一、项目基本信息

@@ -1,9 +1,11 @@
-"""Deterministic word-window chunking for extracted paper pages."""
+"""Page-local word and multilingual token chunking with source metadata."""
 
 import json
+import re
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Any, Protocol
 
 from paper_assistant.pdf_parser import PageDocument
 
@@ -20,6 +22,9 @@ class TextChunk:
     word_start: int
     word_end: int
     text: str
+    char_start: int | None = None
+    char_end: int | None = None
+    token_count: int | None = None
 
     @property
     def word_count(self) -> int:
@@ -127,3 +132,80 @@ def write_chunks_jsonl(
             output_file.write("\n")
 
     return destination
+
+
+class OffsetTokenizer(Protocol):
+    """A fast tokenizer supporting source character offsets."""
+
+    def __call__(self, text: str, **kwargs: Any) -> Any: ...
+
+
+def chunk_pages_by_tokens(
+    pages: Iterable[PageDocument],
+    tokenizer: OffsetTokenizer,
+    *,
+    max_tokens: int = 384,
+    overlap_tokens: int = 64,
+    document_prefix: str = "passage: ",
+) -> list[TextChunk]:
+    """Split Chinese, English, or mixed pages using the embedding tokenizer.
+
+    max_tokens includes the document prefix and special tokens. Overlap counts
+    content tokens. Each emitted substring is re-tokenized to account for
+    tokenization changes at boundaries. Character offsets are zero-based,
+    end-exclusive positions in the cleaned page, preserving exact source text.
+    Word ranges remain available for compatibility; use character ranges for
+    Chinese because whitespace-delimited words are not meaningful there.
+    """
+    if max_tokens <= 0:
+        raise ValueError("max_tokens must be greater than zero")
+    overhead = len(tokenizer(document_prefix, add_special_tokens=True)["input_ids"])
+    content_budget = max_tokens - overhead
+    if content_budget <= 0:
+        raise ValueError("max_tokens must leave room for document content")
+    if not 0 <= overlap_tokens < content_budget:
+        raise ValueError("overlap_tokens must be non-negative and smaller than the content budget")
+
+    chunks: list[TextChunk] = []
+    for page in pages:
+        if not page.text.strip():
+            continue
+        encoded = tokenizer(
+            page.text, add_special_tokens=False, return_offsets_mapping=True,
+            truncation=False, verbose=False,
+        )
+        offsets = [(start, end) for start, end in encoded["offset_mapping"] if end > start]
+        if not offsets:
+            raise ValueError(f"Tokenizer produced no offsets for {page.filename}, page {page.page_number}")
+        words = list(re.finditer(r"\S+", page.text))
+        start = 0
+        chunk_index = 1
+        while start < len(offsets):
+            end = min(start + content_budget, len(offsets))
+            char_start = offsets[start][0]
+            while end > start:
+                char_end = offsets[end - 1][1]
+                text = page.text[char_start:char_end]
+                token_count = len(tokenizer(
+                    document_prefix + text, add_special_tokens=True,
+                    truncation=False, verbose=False,
+                )["input_ids"])
+                if token_count <= max_tokens:
+                    break
+                end -= 1
+            if end == start:
+                raise ValueError("A source character cannot fit within max_tokens")
+            chunks.append(TextChunk(
+                chunk_id=f"{page.document_id}::page-{page.page_number:04d}::chunk-{chunk_index:04d}",
+                document_id=page.document_id, filename=page.filename,
+                page_number=page.page_number, chunk_index=chunk_index,
+                word_start=sum(word.end() <= char_start for word in words),
+                word_end=sum(word.start() < char_end for word in words),
+                text=text, char_start=char_start, char_end=char_end,
+                token_count=token_count,
+            ))
+            if end == len(offsets):
+                break
+            start = max(start + 1, end - overlap_tokens)
+            chunk_index += 1
+    return chunks

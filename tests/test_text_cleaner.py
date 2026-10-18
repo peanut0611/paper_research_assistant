@@ -54,3 +54,13 @@ def test_remove_page_boilerplate_keeps_body_year_and_doi() -> None:
     raw = "2025\nResults remain available at DOI: 10.1/body\nConclusion text."
 
     assert remove_page_boilerplate(raw) == raw
+
+
+def test_remove_repeated_terminal_watermark_fragments() -> None:
+    raw = "中文正文 English body.\nA\nRMARK WA\nWATERMARK WATERMARK W\nWATERMARK WATERMARK\nK WATERMARK WATERMARK W"
+    assert remove_page_boilerplate(raw) == "中文正文 English body."
+
+
+def test_preserve_normal_watermark_mentions() -> None:
+    for raw in ["This WATERMARK identifies the source.", "正文\nWATERMARK", "WATERMARK\n正文"]:
+        assert remove_page_boilerplate(raw) == raw

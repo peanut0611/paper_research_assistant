@@ -8,10 +8,6 @@ from paper_assistant.corpus_ingestion import ingest_pdf_directory
 from paper_assistant.pdf_parser import PageDocument
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PAPER_DIRECTORY = PROJECT_ROOT / "paper"
-
-
 def make_page(text: str) -> PageDocument:
     return PageDocument(
         document_id="paper-one",
@@ -73,14 +69,14 @@ def test_chunk_page_rejects_invalid_parameters(
         )
 
 
-def test_chunk_real_corpus_respects_word_limit() -> None:
-    report = ingest_pdf_directory(PAPER_DIRECTORY)
+def test_chunk_sample_corpus_respects_default_word_limit(sample_pdf: Path) -> None:
+    report = ingest_pdf_directory(sample_pdf.parent)
 
-    chunks = chunk_pages(report.pages, max_words=250, overlap_words=50)
+    chunks = chunk_pages(report.pages)
 
     assert chunks
-    assert all(0 < chunk.word_count <= 250 for chunk in chunks)
-    assert all(chunk.page_number in {1, 2, 3, 4} for chunk in chunks)
+    assert all(0 < chunk.word_count <= 180 for chunk in chunks)
+    assert all(chunk.page_number in {page.page_number for page in report.pages} for chunk in chunks)
 
 
 def test_write_chunks_jsonl_includes_derived_word_count(tmp_path: Path) -> None:

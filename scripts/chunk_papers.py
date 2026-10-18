@@ -1,11 +1,12 @@
-"""Ingest papers, create word-window chunks, and export JSONL."""
+"""Ingest papers, create token-window chunks, and export JSONL."""
 
 import argparse
 from pathlib import Path
 from statistics import mean
 
-from paper_assistant.chunking import chunk_pages, write_chunks_jsonl
+from paper_assistant.chunking import chunk_pages_by_tokens, write_chunks_jsonl
 from paper_assistant.corpus_ingestion import ingest_pdf_directory
+from paper_assistant.embedding import DEFAULT_MODEL_NAME, SentenceTransformerEmbedder
 
 
 def main() -> None:
@@ -23,29 +24,33 @@ def main() -> None:
         default=Path("data/chunks/chunks.jsonl"),
         help="Chunk JSONL destination (default: data/chunks/chunks.jsonl)",
     )
-    parser.add_argument("--max-words", type=int, default=180)
-    parser.add_argument("--overlap-words", type=int, default=36)
+    parser.add_argument("--max-tokens", type=int, default=384)
+    parser.add_argument("--model", default=DEFAULT_MODEL_NAME)
+    parser.add_argument("--overlap-tokens", type=int, default=64)
     parser.add_argument("--recursive", action="store_true")
     args = parser.parse_args()
 
     report = ingest_pdf_directory(args.directory, recursive=args.recursive)
-    chunks = chunk_pages(
-        report.pages,
-        max_words=args.max_words,
-        overlap_words=args.overlap_words,
+    embedder = SentenceTransformerEmbedder(args.model)
+    if args.max_tokens > embedder.max_sequence_length:
+        parser.error("--max-tokens exceeds the embedding model input limit")
+    chunks = chunk_pages_by_tokens(
+        report.pages, embedder.tokenizer,
+        max_tokens=args.max_tokens, overlap_tokens=args.overlap_tokens,
+        document_prefix=embedder.document_prefix,
     )
     output_path = write_chunks_jsonl(chunks, args.output)
 
-    word_counts = [chunk.word_count for chunk in chunks]
+    token_counts = [chunk.token_count for chunk in chunks]
     print(f"Processed PDFs: {len(report.processed_files)}")
     print(f"Extracted pages: {len(report.pages)}")
     print(f"Created chunks: {len(chunks)}")
-    if word_counts:
+    if token_counts:
         print(
-            "Chunk words: "
-            f"min={min(word_counts)}, "
-            f"avg={mean(word_counts):.1f}, "
-            f"max={max(word_counts)}"
+            "Chunk tokens (including prefix and special tokens): "
+            f"min={min(token_counts)}, "
+            f"avg={mean(token_counts):.1f}, "
+            f"max={max(token_counts)}"
         )
     print(f"Failed PDFs: {len(report.failures)}")
     print(f"Output: {output_path}")

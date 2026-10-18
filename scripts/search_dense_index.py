@@ -31,6 +31,7 @@ def main() -> None:
         preview = result.chunk.text[:350].replace("\n", " ")
         print(
             f"#{result.rank} score={result.score:.4f} "
+            f"file={result.chunk.filename} "
             f"page={result.chunk.page_number} "
             f"chunk={result.chunk.chunk_index}"
         )
