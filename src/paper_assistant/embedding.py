@@ -68,6 +68,10 @@ class SentenceTransformerEmbedder:
         self.max_sequence_length = int(self._model.max_seq_length)
 
     @property
+    def device(self) -> str:
+        return str(self._model.device)
+
+    @property
     def tokenizer(self) -> OffsetTokenizer:
         """The same tokenizer used for chunking and embedding length checks."""
         return self._model.tokenizer

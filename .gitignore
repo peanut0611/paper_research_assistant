@@ -8,4 +8,6 @@ data/extracted/
 data/chunks/
 data/index/
 data/models/
+data/evaluation/
+data/context/
 .DS_Store

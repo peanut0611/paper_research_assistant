@@ -1,5 +1,23 @@
 # Paper Research Assistant 项目交接说明
 
+> 上下文构造更新：新增 `context_builder.py` 和 `scripts/preview_context.py`，
+> 已支持 E 编号、来源映射、同页重叠片段按准确字符区间合并、重复/空文本处理、
+> 全消息预算与排除原因记录。核心计数器可替换，预览仅使用 E5 tokenizer 估算，
+> 接 LLM 时必须换成生成模型的 chat-template 计数并预留输出预算。
+> 默认预览走 Hybrid，输出 `data/context/context_preview.json`（Git 忽略），
+> 已用当前中文材料验证 3 个检索片段合并为 2 条带来源证据。最新测试 95 passed。
+> 尚未调用 LLM；下一步实现模型适配、答案生成和引用验证。
+
+> 三路检索实验更新：已新增 `lexical_retrieval.py`（BM25 与 RRF）、
+> `retrieval_comparison.py` 和 `scripts/compare_retrieval.py`。保持原有 4 chunks、
+> 向量模型和 20 题标注不变，完成三轮实测。完整报告在
+> `data/evaluation/retrieval_comparison/comparison.md` / `comparison.json`。
+> 16 可答题证据 Hit@1：Dense 68.75%、BM25 81.25%、Hybrid 81.25%；
+> MRR@5：0.8333 / 0.8438 / 0.9062。按预设事实组指标 BM25 第一，但
+> 英文跨语言两题均失败；中英文通用建议 Hybrid。两种判定在报告中分别记录。
+> 参数固定，未按开发集调参；当前结果不代表真实多论文语料。默认查询仍为 Dense，
+> `search_dense_index.py --method hybrid` 可使用建议方案。最新测试：78 passed。
+
 > 2026-10-18 更新：默认模型已改为 `intfloat/multilingual-e5-small`。
 > 两个分块/索引 CLI 默认按 token 切分（384 tokens，正文重叠 64 tokens），
 > 使用模型 tokenizer，最大长度包含前缀及特殊 token；新增清洗后页内字符范围。
@@ -10,6 +28,16 @@
 > 当前中文 PDF 为 2 页、4 chunks、384 维；完整输入 token 数为 384/384/344/218。
 > 两个中文问题及英文检索样例已做冒烟验证，这不等于完成正式检索评测。
 > 运行说明以 README.md 为准；下文的英文模型、19 chunks、29 passed 等为旧基线记录。
+
+> 检索评测更新：新增 `src/paper_assistant/evaluation.py` 和
+> `scripts/evaluate_retrieval.py`，支持页级/证据级指标、完整证据覆盖、截断 MRR、
+> 延迟、按语言/类别及事实组平均、逐题失败详情。无答案题单列，不虚构拒答指标。
+> 初始数据在 `eval_data/`：20 题（16 可答、4 无答案），仍待人工复核。
+> 已使用本地多语言模型跑通，报告在 `data/evaluation/retrieval_report.json`（Git 忽略）。
+> 开发集逐题平均证据 Hit@1=0.6875、Hit@3=1.0、MRR@5=0.8333；
+> 完整证据覆盖题目比例 @1=0.625、@3=0.9375。当前仅 4 chunks，@5 返回全部索引。
+> 最新单元测试为 63 passed；未修改检索参数或标注来提高指标。下一步先分析失败题，
+> 完成人工复核并扩展真实论文评测语料，再考虑检索改进和 LLM 接入。
 
 请接手并继续开发以下项目。请先阅读本说明和现有代码，不要重新从零搭建。
 
