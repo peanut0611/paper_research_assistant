@@ -10,4 +10,8 @@ data/index/
 data/models/
 data/evaluation/
 data/context/
+data/answers/
+.env
+.env.*
+!.env.example
 .DS_Store

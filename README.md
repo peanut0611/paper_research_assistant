@@ -1,7 +1,8 @@
 # Paper Research Assistant
 
 已实现 PDF 解析、清洗、按页分块、向量检索和批量检索评测。默认使用
-`intfloat/multilingual-e5-small` 处理中英文及混合文本；尚未接入 LLM。
+`intfloat/multilingual-e5-small` 处理中英文及混合文本；已支持通过 OpenAI API
+调用 `gpt-5.4-mini`，根据检索证据生成带引用的回答。
 跨语言检索质量需要进一步评测。
 
 ## Windows / PowerShell 运行
@@ -141,6 +142,70 @@ python -m uv run python scripts/preview_context.py "时间停止手表能暂停�
 提示词要求证据不足时说明无法回答，但提示词约束与 JSON 转义不保证模型遵守，
 后续仍需实现答案与引用验证。
 
+## GPT-5.4 Mini 回答生成
+
+先安装锁定的依赖，在同一个 PowerShell 终端设置 API 密钥并运行：
+
+```powershell
+python -m uv sync --locked
+# 先复制完整 API Key，再从剪贴板读取，不把密钥写入命令历史。
+$env:OPENAI_API_KEY = (Get-Clipboard -Raw).Trim()
+python -m uv run python scripts/ask_papers.py "时间停止手表能暂停多长时间？" --local-models-only
+```
+
+密钥从当前进程的 `OPENAI_API_KEY` 环境变量读取；上面的命令不会将密钥写入命令
+历史。请在本机输入密钥，不要发送到聊天或提交到 Git。环境变量仅对当前终端及
+其启动的程序生效。需要事先构建索引；`--local-models-only` 使用本地缓存的
+Embedding 模型，OpenAI 计数和生成请求仍然需要联网。
+
+流程为 Hybrid 检索 → 上下文构造 → GPT-5.4 Mini → 编号及引文校验。
+默认输入预算 4096、输出上限 512 tokens，推理关闭，使用严格 JSON schema。
+没有提供外部搜索工具，回答仅使用传入的资料。底层采用官方 Responses API，
+构造过程中通过 `responses.input_tokens.count` 对完整请求计数，包含额外回答规则
+和输出 schema；计数请求会把对应文本发送给 OpenAI。不会用 E5 计数替代生成端
+计数，计数失败时停止请求。可显式选择 `--token-count-mode local`，跳过远程计数，
+使用 tiktoken 对序列化请求（包含规则和 schema）估算，增加 10% 和 128 tokens
+余量。这不是服务端精确计数，也不保证费用上界；生成后仍记录 API 实际用量。
+首次本地计数可能下载公开的 tokenizer 数据，之后使用缓存。
+
+本地估算模式示例：
+
+```powershell
+python -m uv run python scripts/ask_papers.py "特兰克斯是谁？" --local-models-only --token-count-mode local
+```
+
+```powershell
+python -m uv run python scripts/ask_papers.py "制造黑暗赛亚人的科学家叫什么名字？" --local-models-only --output data/answers/unknown.json
+```
+
+每次运行最多发送一次生成请求；默认请求超时 60 秒，自动重试关闭。空上下文跳过
+生成。默认 `--max-cost-usd 0.02` 是按当前标准费率、实际输入计数和最大输出量
+计算的单次生成费用上界检查（local 模式仅为估算），并非账户级扣费限制。费率变动时应更新配置。
+其他参数包括 `--method`、`--top-k`、`--max-input-tokens`、`--max-output-tokens`
+及 `--output`。如输出因长度限制不完整，可检查保存的结果后调整输出上限重新运行。
+
+结果默认保存在 `data/answers/latest.json`（Git 忽略），含：
+
+- 完整上下文、E 编号及其文件/页码/chunk 来源。
+- 结构化回答、实际引文、响应 ID、实际模型版本及原始模型输出。
+- 输入、缓存输入、输出及推理 token 用量，以及按标准费率估算的生成费用。
+- `answered`、`insufficient_evidence`、`no_evidence`、`model_refusal`、`incomplete`
+  或 `invalid_response` 状态。拒绝、截断和校验失败不会作为正常答案展示。
+
+校验要求行内引用与引用列表一致、编号来自本次上下文、引文确实包含于该编号的
+原文中（忽略 Unicode 和空白差异）。**这尚不等于验证每个结论都被引文支持**，
+也不能保证模型正确识别无答案题；仍需人工/后续生成评测。
+
+用户已在本机验证回答可正常显示；单元测试使用假客户端及官方 SDK 的本地模拟
+HTTP 响应，不要求密钥或联网，也不发起付费调用。
+HTTP 错误现在会显示失败阶段 `stage`、脱敏的结构化 `message` 和参数 `param`。
+若没有结构化错误，会显示响应内容类型，辅助判断网关/代理响应；仅凭 HTTP 400
+不能判断密钥无效。程序不会输出完整响应体、Authorization 请求头或 API 密钥。
+
+接口依据：[模型说明](https://developers.openai.com/api/docs/models/gpt-5.4-mini)、
+[结构化输出](https://developers.openai.com/api/docs/guides/structured-outputs)、
+[输入 token 计数](https://developers.openai.com/api/docs/guides/token-counting)。
+
 ## 测试和限制
 
 单元测试使用临时生成的 PDF 和假 tokenizer / embedder，不需要下载模型，
@@ -153,4 +218,5 @@ python -m uv run pytest -q --basetemp=tmp/pytest-local -p no:cacheprovider
 
 扫描版 PDF 暂无 OCR；PDF 的阅读顺序、表格和断词仍依赖文本层质量。
 清洗支持 IEEE 页脚，以及页末密集重复的 `WATERMARK` 及其截断片段，
-并非通用水印识别。检索返回原文证据，不生成答案，也没有无证据拒答机制。
+并非通用水印识别。`search_dense_index.py` 返回原文证据，`ask_papers.py` 生成回答。
+检索器尚无相关性拒绝阈值；回答阶段的证据不足判断与引用支持程度需要进一步评测。

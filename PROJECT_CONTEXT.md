@@ -1,5 +1,21 @@
 # Paper Research Assistant 项目交接说明
 
+> LLM 接入更新：已新增 `answer_generation.py` 和 `scripts/ask_papers.py`，
+> 使用官方 OpenAI SDK（依赖及 uv.lock 已更新），目标为 `gpt-5.4-mini`。
+> 默认 Hybrid Top-3，输入预算 4096、输出上限 512、推理 none，严格 JSON 输出。
+> 默认计数使用 Responses input_tokens.count，包含回答规则和 schema，替代 E5 预估。
+> 支持 --token-count-mode local
+> 显式跳过远程计数，使用 tiktoken 完整请求估算 +10% +128，费用检查也仅为估算。
+> 支持引用编号/引文包含性检查、证据不足、模型拒绝、截断/无效响应及用量费用记录。
+> 默认单次生成成本估算上限 $0.02，自动重试关闭，结果保存在 `data/answers/`。
+> 用户已确认本机回答正常显示。此前空 HTTP 400 排查发现环境变量中的 Key 长度
+> 仅为 1；绕过终端安全输入框，使用 Get-Clipboard 读取完整 Key 后已能正常问答。
+> 已清理临时诊断脚本、相关专用测试、排错说明和多轮测试输出；保留正式功能测试。
+> 问答 CLI 保留 --ignore-env-proxy，常规错误信息仍脱敏输出，不显示密钥。
+> 清理后正式测试 131 passed；自动化测试不调用付费生成接口。
+> 运行方法见 README。引用检查仅验证来源存在与原文匹配，尚未验证语义蕴含，
+> 下一步需要生成评测，特别检查无答案题与多证据问题。
+
 > 上下文构造更新：新增 `context_builder.py` 和 `scripts/preview_context.py`，
 > 已支持 E 编号、来源映射、同页重叠片段按准确字符区间合并、重复/空文本处理、
 > 全消息预算与排除原因记录。核心计数器可替换，预览仅使用 E5 tokenizer 估算，
