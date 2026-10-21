@@ -26,6 +26,32 @@ python -m uv run python scripts/search_dense_index.py "时间停止手表能暂�
 `data/index/dense/`，查询会读取索引中记录的模型名称。更换模型或论文后需重新构建索引。
 模型、生成数据和索引不进入 Git。
 
+## 本地交互页面
+
+已有基础环境和索引后，无需安装 Node.js 或额外界面依赖。在配置好
+`OPENAI_API_KEY` 的同一个 PowerShell 终端启动：
+
+```powershell
+python -m uv run python scripts/app.py --local-models-only
+```
+
+打开 **http://127.0.0.1:8501**，输入问题并发送即可查看回答、来源页码和原文引文。
+首次提问会加载 Embedding 模型。服务只在本机监听；终端需保持运行，按 Ctrl+C 停止。
+端口被占用时可加 `--port 8502`，随后使用对应地址访问。密钥配置见下方“回答生成”。
+
+- 默认 Hybrid Top-3，可切换 Dense / BM25、调整检索片段数量。
+- 默认本地估算输入 token；可勾选 API 精确计数，生成预算与命令行一致。
+- 显示证据不足、截断、引用校验失败及接口错误；没有自动重试。
+- 可以展开查看参考片段、下载单次完整 JSON 结果、清空当前页面记录。
+- 每次提问独立检索，不将页面历史传入模型；记录仅存于页面内存，刷新后清空，
+  不覆盖命令行保存的 `data/answers/latest.json`。
+- PDF 上传按钮已预留并禁用，目前使用本地 `paper/` 资料对应的现有索引；
+  更换 PDF 后执行 `scripts/build_dense_index.py --recursive`，刷新页面即可加载新索引。
+
+打开页面和读取资料列表不会调用 LLM；提交问题后会按现有配置调用 OpenAI。
+原文和回答按纯文本展示，不执行资料中包含的 HTML。界面由 Python 自带 HTTP 服务
+及本地 HTML/CSS/JavaScript 实现，不依赖 CDN、Streamlit 或其他前端包。
+
 ## 分块与来源追溯
 
 - 默认每块最多 384 tokens，包含 `passage:` 前缀和特殊 token；相邻块重叠
@@ -214,6 +240,12 @@ HTTP 错误现在会显示失败阶段 `stage`、脱敏的结构化 `message` �
 ```powershell
 New-Item -ItemType Directory -Path tmp -Force | Out-Null
 python -m uv run pytest -q --basetemp=tmp/pytest-local -p no:cacheprovider
+```
+
+如需运行前端交互测试，可在已安装 Node.js 的开发环境执行（页面运行不需要 Node.js）：
+
+```powershell
+node --test tests/web_app_client.test.cjs
 ```
 
 扫描版 PDF 暂无 OCR；PDF 的阅读顺序、表格和断词仍依赖文本层质量。

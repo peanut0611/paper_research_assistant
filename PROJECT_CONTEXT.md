@@ -1,5 +1,18 @@
 # Paper Research Assistant 项目交接说明
 
+> 本地交互页面更新（2026-10-19）：新增 `scripts/app.py`、`interactive.py`、
+> `web_server.py` 和 `src/paper_assistant/web/` 静态页面。使用 Python 标准库 HTTP
+> 服务，无需额外前端依赖；运行 `python -m uv run python scripts/app.py --local-models-only`，
+> 浏览器访问 http://127.0.0.1:8501。仅监听本机，密钥保留在服务端环境变量中。
+> 支持提问、回答/来源/引文、片段查看、检索方式与 Top-K 设置、单次 JSON 下载，
+> PDF 上传入口已预留并禁用，读取现有 `paper/` 对应索引，索引变动后刷新自动重载。
+> 默认 Hybrid Top-3、本地 token 估算；每个问题独立，不将页面历史传给 LLM。
+> 缓存索引和 Embedding 模型，生成请求只在用户提交时执行，不自动重试；
+> 同时只处理一个问题。浏览器历史仅在当前页面内存中，不写入答案文件。
+> 验证：151 项 Python 测试、4 项 Node 前端测试通过，实际 HTTP 状态与静态资源可访问，
+> 当前索引识别为 `paper.pdf` / 4 chunks。浏览器截图受环境图形权限限制未完成；
+> 未发起真实付费生成。完整问答真实测试由用户本机进行。
+
 > LLM 接入更新：已新增 `answer_generation.py` 和 `scripts/ask_papers.py`，
 > 使用官方 OpenAI SDK（依赖及 uv.lock 已更新），目标为 `gpt-5.4-mini`。
 > 默认 Hybrid Top-3，输入预算 4096、输出上限 512、推理 none，严格 JSON 输出。

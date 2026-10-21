@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper Assistant · 资料问答</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside>
+    <a class="brand" href="/">P<span>Paper Assistant</span></a>
+    <section>
+      <h2>当前资料</h2>
+      <ul id="files"><li>正在读取本地索引…</li></ul>
+      <p id="corpus-summary" class="muted"></p>
+      <button class="upload" disabled>＋ 上传 PDF</button>
+      <p class="muted">上传入口暂未开放。当前使用 paper 文件夹中已建立索引的资料。</p>
+    </section>
+    <section>
+      <h2>问答设置</h2>
+      <label for="method">检索方式</label>
+      <select id="method">
+        <option value="hybrid">Hybrid · 混合检索</option>
+        <option value="dense">Dense · 向量检索</option>
+        <option value="bm25">BM25 · 关键词检索</option>
+      </select>
+      <label for="top-k">检索片段数</label>
+      <input id="top-k" type="number" min="1" max="10" value="3">
+      <label class="check"><input id="exact-count" type="checkbox">使用 API 精确计数</label>
+      <p class="muted">默认在本地估算输入长度。模型为 GPT-5.4-mini，回答上限 512 tokens；生成前按 $0.02 检查费用，本地计数模式下为估算。</p>
+    </section>
+    <button id="clear" class="secondary">清空页面记录</button>
+    <p class="muted">每次提问独立检索。历史只用于查看，刷新页面后清空。</p>
+  </aside>
+  <main>
+    <header><span class="eyebrow">LOCAL DOCUMENT Q&A</span><h1>让资料回答你的问题</h1><p>从本地文章中寻找依据，查看回答、引文和来源。</p></header>
+    <div id="notice" role="status" aria-live="polite">正在检查本地资料…</div>
+    <div id="conversation" aria-live="polite"></div>
+    <div id="empty" class="empty"><span class="book">▤</span><h2>从一个问题开始</h2><p>例如：时间停止手表能暂停多长时间？</p><p class="muted">回答将附带可展开查看的原文证据。</p></div>
+    <form id="question-form">
+      <label class="sr-only" for="question">关于当前资料的问题</label>
+      <textarea id="question" rows="3" maxlength="4000" placeholder="输入关于当前资料的问题…" required disabled></textarea>
+      <div class="composer-footer"><span>Enter 发送 · Shift+Enter 换行</span><button id="submit" type="submit" disabled>发送问题 ↗</button></div>
+    </form>
+    <p class="footnote">回答仅依据检索资料；引用已做编号与原文匹配检查，仍需核对结论是否被证据支持。</p>
+  </main>
+</body>
+</html>
