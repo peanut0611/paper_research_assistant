@@ -1,0 +1,7 @@
+{"tool":"search_literature","arguments":{"query":"retrieval augmented generation","max_results":3},"purpose":"获取固定时间窗口内的候选元数据"}
+{"tool":"fetch_paper","arguments":{"arxiv_id":"2401.00396","version":2},"purpose":"读取已登记固定版本的PDF缓存"}
+{"tool":"list_documents","arguments":{},"purpose":"核对全文获取状态"}
+{"tool":"ingest_paper","arguments":{"arxiv_id":"2401.00396"},"purpose":"建立本任务的全文索引"}
+{"tool":"search_documents","arguments":{"query":"What is RAGTruth?","method":"hybrid","top_k":3},"purpose":"定位相关原文证据"}
+{"tool":"read_pages","arguments":{"document_id":"arxiv--2401.00396--v2","start_page":1,"max_chars":500},"purpose":"查看第一页的有限原文与续读位置"}
+{"tool":"verify_citations","arguments":{"answer":"当前仅进行工具执行验证，未生成研究结论。","insufficient_evidence":true,"citations":[]},"purpose":"验证无引用的证据不足结果格式"}

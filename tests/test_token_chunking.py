@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from paper_assistant.chunking import chunk_pages_by_tokens
-from paper_assistant.pdf_parser import PageDocument
-from paper_assistant.embedding import build_dense_index, load_dense_index, save_dense_index
+from paper_assistant.documents.chunking import chunk_pages_by_tokens
+from paper_assistant.documents.pdf_parser import PageDocument
+from paper_assistant.retrieval.embedding import build_dense_index, load_dense_index, save_dense_index
 from test_embedding import FakeEmbedder
 
 

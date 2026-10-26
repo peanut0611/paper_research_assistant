@@ -1,18 +1,64 @@
-.venv/
-.uv-cache/
+# Local Python environments and package caches
+/.venv/
+/venv/
+/env/
+/.uv-cache/
 __pycache__/
 *.py[cod]
 .pytest_cache/
-tmp/
-data/extracted/
-data/chunks/
-data/index/
-data/models/
-data/evaluation/
-data/context/
-data/answers/
-paper/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# Build outputs and test coverage; keep pyproject.toml and uv.lock
+/build/
+/dist/
+*.egg-info/
+.eggs/
+/.coverage
+/.coverage.*
+/coverage.xml
+/coverage.json
+/htmlcov/
+
+# Local papers and generated data: models, indexes, caches, answers and task runs
+/paper/
+/data/*
+!/data/README.md
+!/data/.gitkeep
+/tmp/
+/logs/
+*.log
+
+# Local planning and handoff documents (existing project convention)
+/docs/
+/PROJECT_CONTEXT.md
+
+# Secrets and local configuration; configuration examples may be committed
 .env
 .env.*
 !.env.example
+!.env.template
+.secrets/
+.credentials/
+/.aws/
+/.ssh/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Editor and operating-system files
+/.idea/
+/.vscode/
+*.code-workspace
 .DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+*.tmp
+*.temp
+*.bak

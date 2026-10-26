@@ -3,13 +3,13 @@ from dataclasses import replace
 
 import pytest
 
-from paper_assistant.embedding import build_dense_index
-from paper_assistant.lexical_retrieval import (
+from paper_assistant.retrieval.embedding import build_dense_index
+from paper_assistant.retrieval.lexical import (
     build_bm25_index, lexical_tokens, reciprocal_rank_fusion,
     search_bm25_index, search_hybrid_index,
 )
 from test_embedding import FakeEmbedder
-from test_evaluation import result
+from retrieval_fixtures import result
 
 
 def test_bilingual_terms_and_pdf_whitespace_repair():

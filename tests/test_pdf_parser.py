@@ -1,8 +1,9 @@
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
-from paper_assistant.pdf_parser import parse_pdf
+from paper_assistant.documents.pdf_parser import PDFLimitError, parse_pdf
 
 
 def test_parse_pdf_preserves_page_metadata(sample_pdf: Path) -> None:
@@ -35,3 +36,16 @@ def test_parse_pdf_can_return_raw_text(sample_pdf: Path) -> None:
 def test_parse_pdf_rejects_missing_file(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError, match="PDF file not found"):
         parse_pdf(tmp_path / "missing.pdf")
+
+
+def test_page_limit_is_checked_before_any_text_extraction(sample_pdf):
+    with patch("pypdf._page.PageObject.extract_text", side_effect=AssertionError("Must not extract")):
+        with pytest.raises(PDFLimitError) as caught:
+            parse_pdf(sample_pdf, max_pages=1)
+    assert caught.value.code == "page_limit_exceeded"
+
+
+def test_character_limit_stops_instead_of_silently_truncating(sample_pdf):
+    with pytest.raises(PDFLimitError) as caught:
+        parse_pdf(sample_pdf, max_text_chars=3)
+    assert caught.value.code == "text_limit_exceeded"

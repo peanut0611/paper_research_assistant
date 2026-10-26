@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from paper_assistant.chunking import chunk_page, chunk_pages, write_chunks_jsonl
-from paper_assistant.corpus_ingestion import ingest_pdf_directory
-from paper_assistant.pdf_parser import PageDocument
+from paper_assistant.documents.chunking import chunk_page, chunk_pages, write_chunks_jsonl
+from paper_assistant.documents.ingestion import ingest_pdf_directory
+from paper_assistant.documents.pdf_parser import PageDocument
 
 
 def make_page(text: str) -> PageDocument:

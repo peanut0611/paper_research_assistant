@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fabricated offline fixture. These IDs and papers are not real recommendations. -->
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom">
+  <id>urn:synthetic:arxiv-feed</id>
+  <title>SYNTHETIC test response</title>
+  <updated>2026-10-23T00:00:00Z</updated>
+  <opensearch:totalResults>4</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <opensearch:itemsPerPage>4</opensearch:itemsPerPage>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00001v1</id>
+    <published>2026-09-10T12:00:00Z</published><updated>2026-09-10T12:00:00Z</updated>
+    <title>Synthetic Hybrid
+      Retrieval ∗</title>
+    <summary>Fabricated bilingual 中英文 metadata; no real experiments or claims.</summary>
+    <author><name>Test Author</name></author><author><name>Test Author Two</name></author>
+    <category term="cs.IR"/><category term="cs.CL"/>
+    <arxiv:primary_category term="cs.IR"/>
+    <link href="http://arxiv.org/pdf/2609.00001v1" title="pdf" type="application/pdf"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00001v2</id>
+    <published>2026-09-10T12:00:00Z</published><updated>2026-09-25T12:00:00Z</updated>
+    <title>Synthetic Hybrid Retrieval Revision</title>
+    <summary>Fabricated revised record, not a second paper.</summary>
+    <author><name>Test Author</name></author><category term="cs.IR"/>
+    <link href="http://arxiv.org/pdf/2609.00001v2" title="pdf" type="application/pdf"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.00002v2</id>
+    <published>2026-08-10T12:00:00Z</published><updated>2026-09-20T12:00:00Z</updated>
+    <title>Synthetic Old Paper Updated Recently</title>
+    <summary>Fabricated old submission, excluded by first submission time.</summary>
+    <author><name>Test Author</name></author><category term="cs.IR"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.00003v1</id>
+    <published>2026-10-01T00:00:00Z</published><updated>2026-10-01T00:00:00Z</updated>
+    <title>Synthetic Exclusive End Boundary</title>
+    <summary>Fabricated boundary record; the end of the window is excluded.</summary>
+    <author><name>Test Author</name></author><category term="cs.IR"/>
+  </entry>
+</feed>

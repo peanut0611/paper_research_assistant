@@ -1,14 +1,13 @@
 [project]
 name = "paper-research-assistant"
 version = "0.1.0"
-description = "Evidence-grounded research assistant for academic papers"
+description = "Literature discovery and evidence analysis agent"
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.0,<3.0",
     "openai>=3.35.1",
     "pypdf>=6.0,<7.0",
     "sentence-transformers>=6.0,<7.0",
-    "tiktoken>=0.14.0",
 ]
 
 [dependency-groups]

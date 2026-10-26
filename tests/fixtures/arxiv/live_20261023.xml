@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Mwpn1JNrldsprhE2K4GN41Z3v40</id>
+  <title>arXiv Query: search_query=( (ti:"retrieval" OR abs:"retrieval") AND (ti:"augmented" OR abs:"augmented") AND (ti:"generation" OR abs:"generation") ) AND submittedDate:"202301010000 TO 202401010000"&amp;id_list=&amp;start=0&amp;max_results=3</title>
+  <updated>2026-10-23T10:18:39Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=((ti:%22retrieval%22+OR+abs:%22retrieval%22)+AND+((ti:%22augmented%22+OR+abs:%22augmented%22)+AND+(ti:%22generation%22+OR+abs:%22generation%22)))+AND+submittedDate:%22202301010000+TO+202401010000%22&amp;start=0&amp;max_results=3&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>
+  <opensearch:totalResults>315</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2401.00544v2</id>
+    <title>A Reliable Knowledge Processing Framework for Combustion Science using Foundation Models</title>
+    <updated>2024-01-02T03:03:18Z</updated>
+    <link href="https://arxiv.org/abs/2401.00544v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.00544v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This research explores the integration of large language models (LLMs) into scientific data assimilation, focusing on combustion science as a case study. Leveraging foundational models integrated with Retrieval-Augmented Generation (RAG) framework, the study introduces an approach to process diverse combustion research data, spanning experimental studies, simulations, and literature. The multifaceted nature of combustion research emphasizes the critical role of knowledge processing in navigating and extracting valuable information from a vast and diverse pool of sources. The developed approach minimizes computational and economic expenses while optimizing data privacy and accuracy. It incorporates prompt engineering and offline open-source LLMs, offering user autonomy in selecting base models. The study provides a thorough examination of text segmentation strategies, conducts comparative studies between LLMs, and explores various optimized prompts to demonstrate the effectiveness of the framework. By incorporating an external database, the framework outperforms a conventional LLM in generating accurate responses and constructing robust arguments. Additionally, the study delves into the investigation of optimized prompt templates for the purpose of efficient extraction of scientific literature. The research addresses concerns related to hallucinations and false research articles by introducing a custom workflow developed with a detection algorithm to filter out inaccuracies. Despite identified areas for improvement, the framework consistently delivers accurate domain-specific responses with minimal human oversight. The prompt-agnostic approach introduced holds promise for future deliberations. The study underscores the significance of integrating LLMs and knowledge processing techniques in scientific research, providing a foundation for advancements in data assimilation and utilization.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-31T17:15:25Z</published>
+    <arxiv:comment>38 pages and 10 figures; Fixed figure resolution</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Vansh Sharma</name>
+    </author>
+    <author>
+      <name>Venkat Raman</name>
+    </author>
+    <arxiv:doi>10.1016/j.egyai.2024.100365</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.egyai.2024.100365" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.00396v2</id>
+    <title>RAGTruth: A Hallucination Corpus for Developing Trustworthy Retrieval-Augmented Language Models</title>
+    <updated>2024-05-17T06:29:31Z</updated>
+    <link href="https://arxiv.org/abs/2401.00396v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.00396v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Retrieval-augmented generation (RAG) has become a main technique for alleviating hallucinations in large language models (LLMs). Despite the integration of RAG, LLMs may still present unsupported or contradictory claims to the retrieved contents. In order to develop effective hallucination prevention strategies under RAG, it is important to create benchmark datasets that can measure the extent of hallucination. This paper presents RAGTruth, a corpus tailored for analyzing word-level hallucinations in various domains and tasks within the standard RAG frameworks for LLM applications. RAGTruth comprises nearly 18,000 naturally generated responses from diverse LLMs using RAG. These responses have undergone meticulous manual annotations at both the individual cases and word levels, incorporating evaluations of hallucination intensity. We not only benchmark hallucination frequencies across different LLMs, but also critically assess the effectiveness of several existing hallucination detection methodologies. Furthermore, we show that using a high-quality dataset such as RAGTruth, it is possible to finetune a relatively small LLM and achieve a competitive level of performance in hallucination detection when compared to the existing prompt-based approaches using state-of-the-art large language models such as GPT-4.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-31T04:43:45Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Cheng Niu</name>
+    </author>
+    <author>
+      <name>Yuanhao Wu</name>
+    </author>
+    <author>
+      <name>Juno Zhu</name>
+    </author>
+    <author>
+      <name>Siliang Xu</name>
+    </author>
+    <author>
+      <name>Kashun Shum</name>
+    </author>
+    <author>
+      <name>Randy Zhong</name>
+    </author>
+    <author>
+      <name>Juntong Song</name>
+    </author>
+    <author>
+      <name>Tong Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.00280v3</id>
+    <title>Advancing TTP Analysis: Harnessing the Power of Large Language Models with Retrieval Augmented Generation</title>
+    <updated>2024-07-22T02:51:05Z</updated>
+    <link href="https://arxiv.org/abs/2401.00280v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.00280v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Tactics, Techniques, and Procedures (TTPs) outline the methods attackers use to exploit vulnerabilities. The interpretation of TTPs in the MITRE ATT&amp;CK framework can be challenging for cybersecurity practitioners due to presumed expertise and complex dependencies. Meanwhile, advancements with Large Language Models (LLMs) have led to recent surge in studies exploring its uses in cybersecurity operations. It is, however, unclear how LLMs can be used in an efficient and proper way to provide accurate responses for critical domains such as cybersecurity. This leads us to investigate how to better use two types of LLMs: small-scale encoder-only (e.g., RoBERTa) and larger decoder-only (e.g., GPT-3.5) LLMs to comprehend and summarize TTPs with the intended purposes (i.e., tactics) of a cyberattack procedure. This work studies and compares the uses of supervised fine-tuning (SFT) of encoder-only LLMs vs. Retrieval Augmented Generation (RAG) for decoder-only LLMs (without fine-tuning). Both SFT and RAG techniques presumably enhance the LLMs with relevant contexts for each cyberattack procedure. Our studies show decoder-only LLMs with RAG achieves better performance than encoder-only models with SFT, particularly when directly relevant context is extracted by RAG. The decoder-only results could suffer low `Precision' while achieving high `Recall'. Our findings further highlight a counter-intuitive observation that more generic prompts tend to yield better predictions of cyberattack tactics than those that are more specifically tailored.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-30T16:56:24Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Reza Fayyazi</name>
+    </author>
+    <author>
+      <name>Rozhina Taghdimi</name>
+    </author>
+    <author>
+      <name>Shanchieh Jay Yang</name>
+    </author>
+    <arxiv:doi>10.1109/ACSACW65225.2024.00036</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ACSACW65225.2024.00036" title="doi"/>
+  </entry>
+</feed>

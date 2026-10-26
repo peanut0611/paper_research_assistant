@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper Assistant · 文献研究</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/research.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="/" aria-label="Paper Assistant 首页"><span class="brand-mark">P</span>Paper Assistant</a>
+    <span class="header-label">文献研究 Agent</span>
+  </header>
+  <main>
+    <div id="research-panel">
+      <header class="page-heading">
+        <span class="eyebrow">研究工作台</span>
+        <h1>查找论文，带着证据回答。</h1>
+        <p>输入研究问题，自动查找文献、阅读正文并核对来源。</p>
+      </header>
+      <div id="research-notice" class="notice" role="status" aria-live="polite">正在连接研究服务…</div>
+      <details id="research-editor" class="task-editor" open>
+        <summary>研究设置 <span class="summary-note">主题、问题与日期</span></summary>
+      <form id="research-form" class="research-form">
+        <div class="section-heading"><h2>新建研究</h2><button id="research-example" type="button" class="text-button">试用示例</button></div>
+        <label for="research-topic">研究主题</label>
+        <input id="research-topic" type="text" maxlength="500" placeholder="例如：检索增强生成中的幻觉检测" required>
+        <label for="research-questions">希望回答什么？<span class="label-note">每行一个问题</span></label>
+        <textarea id="research-questions" rows="3" maxlength="8000" placeholder="这些论文解决什么问题？采用了什么方法？" required></textarea>
+        <div class="form-grid research-range">
+          <div><label for="research-start">起始日期 <span class="label-note">UTC，含当日</span></label><input id="research-start" type="date" required></div>
+          <div><label for="research-end">截止日期 <span class="label-note">UTC，不含当日</span></label><input id="research-end" type="date" required></div>
+          <div><label for="research-papers">研究篇数</label><select id="research-papers"><option value="1">最多 1 篇</option><option value="2">最多 2 篇</option><option value="3">最多 3 篇</option></select></div>
+        </div>
+        <details class="settings" id="research-settings">
+          <summary>更多设置 <span id="research-settings-summary" class="summary-note">联网发现 · 预算 $0.10</span></summary>
+          <div class="form-grid">
+            <div><label for="research-source">文献来源</label><select id="research-source"><option value="online">联网发现 · arXiv</option><option id="research-cache-option" value="cached_example" disabled>缓存示例 · RAGTruth</option></select></div>
+            <div><label for="research-budget">任务预算 · 美元</label><input id="research-budget" type="number" value="0.10" min="0.03" max="0.10" step="0.01" required></div>
+          </div>
+          <p id="research-source-note" class="muted">从 arXiv 获取论文；模型按调用计费。</p>
+        </details>
+        <div class="composer-footer"><span>仅在开始研究后调用模型</span><button id="research-submit" type="submit" disabled>开始研究</button></div>
+      </form>
+      </details>
+
+      <section id="research-result" class="research-result" hidden aria-label="当前研究任务">
+        <div class="section-heading result-heading"><h2 id="research-run-title">研究结果</h2><span id="research-status" class="status" role="status" aria-live="polite"></span></div>
+        <p id="research-current" class="current-step" role="status" aria-live="polite"></p>
+        <div class="run-actions"><button id="research-stop" type="button" class="secondary" disabled>停止研究</button><button id="research-reconnect" type="button" class="secondary" hidden>重新连接</button><button id="research-download" type="button" class="text-button" disabled>下载结果</button></div>
+        <p id="research-error" class="error" hidden></p>
+        <div class="answer-card"><h3>回答</h3><div id="research-answer" class="answer">回答将在完成引用核对后显示。</div><div id="research-citations"></div></div>
+        <details class="result-section">
+          <summary>参考论文</summary>
+          <div id="research-candidates" class="muted">尚未发现候选。</div>
+        </details>
+        <details class="result-section">
+          <summary>执行详情</summary>
+          <div id="research-metrics" class="metrics"></div>
+          <p id="research-run-id" class="muted"></p>
+          <p id="research-run-summary" class="muted"></p>
+          <ol id="research-events" class="event-list"></ol>
+          <p id="research-gaps" class="muted"></p>
+        </details>
+        <p class="footnote">回答基于实际取得的文献，请结合原文核对结论。</p>
+      </section>
+    </div>
+
+  </main>
+</body>
+</html>

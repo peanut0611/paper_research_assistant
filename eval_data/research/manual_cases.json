@@ -1,0 +1,355 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-24",
+  "purpose": "当前版本的手工 Agent 验收输入；不替代既有 synthetic 离线场景，不是已完成的质量评测结果。",
+  "reference_visibility": "references / expected 仅供人工验收，不传入模型；模型输入仅为 task 或 web_payload。",
+  "estimated_budget_note": "每题任务预算 0.10 美元，预留 0.02 美元；五题配置总额 0.50 美元。是应用侧预算与费率估算，不是账户硬限额。生成本文件没有调用 OpenAI。",
+  "known_regression": {
+    "task_id": "web-20261024T092731-7a62fb1259a6",
+    "observed_sequence": [
+      "fetch_paper",
+      "search_documents",
+      "read_pages",
+      "read_pages"
+    ],
+    "missing_step": "ingest_paper",
+    "stop_reason": "no_progress",
+    "note": "此轨迹说明当前失败不能直接归因于题目。新用例用于隔离诊断，不绕过入库，不强制模型照抄预定步骤。"
+  },
+  "sources": {
+    "ragtruth-v2": {
+      "arxiv_id": "2401.00396",
+      "version": 2,
+      "title": "RAGTruth: A Hallucination Corpus for Developing Trustworthy Retrieval-Augmented Language Models",
+      "document_id": "arxiv--2401.00396--v2",
+      "submitted_at": "2023-12-31T04:43:45+00:00",
+      "abstract_url": "https://arxiv.org/abs/2401.00396v2",
+      "pdf_url": "https://arxiv.org/pdf/2401.00396v2",
+      "pdf_sha256": "268a06b73f7266970e0d393f8b27d74b56ac219d6ae1546da765183193a9d837",
+      "page_count": 16,
+      "source_note": "固定历史材料；不是近期论文推荐。原文及字符范围由当前解析器核对，答案质量仍需人工验收。"
+    }
+  },
+  "references": {
+    "response_count": {
+      "claim": "RAGTruth 包含近 18,000 条来自不同 LLM 的自然生成 RAG 回答；不是 18,000 篇论文。",
+      "evidence": [
+        {
+          "page_number": 1,
+          "page_number_kind": "physical_pdf_page_1_based",
+          "char_start": 886,
+          "char_end": 978,
+          "quote": "RAGTruth comprises nearly 18,000 nat-urally generated responses from diverse LLMs using RAG.",
+          "page_text_sha256": "1affc76a9405f0b31a8835c87bed981a5786e20b0e4aab64da44cb991819a4db"
+        }
+      ]
+    },
+    "annotation_levels": {
+      "claim": "回答经过样本级和词级的人工标注。",
+      "evidence": [
+        {
+          "page_number": 1,
+          "page_number_kind": "physical_pdf_page_1_based",
+          "char_start": 979,
+          "char_end": 1084,
+          "quote": "These responses have undergone meticulous manual annotations at both the indi-vidual case and word levels",
+          "page_text_sha256": "1affc76a9405f0b31a8835c87bed981a5786e20b0e4aab64da44cb991819a4db"
+        }
+      ]
+    },
+    "generation_tasks": {
+      "claim": "三种任务是问答、数据到文本写作、新闻摘要。",
+      "evidence": [
+        {
+          "page_number": 3,
+          "page_number_kind": "physical_pdf_page_1_based",
+          "char_start": 3433,
+          "char_end": 3498,
+          "quote": "Question Answering, Data-to-text Writing, and News Summarization.",
+          "page_text_sha256": "21d7b2f02745245baac258d457befeb09fa431fa19b24c783020d0bf41efbe80"
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "ragtruth-cn-basic",
+      "name": "中文单事实基线",
+      "task": {
+        "topic": "RAGTruth hallucination corpus",
+        "research_questions": [
+          "RAGTruth 语料库大约包含多少条由语言模型生成的回答？请根据论文正文回答，并给出页码和原文引文。"
+        ],
+        "start_at": "2023-01-01T00:00:00+00:00",
+        "end_at": "2024-01-01T00:00:00+00:00",
+        "target_papers": 1,
+        "source": "arxiv",
+        "limits": {
+          "max_model_cost_usd": 0.1,
+          "report_reserve_usd": 0.02
+        }
+      },
+      "web_payload": {
+        "topic": "RAGTruth hallucination corpus",
+        "questions": [
+          "RAGTruth 语料库大约包含多少条由语言模型生成的回答？请根据论文正文回答，并给出页码和原文引文。"
+        ],
+        "start_date": "2023-01-01",
+        "end_date": "2024-01-01",
+        "source_mode": "cached_example",
+        "target_papers": 1,
+        "max_cost_usd": 0.1
+      },
+      "execution": {
+        "seed_search_results": "data/literature_search/smoke/20261023.json",
+        "offline_sources": true,
+        "local_models_only": true,
+        "max_steps": 12,
+        "max_model_tokens": 60000,
+        "max_output_tokens": 1200
+      },
+      "expected": {
+        "answerable": true,
+        "source_id": "ragtruth-v2",
+        "reference_fact_ids": [
+          "response_count"
+        ],
+        "checks": [
+          "选择 RAGTruth 2401.00396v2；其他两篇种子候选不是本题目标。",
+          "仅在任务固定日期窗口内选取已登记候选，使用固定版本。",
+          "在首次成功正文检索或读页之前，该论文须已成功 fetch_paper 和 ingest_paper；不得猜测未入库文档 ID。",
+          "不能将标题、摘要、模型记忆当作已读取全文。",
+          "不得重复无效读页直到 no_progress，并将此计为研究成功。",
+          "如有证据回答，须成功 verify_citations；人工另查结论是否由引文支持。",
+          "产生非空证据及已校验的非空引用。",
+          "stop_reason 为 sufficient_evidence，且参考事实正确，才记本题通过。"
+        ],
+        "observation_note": "",
+        "review_status": "pending_real_model_run_and_human_acceptance"
+      }
+    },
+    {
+      "id": "ragtruth-en-basic",
+      "name": "英文单事实对照",
+      "task": {
+        "topic": "RAGTruth hallucination corpus",
+        "research_questions": [
+          "Approximately how many LLM-generated responses does RAGTruth contain? Answer in English using the paper text, with a PDF page number and a supporting quotation."
+        ],
+        "start_at": "2023-01-01T00:00:00+00:00",
+        "end_at": "2024-01-01T00:00:00+00:00",
+        "target_papers": 1,
+        "source": "arxiv",
+        "limits": {
+          "max_model_cost_usd": 0.1,
+          "report_reserve_usd": 0.02
+        }
+      },
+      "web_payload": {
+        "topic": "RAGTruth hallucination corpus",
+        "questions": [
+          "Approximately how many LLM-generated responses does RAGTruth contain? Answer in English using the paper text, with a PDF page number and a supporting quotation."
+        ],
+        "start_date": "2023-01-01",
+        "end_date": "2024-01-01",
+        "source_mode": "cached_example",
+        "target_papers": 1,
+        "max_cost_usd": 0.1
+      },
+      "execution": {
+        "seed_search_results": "data/literature_search/smoke/20261023.json",
+        "offline_sources": true,
+        "local_models_only": true,
+        "max_steps": 12,
+        "max_model_tokens": 60000,
+        "max_output_tokens": 1200
+      },
+      "expected": {
+        "answerable": true,
+        "source_id": "ragtruth-v2",
+        "reference_fact_ids": [
+          "response_count"
+        ],
+        "checks": [
+          "选择 RAGTruth 2401.00396v2；其他两篇种子候选不是本题目标。",
+          "仅在任务固定日期窗口内选取已登记候选，使用固定版本。",
+          "在首次成功正文检索或读页之前，该论文须已成功 fetch_paper 和 ingest_paper；不得猜测未入库文档 ID。",
+          "不能将标题、摘要、模型记忆当作已读取全文。",
+          "不得重复无效读页直到 no_progress，并将此计为研究成功。",
+          "如有证据回答，须成功 verify_citations；人工另查结论是否由引文支持。",
+          "产生非空证据及已校验的非空引用。",
+          "stop_reason 为 sufficient_evidence，且参考事实正确，才记本题通过。"
+        ],
+        "observation_note": "与中文基线核对同一事实，用于观察语言差异；应分别使用全新任务，不能将上次回答当作证据。",
+        "review_status": "pending_real_model_run_and_human_acceptance"
+      }
+    },
+    {
+      "id": "ragtruth-multi-evidence",
+      "name": "多证据检索与可能的查询调整",
+      "task": {
+        "topic": "RAGTruth hallucination corpus",
+        "research_questions": [
+          "RAGTruth 的回答生成覆盖哪三类任务？人工标注在什么粒度上进行？请分别给出论文页码和原文引文。"
+        ],
+        "start_at": "2023-01-01T00:00:00+00:00",
+        "end_at": "2024-01-01T00:00:00+00:00",
+        "target_papers": 1,
+        "source": "arxiv",
+        "limits": {
+          "max_model_cost_usd": 0.1,
+          "report_reserve_usd": 0.02
+        }
+      },
+      "web_payload": {
+        "topic": "RAGTruth hallucination corpus",
+        "questions": [
+          "RAGTruth 的回答生成覆盖哪三类任务？人工标注在什么粒度上进行？请分别给出论文页码和原文引文。"
+        ],
+        "start_date": "2023-01-01",
+        "end_date": "2024-01-01",
+        "source_mode": "cached_example",
+        "target_papers": 1,
+        "max_cost_usd": 0.1
+      },
+      "execution": {
+        "seed_search_results": "data/literature_search/smoke/20261023.json",
+        "offline_sources": true,
+        "local_models_only": true,
+        "max_steps": 12,
+        "max_model_tokens": 60000,
+        "max_output_tokens": 1200
+      },
+      "expected": {
+        "answerable": true,
+        "source_id": "ragtruth-v2",
+        "reference_fact_ids": [
+          "generation_tasks",
+          "annotation_levels"
+        ],
+        "checks": [
+          "选择 RAGTruth 2401.00396v2；其他两篇种子候选不是本题目标。",
+          "仅在任务固定日期窗口内选取已登记候选，使用固定版本。",
+          "在首次成功正文检索或读页之前，该论文须已成功 fetch_paper 和 ingest_paper；不得猜测未入库文档 ID。",
+          "不能将标题、摘要、模型记忆当作已读取全文。",
+          "不得重复无效读页直到 no_progress，并将此计为研究成功。",
+          "如有证据回答，须成功 verify_citations；人工另查结论是否由引文支持。",
+          "产生非空证据及已校验的非空引用。",
+          "stop_reason 为 sufficient_evidence，且参考事实正确，才记本题通过。"
+        ],
+        "observation_note": "若首轮证据不完整，观察是否调整查询或读页补证据；首轮已覆盖全部事实也可通过。仅实际发生且有理由的调整才能算查询调整演示，不能预设一定触发。",
+        "review_status": "pending_real_model_run_and_human_acceptance"
+      }
+    },
+    {
+      "id": "ragtruth-insufficient",
+      "name": "缺少业务指标时诚实停止",
+      "task": {
+        "topic": "RAGTruth hallucination corpus",
+        "research_questions": [
+          "仅根据 RAGTruth v2，这篇论文是否报告了该数据集在企业生产环境中的每月维护成本（美元）？如有，请给出金额和核算方法；缺少依据时请明确说明。"
+        ],
+        "start_at": "2023-01-01T00:00:00+00:00",
+        "end_at": "2024-01-01T00:00:00+00:00",
+        "target_papers": 1,
+        "source": "arxiv",
+        "limits": {
+          "max_model_cost_usd": 0.1,
+          "report_reserve_usd": 0.02
+        }
+      },
+      "web_payload": {
+        "topic": "RAGTruth hallucination corpus",
+        "questions": [
+          "仅根据 RAGTruth v2，这篇论文是否报告了该数据集在企业生产环境中的每月维护成本（美元）？如有，请给出金额和核算方法；缺少依据时请明确说明。"
+        ],
+        "start_date": "2023-01-01",
+        "end_date": "2024-01-01",
+        "source_mode": "cached_example",
+        "target_papers": 1,
+        "max_cost_usd": 0.1
+      },
+      "execution": {
+        "seed_search_results": "data/literature_search/smoke/20261023.json",
+        "offline_sources": true,
+        "local_models_only": true,
+        "max_steps": 12,
+        "max_model_tokens": 60000,
+        "max_output_tokens": 1200
+      },
+      "expected": {
+        "answerable": false,
+        "source_id": "ragtruth-v2",
+        "reference_fact_ids": [],
+        "checks": [
+          "选择 RAGTruth 2401.00396v2；其他两篇种子候选不是本题目标。",
+          "仅在任务固定日期窗口内选取已登记候选，使用固定版本。",
+          "在首次成功正文检索或读页之前，该论文须已成功 fetch_paper 和 ingest_paper；不得猜测未入库文档 ID。",
+          "不能将标题、摘要、模型记忆当作已读取全文。",
+          "不得重复无效读页直到 no_progress，并将此计为研究成功。",
+          "如有证据回答，须成功 verify_citations；人工另查结论是否由引文支持。",
+          "明确说明现有论文证据不足，不能编造月度金额或计算公式。",
+          "不得把标注费用、模型推理费用等其他数字解释成企业每月维护成本。",
+          "允许结论为未在已取得材料中找到；不要宣称有限检索已证明整篇论文绝对不存在此信息。",
+          "最终 insufficient_evidence，且回答没有无来源事实，才记本题通过。"
+        ],
+        "observation_note": "这是来源受限的证据不足题，不预先声称全文已被穷尽核对；按实际使用材料及回答边界人工检查。",
+        "review_status": "pending_real_model_run_and_human_acceptance"
+      }
+    },
+    {
+      "id": "recent-online",
+      "name": "近期论文联网发现",
+      "task": {
+        "topic": "检索增强生成中的幻觉检测",
+        "research_questions": [
+          "在指定日期范围内查找一篇与 RAG 幻觉检测相关的论文，说明它研究的问题和一个主要方法，并引用实际取得的正文证据。"
+        ],
+        "start_at": "2026-09-01T00:00:00+00:00",
+        "end_at": "2026-10-24T00:00:00+00:00",
+        "target_papers": 1,
+        "source": "arxiv",
+        "limits": {
+          "max_model_cost_usd": 0.1,
+          "report_reserve_usd": 0.02
+        }
+      },
+      "web_payload": {
+        "topic": "检索增强生成中的幻觉检测",
+        "questions": [
+          "在指定日期范围内查找一篇与 RAG 幻觉检测相关的论文，说明它研究的问题和一个主要方法，并引用实际取得的正文证据。"
+        ],
+        "start_date": "2026-09-01",
+        "end_date": "2026-10-24",
+        "source_mode": "online",
+        "target_papers": 1,
+        "max_cost_usd": 0.1
+      },
+      "execution": {
+        "seed_search_results": null,
+        "offline_sources": false,
+        "local_models_only": true,
+        "max_steps": 12,
+        "max_model_tokens": 60000,
+        "max_output_tokens": 1200
+      },
+      "expected": {
+        "answerable": null,
+        "source_id": null,
+        "reference_fact_ids": [],
+        "checks": [
+          "仅在任务固定日期窗口内选取已登记候选，使用固定版本。",
+          "在首次成功正文检索或读页之前，该论文须已成功 fetch_paper 和 ingest_paper；不得猜测未入库文档 ID。",
+          "不能将标题、摘要、模型记忆当作已读取全文。",
+          "不得重复无效读页直到 no_progress，并将此计为研究成功。",
+          "如有证据回答，须成功 verify_citations；人工另查结论是否由引文支持。",
+          "候选未预先指定，按真实返回的标题/摘要给出选择理由；记录来源与获取时间。",
+          "成功取得全文时，回答应有该任务正文来源及已校验引用。",
+          "零候选、网络失败或无可用全文时如实给出限制，记来源受限，不能计作研究闭环成功。"
+        ],
+        "observation_note": "日期为 UTC 2026-09-01（含）至 2026-10-24（不含），不是随运行日期滚动的窗口。未联网预先验证候选，不预设任何最新论文标题或答案。必要时由模型用英文关键词搜索。",
+        "review_status": "pending_real_model_run_and_human_acceptance"
+      }
+    }
+  ]
+}

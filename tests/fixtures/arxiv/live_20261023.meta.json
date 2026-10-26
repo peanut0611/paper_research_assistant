@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "synthetic": false,
+  "origin": "live_arxiv_api",
+  "fetched_at": "2026-10-23T10:18:39.841653+00:00",
+  "request_url": "https://export.arxiv.org/api/query?search_query=%28%28ti%3A%22retrieval%22+OR+abs%3A%22retrieval%22%29+AND+%28ti%3A%22augmented%22+OR+abs%3A%22augmented%22%29+AND+%28ti%3A%22generation%22+OR+abs%3A%22generation%22%29%29+AND+submittedDate%3A%5B202301010000+TO+202401010000%5D&start=0&max_results=3&sortBy=submittedDate&sortOrder=descending",
+  "request": {
+    "api_query": "((ti:\"retrieval\" OR abs:\"retrieval\") AND (ti:\"augmented\" OR abs:\"augmented\") AND (ti:\"generation\" OR abs:\"generation\")) AND submittedDate:[202301010000 TO 202401010000]",
+    "boundary": "start_inclusive_end_exclusive",
+    "date_field": "submitted",
+    "end_at": "2024-01-01T00:00:00+00:00",
+    "max_results": 3,
+    "query": "retrieval augmented generation",
+    "sort_by": "submittedDate",
+    "sort_order": "descending",
+    "start_at": "2023-01-01T00:00:00+00:00",
+    "utc_end_at": "2024-01-01T00:00:00+00:00",
+    "utc_start_at": "2023-01-01T00:00:00+00:00"
+  },
+  "raw_sha256": "f98d28a8ade3161a26ed57eb75a8daea2a81a80900c0575a188f54180690faf6",
+  "expected_total_results": 315,
+  "expected_candidates": [
+    {
+      "arxiv_id": "2401.00544",
+      "version": 2,
+      "title": "A Reliable Knowledge Processing Framework for Combustion Science using Foundation Models",
+      "submitted_at": "2023-12-31T17:15:25+00:00",
+      "updated_at": "2024-01-02T03:03:18+00:00"
+    },
+    {
+      "arxiv_id": "2401.00396",
+      "version": 2,
+      "title": "RAGTruth: A Hallucination Corpus for Developing Trustworthy Retrieval-Augmented Language Models",
+      "submitted_at": "2023-12-31T04:43:45+00:00",
+      "updated_at": "2024-05-17T06:29:31+00:00"
+    },
+    {
+      "arxiv_id": "2401.00280",
+      "version": 3,
+      "title": "Advancing TTP Analysis: Harnessing the Power of Large Language Models with Retrieval Augmented Generation",
+      "submitted_at": "2023-12-30T16:56:24+00:00",
+      "updated_at": "2024-07-22T02:51:05+00:00"
+    }
+  ],
+  "review_status": "metadata_captured_from_official_api_relevance_not_human_reviewed",
+  "notes": "Metadata only. No PDFs or model calls. This frozen bounded response is not a quality benchmark."
+}

@@ -1,13 +1,16 @@
-"""Serve the local paper question page without additional UI dependencies."""
+"""Serve the literature research Agent without additional UI dependencies."""
 
 import argparse
 import os
+import sys
 from pathlib import Path
 
-from paper_assistant.web_server import PaperHTTPServer
+from paper_assistant.web.server import PaperHTTPServer
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8501)
     parser.add_argument("--local-models-only", action="store_true",
@@ -17,14 +20,13 @@ def main() -> None:
         parser.error("port must be between 1 and 65535")
     root = Path(__file__).resolve().parents[1]
     os.chdir(root)
-    os.environ.setdefault("TIKTOKEN_CACHE_DIR", str(root / "tmp/tiktoken-cache"))
     if args.local_models_only:
         os.environ["HF_HUB_OFFLINE"] = "1"
         os.environ["TRANSFORMERS_OFFLINE"] = "1"
     try:
-        with PaperHTTPServer(args.port, root / "data/index/dense") as server:
-            print(f"资料问答页面：http://127.0.0.1:{args.port}", flush=True)
-            print("按 Ctrl+C 停止。首次提问需要加载模型；每次提交会调用 OpenAI。", flush=True)
+        with PaperHTTPServer(args.port, project_root=root) as server:
+            print(f"文献研究 Agent：http://127.0.0.1:{args.port}", flush=True)
+            print("按 Ctrl+C 停止。页面加载不调用模型；开始研究后调用 OpenAI。", flush=True)
             server.serve_forever()
     except KeyboardInterrupt:
         print("\n页面服务已停止。")

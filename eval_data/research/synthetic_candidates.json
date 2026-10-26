@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "snapshot_kind": "fabricated_offline_fixture_not_api_response",
+  "created_at": "2026-10-23T00:00:00Z",
+  "fetched_at": null,
+  "records": [
+    {"id":"synthetic:hybrid-a","base_id":"synthetic:hybrid-a","version":1,"title":"Synthetic Hybrid Retrieval A","abstract":"Synthetic discussion of lexical and dense fusion; no deployment latency given.","submitted_at":"2026-09-10T10:00:00Z","updated_at":"2026-09-10T10:00:00Z","fulltext_fixture":"available_when_added"},
+    {"id":"synthetic:hybrid-b","base_id":"synthetic:hybrid-b","version":1,"title":"Synthetic Hybrid Retrieval B","abstract":"Synthetic study comparing retrieval methods under different settings.","submitted_at":"2026-09-12T10:00:00Z","updated_at":"2026-09-12T10:00:00Z","fulltext_fixture":"available_when_added"},
+    {"id":"synthetic:unrelated","base_id":"synthetic:unrelated","version":1,"title":"Synthetic Image Classification","abstract":"Synthetic visual classifier; unrelated to evidence position.","submitted_at":"2026-09-14T10:00:00Z","updated_at":"2026-09-14T10:00:00Z","fulltext_fixture":"not_selected"},
+    {"id":"synthetic:position","base_id":"synthetic:position","version":1,"title":"Synthetic Evidence Position","abstract":"Synthetic document mentioning evidence placement in long contexts.","submitted_at":"2026-09-15T10:00:00Z","updated_at":"2026-09-15T10:00:00Z","fulltext_fixture":"available_when_added"},
+    {"id":"synthetic:no-fulltext","base_id":"synthetic:no-fulltext","version":1,"title":"Synthetic Abstract Only","abstract":"Synthetic hybrid retrieval description without numerical results.","submitted_at":"2026-09-16T10:00:00Z","updated_at":"2026-09-16T10:00:00Z","fulltext_fixture":"unavailable"},
+    {"id":"synthetic:hybrid-a-v2","base_id":"synthetic:hybrid-a","version":2,"title":"Synthetic Hybrid Retrieval A, revised","abstract":"Synthetic revision of A; not a distinct paper.","submitted_at":"2026-09-10T10:00:00Z","updated_at":"2026-09-20T10:00:00Z","fulltext_fixture":"available_when_added"},
+    {"id":"synthetic:old-updated","base_id":"synthetic:old-updated","version":2,"title":"Synthetic Older Submission","abstract":"Synthetic older paper revised during the requested window.","submitted_at":"2026-08-10T10:00:00Z","updated_at":"2026-09-20T10:00:00Z","fulltext_fixture":"not_selected"}
+  ]
+}

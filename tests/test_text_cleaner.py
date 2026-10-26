@@ -1,4 +1,4 @@
-from paper_assistant.text_cleaner import clean_page_text, remove_page_boilerplate
+from paper_assistant.documents.text_cleaner import clean_page_text, remove_page_boilerplate
 
 
 def test_clean_page_text_normalizes_layout_line_breaks() -> None:
