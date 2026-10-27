@@ -23,7 +23,7 @@ OPENAI_API_KEY=你的实际密钥
 保存后启动：
 
 ```powershell
-uv run python scripts/app.py
+uv run python -m paper_assistant web
 ```
 
 网页和命令行共用根目录 `.env` 配置，从其他工作目录启动也能读取。`.env` 已被 Git 忽略，只有空的 `.env.example` 随代码提交。保存密钥后刷新页面即可重新检查配置。
@@ -35,7 +35,7 @@ uv run python scripts/app.py
 首次入库需要下载 `intfloat/multilingual-e5-small`；本机已缓存模型时可以运行：
 
 ```powershell
-uv run python scripts/app.py --local-models-only
+uv run python -m paper_assistant web --local-models-only
 ```
 
 `--local-models-only` 只限制 embedding 模型加载；联网发现仍访问 arXiv，研究决策仍调用 OpenAI 并计费。只打开页面、查看状态不会调用模型。服务绑定本机地址，同一时间只执行一个任务。
@@ -43,7 +43,7 @@ uv run python scripts/app.py --local-models-only
 命令行也可发起任务：
 
 ```powershell
-uv run python scripts/run_research.py --task-id research-demo-01 --topic "RAG hallucination detection" --start 2026-09-01T00:00:00+00:00 --end 2026-10-25T00:00:00+00:00 --question "说明一篇相关论文的问题和主要方法，并引用正文证据" --target-papers 1 --max-cost-usd 0.10
+uv run python -m paper_assistant research --task-id research-demo-01 --topic "RAG hallucination detection" --start 2026-09-01T00:00:00+00:00 --end 2026-10-25T00:00:00+00:00 --question "说明一篇相关论文的问题和主要方法，并引用正文证据" --target-papers 1 --max-cost-usd 0.10
 ```
 
 新运行使用新的任务 ID。`--resume` 显式恢复兼容的检查点；变更处理代码或协议后不应续跑旧任务。`--offline-sources` 只允许使用本地文献缓存，**LLM 仍然联网计费**。失败任务不会自动重试。
@@ -55,7 +55,7 @@ uv run python scripts/run_research.py --task-id research-demo-01 --topic "RAG ha
         → 解析和任务内入库 → 检索 / 读页 → 引文校验 → 短证据回答
 ```
 
-这是参考 pi 分层思想、自行实现的 Python 单 Agent harness。通用核心管理消息、工具注册、执行循环和事件；研究宿主管理预算、完成条件、检查点和恢复。使用 GPT-5.4-mini，通过受控的 `research_action` 选择七个研究工具或结束任务。详见 [Agent 结构说明](src/paper_assistant/agent/README.md)。
+这是参考 pi 分层思想、自行实现的 Python 单 Agent harness。通用核心管理消息、工具注册、执行循环和事件；研究宿主管理预算、完成条件、检查点和恢复。使用 GPT-5.4-mini，通过受控的 `research_action` 选择七个研究工具或结束任务。详见 [结构说明与源码阅读路线](ARCHITECTURE.md)。
 
 每个研究任务只检索自己的全文索引，不会读取旧论文或其他任务的索引。保留 Dense、BM25、Hybrid 检索；默认 embedding 支持中英文，实际跨语言效果仍需具体语料验证。PDF 下载成功之后仍必须成功入库才能检索。
 
@@ -65,14 +65,16 @@ uv run python scripts/run_research.py --task-id research-demo-01 --topic "RAG ha
 
 ```text
 src/paper_assistant/
-  agent/          # 通用执行核心、研究宿主、工具、模型适配和引文校验
-  documents/      # PDF 解析、清洗、分块、文档快照
-  retrieval/      # Dense、BM25、Hybrid 和检索范围
-  literature/     # arXiv 搜索与固定版本下载
+  ai/             # 模型契约与 OpenAI 客户端
+  agent/          # 通用内核：消息、工具注册与执行循环
+  research/       # 研究应用：任务、预算、模型适配、工具审计与知识库
+  tools/          # arxiv/ 文献能力；knowledge/ PDF 与三种检索
   web/            # 本地研究页面及任务 API
+  __main__.py     # 统一启动入口
+  config.py       # .env 配置
   storage.py      # 原子写入
-scripts/          # 七个 Agent 相关命令入口
-tests/            # 离线测试及脱敏来源快照
+scripts/          # 两个兼容入口；dev/ 存放能力调试和模拟脚本
+tests/            # 按 ai、agent、research、tools、web 分组
 eval_data/research/# Agent 开发场景与人工验收用例
 ```
 
@@ -86,7 +88,7 @@ eval_data/research/# Agent 开发场景与人工验收用例
 
 ```powershell
 uv run pytest -q
-node --test tests/research_client.test.cjs
+node --test tests/web/research_client.test.cjs
 ```
 
 自动测试使用生成的 PDF、固定来源快照和模拟模型，不需要原测试论文，不调用付费模型。`eval_data/research/` 应随代码保留，便于复现测试意图；虚构候选、待人工复核任务和真实来源样例分别标明，不能将测试通过当作真实 Agent 质量评分。

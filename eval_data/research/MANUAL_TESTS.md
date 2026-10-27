@@ -22,7 +22,7 @@
 启动页面：
 
 ```powershell
-python -m uv run python scripts/app.py --local-models-only
+python -m uv run python -m paper_assistant web --local-models-only
 ```
 
 ## 1. 中文单事实基线：ragtruth-cn-basic
@@ -98,7 +98,7 @@ python -m uv run python scripts/app.py --local-models-only
 
 ## 命令行：从 JSON 选择一题运行
 
-下面在现有 `scripts/run_research.py` 上运行，不读取参考答案。修改第一行的用例 ID 即可换题。
+下面在现有 `python -m paper_assistant research` 上运行，不读取参考答案。修改第一行的用例 ID 即可换题。
 **执行这段命令会调用真实 OpenAI 模型。** 每题配置预算 $0.10，其中 $0.02 为后续报告预留；
 应用估算和预留不等于账户硬限额。不要未经检查一次运行全部五题。
 
@@ -110,7 +110,7 @@ if ($matchedCases.Count -ne 1) { throw '用例 ID 不存在或重复。' }
 $manualCase = $matchedCases[0]
 $researchTaskId = 'manual-' + $selectedCaseId + '-' + [DateTime]::UtcNow.ToString('yyyyMMddHHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 6)
 $runArguments = @(
-    '-m', 'uv', 'run', 'python', 'scripts/run_research.py',
+    '-m', 'uv', 'run', 'python', '-m', 'paper_assistant', 'research',
     '--task-id', $researchTaskId,
     '--topic', $manualCase.task.topic,
     '--start', $manualCase.task.start_at,

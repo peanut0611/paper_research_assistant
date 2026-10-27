@@ -1,6 +1,6 @@
 """Synthetic retrieval results shared by current Agent component tests."""
-from paper_assistant.documents.chunking import TextChunk
-from paper_assistant.retrieval.embedding import SearchResult
+from paper_assistant.tools.knowledge.chunking import TextChunk
+from paper_assistant.tools.knowledge.embedding import SearchResult
 
 
 def result(rank, text="retrieval", doc="a", page=1):

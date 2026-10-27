@@ -5,7 +5,7 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from paper_assistant.web.research import ResearchJobService, WebResearchError
+from paper_assistant.web.jobs import ResearchJobService, WebResearchError
 
 
 ASSETS = Path(__file__).parent / "static"

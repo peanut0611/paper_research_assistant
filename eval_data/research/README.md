@@ -30,11 +30,11 @@
 
 `tool_calls_example.jsonl` 是工具协议的显式七步集成示例，使用固定 2023 年时间窗口、
 真实缓存中的 RAGTruth `2401.00396v2`，不使用虚构候选，也不表示最新论文发现。
-按 README 的 `scripts/run_tool_calls.py` 命令执行；`--offline` 需要本机已有对应元数据、
+按 README 的 `scripts/dev/run_tool_calls.py` 命令执行；`--offline` 需要本机已有对应元数据、
 PDF 和模型缓存。末步只验证无引用的证据不足结果格式，不输出论文研究结论。
 该文件没有模型选择或观察驱动的分支，不作为 Agent 决策或质量评测样本。
 
-`scripts/run_mock_research.py` 用固定历史候选验证 runner 的状态、预算、引用和跨进程恢复。
+`scripts/dev/run_mock_research.py` 用固定历史候选验证 runner 的状态、预算、引用和跨进程恢复。
 正常流程、查询调整、下载失败替代、重复/无进展停止、额度耗尽与中断场景由离线测试覆盖。
 这些测试使用显式模拟策略，不补充本目录缺失的人工筛选标签，也不产生 Agent 质量分数。
 

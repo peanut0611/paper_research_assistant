@@ -3,9 +3,9 @@ import threading
 import pytest
 
 from paper_assistant import config
-from paper_assistant.agent.openai_client import create_openai_client, describe_api_error
-from paper_assistant.web.research import ResearchJobService
-from test_openai_client import error
+from paper_assistant.ai.openai import create_openai_client, describe_api_error
+from paper_assistant.web.jobs import ResearchJobService
+from tests.ai.test_openai_client import error
 
 
 @pytest.fixture
