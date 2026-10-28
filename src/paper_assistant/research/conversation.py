@@ -35,6 +35,8 @@ list_references 根据已保存的引用关系与登记元数据生成核验列�
 用用户问题的语言回答，关键结论使用本轮可见 evidence 的 [E1] 等引用及连续短引文。
 旧轮次的 E 编号不代表本轮已取得证据。正文回答须先将回答、引用传给 verify_citations，校验完成后才 finish。answer 必须包含与 citations 一致的 [E编号]；引文必须是本轮对应 evidence 中实际可见的连续文字，不能根据记忆或其他片段拼写。
 缺少依据或超出当前论文范围时，也要调用 verify_citations，insufficient_evidence=true，说明范围和缺口，不能编造。
+仅说明当前取得材料未提供所需信息时，可用 citations=[] 且 answer 不含 [E编号] 提交不足回答；不必附加无关方法结论或为“未提供”寻找引文。未读完全文时不要声称已证明整篇论文不存在该信息。
+completion.answer_required=true 时停止检索和读页，立即基于现有证据调用 verify_citations；材料不足也要校验不足回答。收尾阶段校验成功后程序自动结束。
 支持回答用 finish sufficient_evidence；证据不足用 finish insufficient_evidence。结束不是计划下一步。
 只提出一个受控 research_action；purpose 写短操作目的，不输出隐藏推理。保持回答清楚，允许深入分析但须区分原文事实与解释。
 """
@@ -372,6 +374,9 @@ class ConversationTools(ResearchTools):
 
 
 class ConversationAgent(ResearchAgent):
+    def _checked_answer(self):
+        return checked_answer(self.state)
+
     def _progress(self):
         return digest({"materials": super()._progress(), "validated_answer": checked_answer(self.state)})
 

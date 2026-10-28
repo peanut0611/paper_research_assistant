@@ -27,7 +27,7 @@ from paper_assistant.tools.arxiv.search import PaperCandidate
 from paper_assistant.tools.arxiv.fetch import FetchResult, PaperFetchError, PaperFetcher, PaperFetchSession
 from paper_assistant.tools.knowledge.pdf_parser import PageDocument
 from paper_assistant.research.task import ResearchTask
-from paper_assistant.storage import atomic_write_bytes
+from paper_assistant.storage import atomic_write_bytes, replace_path
 
 
 DEFAULT_RESEARCH_ROOT = Path("data/research_runs")
@@ -335,7 +335,7 @@ class ResearchWorkspace:
                     shutil.copyfileobj(incoming, file, length=65536)
             if _hash_file(temporary) != expected_sha256:
                 raise WorkspaceError("source_mismatch", "PDF changed while copying it into the task")
-            temporary.replace(destination)
+            replace_path(temporary, destination)
         finally:
             if temporary is not None:
                 temporary.unlink(missing_ok=True)
@@ -355,7 +355,7 @@ class ResearchWorkspace:
             save_dense_index(index, stage)
             save_document_store(store, stage)
             load_document_store(stage)
-            stage.replace(destination)
+            replace_path(stage, destination)
         finally:
             if stage.exists():
                 # Only remove this operation's own staging directory, never an

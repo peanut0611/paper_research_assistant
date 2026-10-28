@@ -53,7 +53,7 @@ class ResearchAgent:
         self._mono_base, self._wall_base = monotonic(), self._now()
         binding = {"task_id": tools.workspace.task_id, "task": tools.task.to_dict(),
                    "config": asdict(self.config), "policy_id": policy.policy_id, "simulated": policy.simulated,
-                   "offline": tools.offline, "runner_protocol_version": 5}
+                   "offline": tools.offline, "runner_protocol_version": 6}
         if self.path.exists():
             if not resume:
                 raise ValueError("Runner state exists; explicit resume is required")
@@ -150,7 +150,33 @@ class ResearchAgent:
         result["tool_specs"] = self.tools.tool_specs()
         result["completion"] = {"can_finish_sufficient_evidence": self._has_verified_answer(),
                                 "required_before_sufficient_finish": "verify_citations"}
+        if self.state.answer_phase:
+            result["completion"].update(answer_required=True, reason=self.state.answer_phase,
+                                        allowed_tools=["verify_citations"])
         return detached(result)
+
+    def _checked_answer(self):
+        return next((row["result"]["data"] for row in reversed(self.state.observations)
+                     if row["tool"] == "verify_citations" and row["result"]["success"]), None)
+
+    def _require_answer(self, reason):
+        self.state.answer_phase = reason
+        self.state.last_error = {"code": "answer_required", "required_tool": "verify_citations",
+            "message": "Stop gathering evidence. Answer from current visible evidence and call verify_citations now. If unsupported, explain the gap with insufficient_evidence=true. Successful validation completes this task."}
+
+    def _can_start_answer(self):
+        return bool(self.state.evidence and not self.state.answer_phase and self._checked_answer() is None)
+
+    def _reject_non_answer(self, call_id):
+        self.state.decisions[-1]["error"] = "answer_required"
+        self.state.pending = None
+        self._require_answer(self.state.answer_phase)
+        self._tool_message(call_id, {"success": False, "data": None, "error": self.state.last_error})
+        if sum(row.get("error") == "answer_required" for row in self.state.decisions) >= self.config.max_invalid_decisions:
+            return self._stop("no_progress", "已提示基于现有证据回答，但模型仍未提交回答校验，已停止。")
+        self.state.status = "ready"
+        self._save()
+        return self.snapshot()
 
     def _has_verified_answer(self):
         # Match the most recent successful validation used by result.json/UI;
@@ -160,11 +186,15 @@ class ResearchAgent:
         return bool(checked and not checked["insufficient_evidence"] and checked["citations"])
 
     def _can_finish(self, action):
+        if self.state.answer_phase:
+            checked = self._checked_answer()
+            return bool(checked and ((action["reason"] == "sufficient_evidence" and self._has_verified_answer())
+                        or (action["reason"] == "insufficient_evidence" and checked["insufficient_evidence"])))
         return action["reason"] != "sufficient_evidence" or self._has_verified_answer()
 
     def _needs_evidence_review(self, action, reservation):
         """One bounded opportunity to inspect fulltext before giving up early."""
-        if action["reason"] != "insufficient_evidence" or not self.state.evidence:
+        if self.state.answer_phase or action["reason"] != "insufficient_evidence" or not self.state.evidence:
             return False
         if any(row.get("error") == "insufficient_evidence_needs_review" for row in self.state.decisions):
             return False
@@ -376,7 +406,17 @@ class ResearchAgent:
             return self._stop(code)
         if self._elapsed() >= self.tools.task.limits.max_runtime_seconds:
             return self._stop("runtime_budget_exhausted")
-        if self.state.no_progress >= self.config.max_no_progress:
+        if self.state.answer_phase and action["tool"] == "verify_citations":
+            if result["success"]:
+                checked = self._checked_answer()
+                reason = "insufficient_evidence" if checked["insufficient_evidence"] else "sufficient_evidence"
+                return self._stop(reason, "已生成并校验回答。")
+            self.state.decisions[-1]["error"] = "answer_validation_failed"
+            if sum(row.get("error") == "answer_validation_failed" for row in self.state.decisions) >= self.config.max_invalid_decisions:
+                return self._stop("invalid_decision_limit", "回答引用校验持续失败，已停止。")
+        if self._can_start_answer() and self.state.no_progress >= max(1, self.config.max_no_progress - 1):
+            self._require_answer("no_progress")
+        if self.state.no_progress >= self.config.max_no_progress and not self.state.answer_phase:
             return self._stop("no_progress")
         self.state.status = "ready"
         self._save()
@@ -402,10 +442,21 @@ class ResearchAgent:
             return self._stop("step_budget_exhausted")
         if self.tools.limits()["tool_calls"] >= self.tools.task.limits.max_tool_calls:
             return self._stop("tool_budget_exhausted")
+        if self._can_start_answer():
+            if self.config.max_steps - self.state.steps <= 2:
+                self._require_answer("step_budget")
+            elif self.tools.task.limits.max_tool_calls - self.tools.limits()["tool_calls"] <= 1:
+                self._require_answer("tool_budget")
         try:
             estimate = self.policy.estimate(self.view())
             if not isinstance(estimate, ModelEstimate):
                 raise ValueError("Missing model reservation")
+            if self._can_start_answer() and not can_reserve(self.tools.task, self.config, self.state.usage,
+                    ModelEstimate(estimate.max_tokens * 2, estimate.max_cost_usd * 2)):
+                self._require_answer("model_budget")
+                estimate = self.policy.estimate(self.view())
+                if not isinstance(estimate, ModelEstimate):
+                    raise ValueError("Missing answer reservation")
         except DecisionError as error:
             self.state.last_error = _redact({"code": error.code, "message": str(error)[:1200]})
             return self._stop(error.code)
@@ -458,6 +509,8 @@ class ResearchAgent:
         self.state.last_error = None
         self.state.decisions.append({"step": self.state.steps, "decision": _redact(action)})
         self._update_notes(action)
+        if self.state.answer_phase and not (action["kind"] == "tool" and action["tool"] == "verify_citations"):
+            return self._reject_non_answer(call_id)
         if action["kind"] == "finish":
             self.session.emit("tool_execution_start", turn=self.state.steps, call_id=call_id, tool="finish")
             if not self._can_finish(action):
@@ -470,6 +523,9 @@ class ResearchAgent:
         if self._repeats_successful_search(action):
             return self._reject_duplicate_search(call_id)
         if sum(row["action_key"] == key for row in self.state.observations) >= self.config.max_repeat_calls:
+            if self._can_start_answer():
+                self._require_answer("no_progress")
+                return self._reject_non_answer(call_id)
             self._tool_message(call_id, {"success": False, "data": None,
                                         "error": {"code": "repeated_action", "message": "Repeated action was not executed"}})
             return self._stop("repeated_action")

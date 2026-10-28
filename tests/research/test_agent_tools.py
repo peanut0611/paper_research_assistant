@@ -72,6 +72,22 @@ def test_seven_tools_form_metadata_fetch_ingest_retrieve_read_and_verify_pipelin
     assert checked["limits"]["after"]["downloaded_papers"] == 1
 
 
+def test_citation_failure_returns_source_bound_repair_then_requires_revalidation(tmp_path, sample_pdf):
+    runtime = tools(tmp_path, sample_pdf, seed=candidates())
+    acquire_and_ingest(runtime)
+    hits = runtime.call("search_documents", {"query": "Hybrid Retrieval", "method": "bm25"})
+    identifier = hits["data"]["results"][0]["evidence_id"]
+    args = {"answer": f"正文摘录 [{identifier}]", "insufficient_evidence": False,
+            "citations": [{"evidence_id": identifier, "quote": "A sentence not in this PDF"}]}
+    failed = runtime.call("verify_citations", args)
+    assert not failed["success"] and failed["error"]["code"] == "citation_validation_failed"
+    hint = failed["data"]["citation_errors"][0]
+    assert hint["evidence_id"] == identifier
+    assert hint["example_source_quote"] in runtime.evidence_records()[identifier]["text"]
+    args["citations"][0]["quote"] = hint["example_source_quote"]
+    assert runtime.call("verify_citations", args)["success"]
+
+
 @pytest.mark.parametrize("tool,arguments", [
     ("search_documents", {"query": "retrieval", "document_ids": ["arxiv--2401.00544--v2"]}),
     ("search_documents", {"query": "retrieval"}),

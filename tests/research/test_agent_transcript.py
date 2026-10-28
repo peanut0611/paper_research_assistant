@@ -88,6 +88,18 @@ def test_empty_literature_feedback_explicitly_reports_no_candidates():
     assert "Rewrite" in summary["next_action"] and "fetch_paper" not in summary["next_action"]
 
 
+def test_citation_repair_data_survives_tool_output_projection():
+    from datetime import datetime, timezone
+    session = AgentSession([], [], now=lambda: datetime.now(timezone.utc))
+    session.assistant("bad-quote", "research_action", envelope({"kind": "tool", "tool": "verify_citations",
+        "arguments": {"answer": "x [E1]", "citations": [{"evidence_id": "E1", "quote": "answer"}], "insufficient_evidence": False}}))
+    errors = [{"evidence_id": "E1", "example_source_quote": "an-swer", "reason": "quote_not_found"}]
+    session.tool_result("bad-quote", {"success": False, "error": {"code": "citation_validation_failed", "message": "Keep PDF hyphens"},
+        "data": {"citation_errors": errors, "invalid_citation_count": 1, "required_action": "verify_citations"}})
+    items, _ = convert_to_llm(session.messages)
+    assert json.loads(items[-1]["output"])["data_summary"]["citation_errors"] == errors
+
+
 def test_duplicate_search_returns_linked_correction_instead_of_executing_again(tmp_path):
     search = envelope({"kind": "tool", "tool": "search_literature", "arguments": {"query": "retrieval", "max_results": 3}})
     runner, client = controller(tmp_path, FakeClient([response(search), response(search), response()]))

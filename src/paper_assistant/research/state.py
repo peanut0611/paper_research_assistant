@@ -87,6 +87,7 @@ class AgentState:
     gaps: list = field(default_factory=list)
     tool_limits: dict = field(default_factory=dict)
     last_error: dict | None = None
+    answer_phase: str | None = None
 
     def to_dict(self) -> dict:
         return detached(asdict(self))
@@ -105,6 +106,8 @@ class AgentState:
         state = cls(**value["state"])
         if state.status not in ("ready", "running", "stopped"):
             raise ValueError("Invalid runner status")
+        if state.answer_phase not in (None, "no_progress", "step_budget", "tool_budget", "model_budget"):
+            raise ValueError("Invalid answer phase")
         for count in (state.steps, state.tool_event_count, state.no_progress, state.invalid_decisions, state.usage["tokens"], state.usage["calls"]):
             if type(count) is not int or count < 0:
                 raise ValueError("Invalid runner counters")

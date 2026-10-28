@@ -269,9 +269,14 @@ def test_evidence_review_is_bounded_and_survives_resume(tmp_path, sample_pdf):
 
 
 def test_review_does_not_override_last_available_step(tmp_path, sample_pdf):
-    result = runner(tmp_path, lambda view: finish() if view["evidence"] else normal_policy(view),
+    def choose(view):
+        if view["completion"].get("answer_required"):
+            return action("verify_citations", answer="当前证据不足以支持回答。", insufficient_evidence=True, citations=[])
+        return finish() if view["evidence"] else normal_policy(view)
+    result = runner(tmp_path, choose,
                     runtime=tools(tmp_path, sample_pdf), config=RunnerConfig(max_steps=5)).run()
     assert result["stop_reason"] == "insufficient_evidence" and result["steps"] == 5
+    assert result["observations"][-1]["tool"] == "verify_citations" and result["answer_phase"] == "step_budget"
     assert not any(row.get("error") == "insufficient_evidence_needs_review" for row in result["decisions"])
 
 

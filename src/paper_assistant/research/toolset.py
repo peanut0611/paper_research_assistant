@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
-from paper_assistant.research.citations import CitationEvidence, EvidenceSource, validate_answer
+from paper_assistant.research.citations import CitationEvidence, EvidenceSource, CitationQuoteError, validate_answer
 from paper_assistant.tools.arxiv.search import ArxivSearchClient, LiteratureSearchError, LiteratureSearchSession, PaperCandidate
 from paper_assistant.tools.arxiv.fetch import PaperFetchSession
 from paper_assistant.research.workspace import ResearchWorkspace, WorkspaceError
@@ -380,6 +380,10 @@ class ResearchTools:
                 evidence[identifier] = CitationEvidence(row["text"], (source,))
             try:
                 answer, insufficient, citations = validate_answer(_json(args).decode(), evidence)
+            except CitationQuoteError as error:
+                raise ToolError("citation_validation_failed", str(error), data={
+                    "citation_errors": error.errors[:3], "invalid_citation_count": len(error.errors),
+                    "required_action": "verify_citations"}) from error
             except ValueError as error:
                 raise ToolError("citation_validation_failed", str(error)) from error
             return {"valid": True, "answer": answer, "insufficient_evidence": insufficient,

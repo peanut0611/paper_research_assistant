@@ -228,6 +228,17 @@ def test_completion_correction_survives_smallest_context_projection(tmp_path):
     assert not projected["completion"]["can_finish_sufficient_evidence"]
 
 
+def test_citation_repair_survives_zero_history_projection(tmp_path):
+    runner, _ = controller(tmp_path)
+    view = runner.view()
+    errors = [{"evidence_id": "E1", "example_source_quote": "an-swer", "reason": "quote_not_found"}]
+    view["observations"] = [{"tool": "verify_citations", "arguments": {"answer": "x" * 12000},
+        "result": {"success": False, "error": {"code": "citation_validation_failed"},
+                   "data": {"citation_errors": errors, "invalid_citation_count": 1, "required_action": "verify_citations"}}}]
+    projected = _compact(view, history=0, minimal=True)
+    assert projected["observations"] == [] and projected["citation_repair"]["citation_errors"] == errors
+
+
 @pytest.mark.parametrize("heading", ["Abstract", "摘要"])
 def test_evidence_projection_skips_front_matter_and_keeps_literal_offsets(tmp_path, heading):
     runner, _ = controller(tmp_path)

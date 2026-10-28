@@ -88,7 +88,7 @@ def _strict(schema):
     return result
 
 
-def action_function(specs):
+def action_function(specs, *, allow_finish=True):
     """One native function with a nested discriminated action union."""
     branches = []
     for spec in specs:
@@ -96,9 +96,10 @@ def action_function(specs):
             "tool": {"type": "string", "enum": [spec["name"]]}, "arguments": _strict(spec["parameters"])})
         branch["description"] = spec["description"]
         branches.append(branch)
-    branches.append(_object({"kind": {"type": "string", "enum": ["finish"]},
-        "reason": {"type": "string", "enum": ["sufficient_evidence", "insufficient_evidence", "no_results"]},
-        "summary": {"type": "string", "maxLength": 4000}}))
+    if allow_finish:
+        branches.append(_object({"kind": {"type": "string", "enum": ["finish"]},
+            "reason": {"type": "string", "enum": ["sufficient_evidence", "insufficient_evidence", "no_results"]},
+            "summary": {"type": "string", "maxLength": 4000}}))
     selection = _object({"arxiv_id": {"type": "string"}, "selected": {"type": "boolean"},
                          "reason": {"type": "string", "minLength": 1, "maxLength": 1000}})
     return {"type": "function", "name": "research_action", "strict": True,
@@ -158,7 +159,7 @@ def convert_to_llm(messages, *, history=1, result_chars=800):
     for call, result in selected:
         raw = result["result"]
         data = raw.get("data") or {}
-        summary = {key: data[key] for key in ("status", "document_id", "required_action", "valid", "insufficient_evidence", "reason", "answer_kind", "reference_scope") if key in data}
+        summary = {key: data[key] for key in ("status", "document_id", "required_action", "valid", "insufficient_evidence", "reason", "answer_kind", "reference_scope", "citation_errors", "invalid_citation_count") if key in data}
         if data.get("answer_kind") == "bibliography":
             summary["reference_document_ids"] = [row["document_id"] for row in data.get("references", [])]
         if "answer" in data:
@@ -189,7 +190,7 @@ class OpenAIDecisionPolicy:
         self._prepared = None
         # Changes to configuration, instructions or recorded rates cannot silently resume.
         self.policy_id = "openai-research-v1:" + digest({"config": asdict(self.config), "instructions": self.instructions,
-            "rates": RATES, "price_checked_at": PRICE_CHECKED_AT, "context_projection_version": 6})
+            "rates": RATES, "price_checked_at": PRICE_CHECKED_AT, "context_projection_version": 8})
 
     def _count(self, request):
         # Byte-level tokenizers cannot need more text tokens than UTF-8 bytes.
@@ -201,12 +202,16 @@ class OpenAIDecisionPolicy:
 
     def _request(self, view, **compact_options):
         projected = _redact(_compact(view, **compact_options))
+        specs = view["tool_specs"]
+        if view.get("completion", {}).get("answer_required"):
+            specs = [spec for spec in specs if spec["name"] == "verify_citations"]
         exchanges, omitted = convert_to_llm(view.get("messages", []), history=1,
                                             result_chars=compact_options.get("evidence_chars", 800))
         projected["omitted_tool_exchanges"] = omitted
         return {"model": self.config.model, "instructions": self.instructions,
             "input": [{"role": "user", "content": json_bytes(projected).decode()}, *exchanges],
-            "tools": [action_function(view["tool_specs"])], "tool_choice": {"type": "function", "name": "research_action"},
+            "tools": [action_function(specs, allow_finish=not view.get("completion", {}).get("answer_required"))],
+            "tool_choice": {"type": "function", "name": "research_action"},
             "parallel_tool_calls": False, "reasoning": {"effort": "none"}, "max_output_tokens": self.config.max_output_tokens,
             "store": False, "service_tier": "default", "truncation": "disabled"}
 

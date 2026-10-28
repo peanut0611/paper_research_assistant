@@ -77,7 +77,7 @@ def _compact(view, *, abstracts=1200, evidence_chars=1400, evidence_count=6, not
     for row in (view["observations"][-history:] if history else []):
         result = row["result"]
         data = result["data"] or {}
-        hint = _pick(data, ("status", "document_id", "required_action", "valid", "insufficient_evidence", "answer_kind", "reference_scope", "truncated", "next_page", "next_char_start"))
+        hint = _pick(data, ("status", "document_id", "required_action", "valid", "insufficient_evidence", "answer_kind", "reference_scope", "truncated", "next_page", "next_char_start", "citation_errors", "invalid_citation_count"))
         if row["tool"] == "search_literature" and result["success"]:
             hint.update(_literature_summary(data))
         arguments = detached(row["arguments"])
@@ -103,7 +103,7 @@ def _compact(view, *, abstracts=1200, evidence_chars=1400, evidence_count=6, not
             selections[identifier] = {"selected": row["selected"]}
         else:
             selections[identifier] = {**row, "reason": row["reason"][:notes], "reason_truncated": len(row["reason"]) > notes}
-    return {"task": view["binding"]["task"], "runner_limits": view["binding"]["config"], "tool_limits": view["tool_limits"],
+    projected = {"task": view["binding"]["task"], "runner_limits": view["binding"]["config"], "tool_limits": view["tool_limits"],
             "usage_so_far": view["usage"], "candidates": candidates, "evidence": evidence,
             "omitted_evidence_count": len(view["evidence"]) - len(evidence), "observations": observations,
             "queries": [{**row, "query": row["query"][:notes], "query_truncated": len(row["query"]) > notes} for row in (view["queries"][-history:] if history else [])],
@@ -114,6 +114,14 @@ def _compact(view, *, abstracts=1200, evidence_chars=1400, evidence_count=6, not
             "completion": view.get("completion", {}),
             "last_error": ({**view["last_error"], "message": view["last_error"].get("message", "")[:notes]}
                            if view.get("last_error") else None)}
+    # Large answer calls may be omitted as whole exchanges. Keep their repair
+    # feedback even when history=0, so the next answer can correct every quote.
+    latest = view["observations"][-1] if view["observations"] else None
+    if latest and latest["tool"] == "verify_citations" and not latest["result"]["success"]:
+        data = latest["result"]["data"] or {}
+        if data.get("citation_errors"):
+            projected["citation_repair"] = _pick(data, ("citation_errors", "invalid_citation_count", "required_action"))
+    return projected
 
 
 def _context_key(view):

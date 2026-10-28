@@ -2,6 +2,7 @@
 import json
 import re
 import unicodedata
+from difflib import SequenceMatcher
 from collections.abc import Mapping
 from dataclasses import dataclass
 
@@ -33,6 +34,24 @@ class ValidatedCitation:
     sources: tuple[EvidenceSource, ...]
 
 
+class CitationQuoteError(ValueError):
+    def __init__(self, errors):
+        self.errors = errors
+        super().__init__("Quotes absent from evidence: " + ", ".join(dict.fromkeys(row["evidence_id"] for row in errors))
+            + ". Copy exact source text, preserving PDF hyphens and punctuation; reconsider unsupported claims.")
+
+
+def _quote_hint(identifier, quote, text):
+    # This is a repair hint, never an alternate acceptance rule. Every example
+    # remains a literal span of the observed source and must be checked again.
+    match = SequenceMatcher(None, quote[:500], text, autojunk=False).find_longest_match()
+    start = max(0, match.b - match.a) if match.size else 0
+    end = text.find(". ", match.b + match.size)
+    end = min(len(text), start + 240, end + 1 if end >= start else len(text))
+    return {"evidence_id": identifier, "reason": "quote_not_found",
+            "example_source_quote": text[start:end], "example_is_not_claim_validation": True}
+
+
 def normalize_evidence(text: str) -> str:
     """Ignore Unicode variants and PDF whitespace, retaining punctuation."""
     return "".join(unicodedata.normalize("NFKC", text).split())
@@ -50,6 +69,7 @@ def validate_answer(raw_output: str, evidence: Mapping[str, CitationEvidence]) -
     if not isinstance(data["citations"], list):
         raise ValueError("citations must be an array")
     citations = []
+    quote_errors = []
     seen = set()
     mapping = evidence
     for item in data["citations"]:
@@ -62,11 +82,15 @@ def validate_answer(raw_output: str, evidence: Mapping[str, CitationEvidence]) -
             raise ValueError("Citation quote cannot be blank")
         normalized = normalize_evidence(quote)
         if normalized not in normalize_evidence(mapping[identifier].text):
-            raise ValueError("Citation quote is absent from its evidence text")
+            quote_errors.append(_quote_hint(identifier, quote, mapping[identifier].text) if len(quote_errors) < 3
+                                else {"evidence_id": identifier, "reason": "quote_not_found"})
+            continue
         if (identifier, normalized) in seen:
             raise ValueError("Duplicate citation")
         seen.add((identifier, normalized))
         citations.append(ValidatedCitation(identifier, quote, mapping[identifier].sources))
+    if quote_errors:
+        raise CitationQuoteError(quote_errors)
     inline = set(re.findall(r"\[(E[^\]]*)\]", answer))
     if inline != {citation.evidence_id for citation in citations}:
         raise ValueError("Inline evidence IDs and citation list do not agree")
