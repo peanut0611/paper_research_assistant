@@ -5,6 +5,7 @@ from paper_assistant.research.model import convert_to_llm
 from paper_assistant.research.state import AgentState
 from tests.research.test_agent_model import FakeClient, controller, envelope, response
 from tests.research.test_agent_runner import resumed
+from tests.research.test_agent_tools import tools
 
 
 def list_documents():
@@ -58,6 +59,47 @@ def test_conversion_drops_large_exchanges_as_pairs_and_ignores_pending_call():
     session.assistant("pending", "research_action", {})
     items, omitted = convert_to_llm(session.messages)
     assert items == [] and omitted == 1
+
+
+def test_successful_literature_feedback_reports_candidates_and_next_step(tmp_path):
+    search = envelope({"kind": "tool", "tool": "search_literature", "arguments": {"query": "retrieval"}})
+    runner, client = controller(tmp_path, FakeClient([response(search), response()]), runtime=tools(tmp_path))
+    runner.run()
+    request = client.calls[1]
+    output = json.loads(request["input"][-1]["output"])
+    summary = output["data_summary"]
+    context = json.loads(request["input"][0]["content"])
+    assert output["success"] and summary["candidate_count"] == 3
+    assert set(summary["candidate_ids"]) == {row["arxiv_id"] for row in context["candidates"]}
+    assert summary["candidate_details"] == "current_context.candidates"
+    assert "fetch_paper" in summary["next_action"] and "evidence_ids" not in summary
+    assert context["observations"][-1]["result_summary"]["candidate_count"] == 3
+
+
+def test_empty_literature_feedback_explicitly_reports_no_candidates():
+    from datetime import datetime, timezone
+    session = AgentSession([], [], now=lambda: datetime.now(timezone.utc))
+    session.assistant("search-empty", "research_action", envelope({
+        "kind": "tool", "tool": "search_literature", "arguments": {"query": "no match"}}))
+    session.tool_result("search-empty", {"success": True, "error": None, "data": {"candidates": []}})
+    items, _ = convert_to_llm(session.messages)
+    summary = json.loads(items[-1]["output"])["data_summary"]
+    assert summary["candidate_count"] == 0 and summary["candidate_ids"] == []
+    assert "Rewrite" in summary["next_action"] and "fetch_paper" not in summary["next_action"]
+
+
+def test_duplicate_search_returns_linked_correction_instead_of_executing_again(tmp_path):
+    search = envelope({"kind": "tool", "tool": "search_literature", "arguments": {"query": "retrieval", "max_results": 3}})
+    runner, client = controller(tmp_path, FakeClient([response(search), response(search), response()]))
+    result = runner.run()
+    request = client.calls[2]
+    exchange = request["input"][1:]
+    assert exchange[0]["call_id"] == exchange[1]["call_id"]
+    error = json.loads(exchange[1]["output"])["error"]
+    assert error["code"] == "duplicate_literature_search" and error["candidate_count"] == 3
+    assert "fetch" in error["message"]
+    assert json.loads(request["input"][0]["content"])["last_error"]["code"] == error["code"]
+    assert result["tool_event_count"] == result["tool_limits"]["search_rounds"] == 1
 
 
 def test_real_sdk_serializes_complete_exchanges_with_original_call_ids(tmp_path):

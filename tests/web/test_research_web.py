@@ -22,7 +22,10 @@ def test_start_accepts_key_from_project_env_without_environment_variable(jobs, m
     service, started, release, calls = jobs
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     (service.project_root / ".env").write_text("OPENAI_API_KEY=sk-local-dotenv-test", encoding="utf-8")
-    result = service.start(payload())
+    request = payload()
+    request.pop("max_cost_usd")
+    result = service.start(request)
+    assert result["job"]["request"]["max_cost_usd"] == .10
     assert started.wait(5)
     assert result["job"]["task_id"].startswith("web-")
     assert len(calls) == 1

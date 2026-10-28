@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.parametrize("command, expected", [
-    ([], "web"), (["web"], "--port"), (["research"], "--task-id"),
+    ([], "web"), (["web"], "--port"), (["research"], "--task-id"), (["chat"], "--turn-id"),
 ])
 def test_package_help_routes_without_starting_service_or_model(tmp_path, command, expected):
     root = Path(__file__).parents[1]

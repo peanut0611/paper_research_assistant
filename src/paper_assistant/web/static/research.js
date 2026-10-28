@@ -16,12 +16,12 @@
     repeated_action: "检测到重复动作，已停止", unverified_completion: "结束前未完成引用校验",
     model_context_too_large: "研究上下文达到本地长度上限，已停止；已下载 PDF 保留，但可能尚未入库"};
   let keyReady = false, available = false, active = false, submitting = false, jobId = null, latest = null, timer = null;
-  let answerSignature = "", candidatesSignature = "";
-  const inputIds = ["research-topic", "research-start", "research-end", "research-questions", "research-source", "research-papers", "research-budget", "research-example"];
+  let answerSignature = "", candidatesSignature = "", discussionBusy = false;
+  const inputIds = ["research-topic", "research-start", "research-end", "research-questions", "research-source", "research-papers", "research-example"];
   function controls() {
-    get("research-submit").disabled = !keyReady || active || submitting;
+    get("research-submit").disabled = !keyReady || active || submitting || discussionBusy;
     get("research-submit").textContent = submitting ? "正在启动…" : active ? "研究进行中…" : "开始研究";
-    inputIds.forEach(id => { get(id).disabled = active || submitting; });
+    inputIds.forEach(id => { get(id).disabled = active || submitting || discussionBusy; });
     get("research-stop").disabled = !active || submitting || latest?.job.stop_requested;
     get("research-stop").hidden = !active;
     get("research-download").disabled = !latest;
@@ -38,11 +38,10 @@
   }
   function sourceNote() {
     const cached = get("research-source").value === "cached_example";
-    const budget = Number(get("research-budget").value);
-    get("research-settings-summary").textContent = `${cached ? "缓存示例" : "联网发现"} · 预算 $${Number.isFinite(budget) ? budget.toFixed(2) : "—"}`;
+    get("research-settings-summary").textContent = cached ? "缓存示例" : "联网发现";
     get("research-source-note").textContent = cached
-      ? "使用本机已有候选与 PDF 缓存；缺少的全文可能不可用。模型仍按调用计费，预算中预留 $0.02。"
-      : "从 arXiv 搜索并获取论文。模型按调用计费，预算中预留 $0.02。";
+      ? "使用本机已有候选与 PDF 缓存；缺少的全文可能不可用。"
+      : "从 arXiv 搜索并获取论文。";
   }
   function evidence(data) {
     const checked = data.state?.evidence_answer;
@@ -92,7 +91,7 @@
       const saved = data.job.request;
       get("research-topic").value = saved.topic; get("research-start").value = saved.start_date; get("research-end").value = saved.end_date;
       get("research-questions").value = saved.questions.join("\n"); get("research-papers").value = String(saved.target_papers);
-      get("research-budget").value = String(saved.max_cost_usd); get("research-source").value = saved.source_mode; sourceNote();
+      get("research-source").value = saved.source_mode; sourceNote();
       get("research-editor").open = false;
     }
     get("research-result").hidden = false;
@@ -106,7 +105,7 @@
     const elapsed = active ? Math.max(0, Math.floor((Date.now() - Date.parse(data.job.created_at)) / 1000)) : Math.round(state?.elapsed_seconds || 0);
     get("research-metrics").replaceChildren(...[
       ["步骤", `${state?.steps || 0} / 12`], ["获取 PDF", `${limits.downloaded_papers || 0} / ${data.job.request.target_papers}`],
-      ["累计 token", String(usage.tokens)], ["估算费用", `$${Number(usage.cost_usd).toFixed(6)} / $${Number(data.job.request.max_cost_usd).toFixed(2)}`],
+      ["累计 token", String(usage.tokens)], ["估算费用", `$${Number(usage.cost_usd).toFixed(6)}`],
       ["耗时", `${elapsed} 秒`]
     ].map(([label, value]) => { const node = make("div", undefined, "metric"); node.append(make("span", label), make("strong", value)); return node; }));
     get("research-current").textContent = data.job.stop_requested && active ? "已请求停止。当前步骤可能仍在执行，结束后不再发起新步骤。"
@@ -129,6 +128,7 @@
     if (!data.events.length) get("research-events").append(make("li", "等待第一个工具动作…", "muted"));
     get("research-gaps").textContent = state?.gaps?.length ? `尚缺信息：${state.gaps.join("；")}` : "";
     evidence(data); candidates(data); controls();
+    globalThis.paperResearchView?.(data, {keyReady, setBusy(value) { discussionBusy = value; controls(); }});
   }
   async function poll() {
     clearTimeout(timer);
@@ -144,24 +144,22 @@
     }
   }
   get("research-source").addEventListener("change", sourceNote);
-  get("research-budget").addEventListener("input", sourceNote);
   get("research-form").addEventListener("invalid", event => {
     get("research-editor").open = true;
-    if (event.target?.id === "research-budget") get("research-settings").open = true;
   }, true);
   get("research-example").addEventListener("click", () => {
     get("research-topic").value = "retrieval augmented generation";
     get("research-start").value = "2023-01-01"; get("research-end").value = "2024-01-01";
     get("research-questions").value = "RAGTruth 如何构建和标注幻觉数据？";
-    get("research-papers").value = "1"; get("research-budget").value = "0.10";
+    get("research-papers").value = "1";
     get("research-source").value = available ? "cached_example" : "online"; sourceNote();
   });
   get("research-form").addEventListener("submit", async event => {
     event.preventDefault();
-    if (active || submitting || !keyReady) return;
+    if (active || submitting || discussionBusy || !keyReady) return;
     const questions = get("research-questions").value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
     const payload = {topic: get("research-topic").value.trim(), start_date: get("research-start").value, end_date: get("research-end").value,
-      questions, target_papers: Number(get("research-papers").value), max_cost_usd: Number(get("research-budget").value), source_mode: get("research-source").value};
+      questions, target_papers: Number(get("research-papers").value), source_mode: get("research-source").value};
     if (!payload.topic || payload.start_date >= payload.end_date || !questions.length || questions.length > 8 || questions.some(q => q.length > 1000)) {
       note("请填写主题、有效日期范围及 1–8 个问题，每个问题最多 1000 字。", true); return;
     }

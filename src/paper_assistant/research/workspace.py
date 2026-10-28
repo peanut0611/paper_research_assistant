@@ -121,7 +121,8 @@ class ResearchWorkspace:
     def __init__(self, task_id: str, task: ResearchTask, candidates: Sequence[PaperCandidate], *,
                  root: str | Path = DEFAULT_RESEARCH_ROOT, fetcher: PaperFetcher | None = None,
                  config: WorkspaceConfig | None = None, embedder_factory: Callable[[str], Any] | None = None,
-                 parser: Callable[[Path, WorkspaceConfig], ExtractedPDF] = parse_pdf_isolated) -> None:
+                 parser: Callable[[Path, WorkspaceConfig], ExtractedPDF] = parse_pdf_isolated,
+                 read_only: bool = False) -> None:
         if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", task_id):
             raise ValueError("task_id must contain 1..64 letters, digits, underscores or hyphens")
         if task_id.upper() in {"CON", "PRN", "AUX", "NUL", *(f"COM{i}" for i in range(1, 10)), *(f"LPT{i}" for i in range(1, 10))}:
@@ -131,6 +132,9 @@ class ResearchWorkspace:
         if not self.directory.resolve().is_relative_to(root):
             raise ValueError("Research task directory must stay within its workspace root")
         self.task, self.task_id = task, task_id
+        if type(read_only) is not bool:
+            raise ValueError("read_only must be boolean")
+        self.read_only = read_only
         self.config = config or WorkspaceConfig()
         self.fetcher = fetcher if fetcher is not None else PaperFetcher()
         # Reuse registration validation without fetching or spending any budget.
@@ -141,7 +145,11 @@ class ResearchWorkspace:
         self._identity = None
         self._parser = parser
         self._lock = threading.RLock()
-        self.directory.mkdir(parents=True, exist_ok=True)
+        if read_only:
+            if not self.directory.is_dir():
+                raise ValueError("No existing workspace to read")
+        else:
+            self.directory.mkdir(parents=True, exist_ok=True)
         self.manifest_path = self.directory / "workspace.json"
         contract = {"schema_version": 1, "task_id": task_id, "task": task.to_dict(),
                     "config": asdict(self.config), "processing": _processing_identity()}
@@ -151,12 +159,17 @@ class ResearchWorkspace:
                     or not isinstance(manifest.get("events"), list)
                     or "active_index" not in manifest or "embedding_identity" not in manifest):
                 raise ValueError("Invalid research workspace manifest")
-            if any(_bytes(manifest.get(key)) != _bytes(value) for key, value in contract.items()):
+            # Reading a verified immutable snapshot does not rerun its parser.
+            # Keep task/config/schema checks; only writers require identical code.
+            compared = {key: value for key, value in contract.items() if not read_only or key != "processing"}
+            if any(_bytes(manifest.get(key)) != _bytes(value) for key, value in compared.items()):
                 raise ValueError("Task/config/processing version changed; use a new task_id")
             if set(manifest["documents"]) - set(self._candidates):
                 raise ValueError("Resume must include all previously registered candidates")
             self._manifest = manifest
         else:
+            if read_only:
+                raise ValueError("No workspace manifest to read")
             self._manifest = {**contract, "embedding_identity": None, "documents": {}, "active_index": None, "events": []}
         documents = dict(self._manifest["documents"])
         for candidate in candidates:
@@ -169,6 +182,8 @@ class ResearchWorkspace:
                 if record["document_id"] != document_id or record["version"] != candidate.version or record["arxiv_id"] != candidate.arxiv_id:
                     raise ValueError("Candidate version changed; use a new task_id")
                 continue
+            if read_only:
+                raise ValueError("Read-only workspace cannot register new candidates")
             documents[candidate.arxiv_id] = {
                 "arxiv_id": candidate.arxiv_id, "version": candidate.version, "document_id": document_id,
                 "title": candidate.title, "abstract": candidate.abstract, "authors": list(candidate.authors),
@@ -179,17 +194,23 @@ class ResearchWorkspace:
                 "source_sha256": None, "source": None, "page_count": None, "blank_pages": [],
                 "warnings": [], "artifact": None, "build_id": None, "last_error": None,
             }
-        self._commit(documents=documents)
+        if not read_only:
+            self._commit(documents=documents)
         if self._manifest["active_index"] is not None:
             self._load_active()
 
     def _commit(self, **changes) -> None:
+        self._require_writable()
         manifest = {**self._manifest, **changes}
         content = _bytes(manifest)
         atomic_write_bytes(self.manifest_path, content)
         # Detach from in-flight row dictionaries. A later row.update must not
         # make an uncommitted document appear ready in the active manifest.
         self._manifest = json.loads(content)
+
+    def _require_writable(self):
+        if self.read_only:
+            raise WorkspaceError("read_only_workspace", "This workspace is open for reading only")
 
     def _path(self, relative: str) -> Path:
         if not isinstance(relative, str) or Path(relative).is_absolute():
@@ -209,7 +230,11 @@ class ResearchWorkspace:
                 raise WorkspaceError("embedding_config_mismatch", "Embedder must provide a stable checkpoint/tokenizer identity")
             if self._manifest["embedding_identity"] is not None and _bytes(identity) != _bytes(self._manifest["embedding_identity"]):
                 raise WorkspaceError("embedding_config_mismatch", "Resolved model/tokenizer changed; use a new task_id")
-            self._commit(embedding_identity=identity)
+            if self.read_only:
+                if self._manifest["embedding_identity"] is None:
+                    raise WorkspaceError("embedding_config_mismatch", "Read-only index has no bound embedding identity")
+            else:
+                self._commit(embedding_identity=identity)
             self._embedder, self._identity = embedder, identity
         return self._embedder
 
@@ -244,6 +269,7 @@ class ResearchWorkspace:
 
     def register_candidates(self, candidates: Sequence[PaperCandidate]) -> None:
         """Trusted coordinator entry point, deliberately absent from model tools."""
+        self._require_writable()
         with self._lock:
             pending = {**self._candidates}
             for candidate in candidates:
@@ -274,6 +300,7 @@ class ResearchWorkspace:
 
     def record_fetch_result(self, result: FetchResult) -> None:
         """Record the task fetch session's observation without claiming parsing."""
+        self._require_writable()
         with self._lock:
             if result.arxiv_id not in self._candidates or result.version != self._candidates[result.arxiv_id].version:
                 raise ValueError("Fetch result is outside the registered task")
@@ -357,6 +384,7 @@ class ResearchWorkspace:
         return self._publish_index(combined, pages, sources, "indexes")
 
     def ingest_paper(self, arxiv_id: str) -> dict:
+        self._require_writable()
         with self._lock:
             if not isinstance(arxiv_id, str) or arxiv_id not in self._candidates:
                 raise ValueError("Unknown candidate ID")

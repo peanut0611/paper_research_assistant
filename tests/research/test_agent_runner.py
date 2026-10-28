@@ -113,6 +113,56 @@ def test_exact_repeats_stop_without_third_side_effect(tmp_path):
     assert result["stop_reason"] == "repeated_action" and result["tool_event_count"] == 2
 
 
+def test_duplicate_literature_search_can_be_corrected_without_spending_search_round(tmp_path, sample_pdf):
+    def choose(view):
+        if len(view["observations"]) == 1 and not view["last_error"]:
+            return action("search_literature", query="  RETRIEVAL   augmented generation ", max_results=3,
+                          sort_by="submittedDate")
+        return normal_policy(view)
+    controller = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf))
+    result = controller.run()
+    assert result["stop_reason"] == "sufficient_evidence"
+    assert result["tool_limits"]["search_rounds"] == 1 and result["tool_event_count"] == 5
+    assert sum(row.get("error") == "duplicate_literature_search" for row in result["decisions"]) == 1
+    assert result["steps"] == result["usage"]["calls"] == 7
+
+
+def test_duplicate_search_correction_limit_survives_resume(tmp_path):
+    controller = runner(tmp_path, lambda view: action("search_literature", query="retrieval", max_results=3))
+    first = controller.run(max_steps_per_run=2)
+    assert first["status"] == "ready" and first["pending"] is None
+    assert first["last_error"]["code"] == "duplicate_literature_search"
+    assert len(first["last_error"]["candidate_ids"]) == 3
+    result = resumed(controller).run()
+    assert result["stop_reason"] == "repeated_action" and result["last_error"]["code"] == "duplicate_literature_search"
+    assert result["tool_event_count"] == result["tool_limits"]["search_rounds"] == 1
+    assert result["steps"] == result["usage"]["calls"] == 3
+
+
+def test_duplicate_correction_cannot_bypass_step_budget(tmp_path):
+    controller = runner(tmp_path, lambda view: action("search_literature", query="retrieval", max_results=3),
+                        config=RunnerConfig(max_steps=2))
+    result = controller.run()
+    assert result["stop_reason"] == "step_budget_exhausted"
+    assert result["usage"]["calls"] == 2 and result["tool_limits"]["search_rounds"] == 1
+
+
+@pytest.mark.parametrize("change", ["query", "sort", "count"])
+def test_literature_search_with_changed_scope_remains_available(tmp_path, change):
+    first = {"query": "retrieval", "max_results": 2, "sort_by": "submittedDate"}
+    second = {**first, **{"query": {"query": "hallucination"}, "sort": {"sort_by": "relevance"},
+                         "count": {"max_results": 3}}[change]}
+    def choose(view):
+        if len(view["observations"]) < 2:
+            return action("search_literature", **(first if not view["observations"] else second))
+        return finish()
+    responses = [HTTPResponse(200, "application/xml", LIVE.read_bytes()) for _ in range(2)]
+    result = runner(tmp_path, choose, runtime=tools(tmp_path, search_responses=responses)).run()
+    assert result["stop_reason"] == "insufficient_evidence"
+    assert result["tool_limits"]["search_rounds"] == 2 and result["tool_event_count"] == 2
+    assert not any(row.get("error") == "duplicate_literature_search" for row in result["decisions"])
+
+
 def test_different_empty_retrievals_stop_for_no_progress(tmp_path):
     result = runner(tmp_path, lambda view: action("search_documents", query=f"missing {view['steps']}", method="bm25")).run()
     assert result["stop_reason"] == "no_progress" and result["tool_limits"]["local_searches"] == 3
@@ -185,6 +235,60 @@ def test_tool_parameters_cannot_expand_task_or_read_arbitrary_path(tmp_path):
 def test_finish_requires_checked_actual_evidence_for_sufficient_flag(tmp_path):
     assert runner(tmp_path / "a", lambda view: finish("sufficient_evidence")).run()["stop_reason"] == "unverified_completion"
     assert runner(tmp_path / "b", lambda view: finish()).run()["stop_reason"] == "insufficient_evidence"
+
+
+def test_insufficient_after_first_retrieval_can_read_pages_and_validate_new_answer(tmp_path, sample_pdf):
+    def choose(view):
+        if not view["evidence"]:
+            return normal_policy(view)
+        if (view["last_error"] or {}).get("code") == "insufficient_evidence_needs_review":
+            return action("read_pages", **view["last_error"]["suggested_arguments"])
+        read = any(row["tool"] == "read_pages" for row in view["observations"])
+        checked = [row for row in view["observations"] if row["tool"] == "verify_citations"]
+        if not checked or (read and checked[-1]["result"]["data"]["insufficient_evidence"]):
+            identifier, evidence = list(view["evidence"].items())[-1]
+            return action("verify_citations", answer=f"Supported excerpt [{identifier}]", insufficient_evidence=not read,
+                          citations=[{"evidence_id": identifier, "quote": evidence["text"][:10]}])
+        return finish("sufficient_evidence" if read else "insufficient_evidence")
+    controller = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf))
+    result = controller.run()
+    assert result["stop_reason"] == "sufficient_evidence"
+    assert sum(row.get("error") == "insufficient_evidence_needs_review" for row in result["decisions"]) == 1
+    assert any(row["tool"] == "read_pages" and row["result"]["success"] for row in result["observations"])
+    assert controller.view()["completion"]["can_finish_sufficient_evidence"]
+
+
+def test_evidence_review_is_bounded_and_survives_resume(tmp_path, sample_pdf):
+    controller = runner(tmp_path, lambda view: finish() if view["evidence"] else normal_policy(view),
+                        runtime=tools(tmp_path, sample_pdf))
+    first = controller.run(max_steps_per_run=5)
+    assert first["status"] == "ready" and first["last_error"]["code"] == "insufficient_evidence_needs_review"
+    result = resumed(controller).run()
+    assert result["stop_reason"] == "insufficient_evidence" and result["steps"] == 6
+    assert result["tool_event_count"] == 4
+
+
+def test_review_does_not_override_last_available_step(tmp_path, sample_pdf):
+    result = runner(tmp_path, lambda view: finish() if view["evidence"] else normal_policy(view),
+                    runtime=tools(tmp_path, sample_pdf), config=RunnerConfig(max_steps=5)).run()
+    assert result["stop_reason"] == "insufficient_evidence" and result["steps"] == 5
+    assert not any(row.get("error") == "insufficient_evidence_needs_review" for row in result["decisions"])
+
+
+@pytest.mark.parametrize("review", ["read_pages", "changed_query"])
+def test_existing_evidence_review_allows_honest_insufficient_finish(tmp_path, sample_pdf, review):
+    def choose(view):
+        if not view["evidence"]:
+            return normal_policy(view)
+        if review == "read_pages" and not any(row["tool"] == "read_pages" for row in view["observations"]):
+            source = next(iter(view["evidence"].values()))
+            return action("read_pages", document_id=source["source"]["document_id"], start_page=source["page_number"])
+        if review == "changed_query" and view["tool_limits"]["local_searches"] == 1:
+            return action("search_documents", query="retrieval method comparison", method="bm25")
+        return finish()
+    result = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf)).run()
+    assert result["stop_reason"] == "insufficient_evidence"
+    assert not any(row.get("error") == "insufficient_evidence_needs_review" for row in result["decisions"])
 
 
 def test_premature_finish_can_be_corrected_by_real_citation_validation(tmp_path, sample_pdf):

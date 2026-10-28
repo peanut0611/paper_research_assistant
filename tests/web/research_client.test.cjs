@@ -34,7 +34,7 @@ async function setup(fetch, stored = null) {
   const html = fs.readFileSync(path.join(__dirname, '../../src/paper_assistant/web/static/index.html'), 'utf8');
   const ids = [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
   const nodes = Object.fromEntries(ids.map(id => [id, new Element()]));
-  nodes['research-source'].value = 'online'; nodes['research-papers'].value = '1'; nodes['research-budget'].value = '.1';
+  nodes['research-source'].value = 'online'; nodes['research-papers'].value = '1';
   const timers = new Map(); let sequence = 0;
   const storage = new Map(stored ? [['paper-assistant-research-job', stored]] : []);
   const context = vm.createContext({document: {getElementById: id => nodes[id], createElement: tag => new Element(tag)}, fetch,
@@ -65,7 +65,8 @@ test('example only fills inputs; explicit submit starts exactly one job and poll
   const pending = n['research-form'].requestSubmit();
   assert.equal(n['research-submit'].disabled, true);
   await n['research-form'].requestSubmit(); assert.equal(calls.length, 2);
-  assert.deepEqual(JSON.parse(calls[1].options.body), settings);
+  const {max_cost_usd, ...formSettings} = settings;
+  assert.deepEqual(JSON.parse(calls[1].options.body), formSettings);
   finish(reply(snapshot())); await pending;
   assert.equal(app.storage.get('paper-assistant-research-job'), id);
   await app.tick();

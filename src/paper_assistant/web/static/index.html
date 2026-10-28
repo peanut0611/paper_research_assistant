@@ -6,6 +6,7 @@
   <title>Paper Assistant · 文献研究</title>
   <link rel="stylesheet" href="/style.css">
   <script src="/research.js" defer></script>
+  <script src="/conversation.js" defer></script>
 </head>
 <body>
   <header class="app-header">
@@ -34,10 +35,9 @@
           <div><label for="research-papers">研究篇数</label><select id="research-papers"><option value="1">最多 1 篇</option><option value="2">最多 2 篇</option><option value="3">最多 3 篇</option></select></div>
         </div>
         <details class="settings" id="research-settings">
-          <summary>更多设置 <span id="research-settings-summary" class="summary-note">联网发现 · 预算 $0.10</span></summary>
+          <summary>文献来源 <span id="research-settings-summary" class="summary-note">联网发现</span></summary>
           <div class="form-grid">
             <div><label for="research-source">文献来源</label><select id="research-source"><option value="online">联网发现 · arXiv</option><option id="research-cache-option" value="cached_example" disabled>缓存示例 · RAGTruth</option></select></div>
-            <div><label for="research-budget">任务预算 · 美元</label><input id="research-budget" type="number" value="0.10" min="0.03" max="0.10" step="0.01" required></div>
           </div>
           <p id="research-source-note" class="muted">从 arXiv 获取论文；模型按调用计费。</p>
         </details>
@@ -51,6 +51,27 @@
         <div class="run-actions"><button id="research-stop" type="button" class="secondary" disabled>停止研究</button><button id="research-reconnect" type="button" class="secondary" hidden>重新连接</button><button id="research-download" type="button" class="text-button" disabled>下载结果</button></div>
         <p id="research-error" class="error" hidden></p>
         <div class="answer-card"><h3>回答</h3><div id="research-answer" class="answer">回答将在完成引用核对后显示。</div><div id="research-citations"></div></div>
+        <section id="conversation-panel" class="conversation" hidden aria-label="继续讨论当前论文">
+          <div class="section-heading"><h3>继续讨论</h3><button id="conversation-refresh" type="button" class="text-button">重新连接</button></div>
+          <div class="conversation-toolbar">
+            <label for="conversation-select" class="sr-only">选择对话</label><select id="conversation-select" aria-label="选择对话"></select>
+            <button id="conversation-new" type="button" class="secondary" disabled>新建对话</button>
+            <button id="conversation-reset" type="button" class="text-button" disabled>重置当前对话</button>
+          </div>
+          <p class="muted">围绕本任务已入库的论文追问，可补检索和读页；不会添加新论文。</p>
+          <p class="muted">新建后可切换回旧对话；重置清空当前追问上下文。原研究结果、历史记录和本任务累计费用保留。</p>
+          <p id="conversation-status" role="status" aria-live="polite"></p>
+          <p id="conversation-usage" class="muted"></p>
+          <div id="conversation-messages" class="conversation-messages" aria-live="polite"></div>
+          <form id="conversation-form" class="conversation-form">
+            <label for="conversation-question">继续提问</label>
+            <textarea id="conversation-question" rows="3" maxlength="1000" placeholder="例如：刚才提到的方法有哪些局限？论文中的实验能否支持这个结论？" required></textarea>
+            <div class="composer-footer">
+              <span class="muted">基于当前论文继续讨论</span>
+              <div class="run-actions"><button id="conversation-stop" class="secondary" type="button" hidden>停止追问</button><button id="conversation-submit" type="submit" disabled>发送追问</button></div>
+            </div>
+          </form>
+        </section>
         <details class="result-section">
           <summary>参考论文</summary>
           <div id="research-candidates" class="muted">尚未发现候选。</div>

@@ -20,6 +20,7 @@ from paper_assistant.tools.arxiv.fetch import load_search_candidates
 from paper_assistant.research.task import ResearchLimits, ResearchTask
 from paper_assistant.storage import atomic_write_bytes
 from paper_assistant.config import get_openai_api_key, valid_api_key_format
+from paper_assistant.research.conversation import ConversationStore
 
 
 JOB_ID = re.compile(r"web-[0-9]{8}T[0-9]{6}-[a-f0-9]{12}")
@@ -66,6 +67,8 @@ class ResearchJobService:
         self._execute = execute or self._run_process
         self._jobs = {}
         self._workers = {}
+        self._chat_active = {}
+        self._chat_workers = {}
         self._lock = threading.RLock()
         self._closing = False
 
@@ -90,14 +93,16 @@ class ResearchJobService:
             pass
         with self._lock:
             active_id = next((task_id for task_id, job in self._jobs.items() if job["status"] in ACTIVE), None)
+            active_id = active_id or next(iter(self._chat_active), None)
         return {"key_ready": key_ready, "busy": self.work_lock.locked(), "active_job_id": active_id,
                 "cached_example_ready": cached, "model": "gpt-5.4-mini", "max_cost_usd": 0.10,
                 "report_reserve_usd": 0.02, "max_runtime_seconds": 300}
 
     def _validate(self, payload):
         allowed = {"topic", "start_date", "end_date", "questions", "target_papers", "max_cost_usd", "source_mode"}
-        if not isinstance(payload, dict) or set(payload) != allowed:
-            raise WebResearchError("请填写主题、UTC 日期范围、研究问题、篇数和预算。")
+        required = allowed - {"max_cost_usd"}
+        if not isinstance(payload, dict) or set(payload) - allowed or not required <= set(payload):
+            raise WebResearchError("请填写主题、UTC 日期范围、研究问题和篇数。")
         if not isinstance(payload["questions"], list):
             raise WebResearchError("研究问题格式无效。")
         mode = payload["source_mode"]
@@ -110,7 +115,7 @@ class ResearchJobService:
                 if not isinstance(raw, str) or re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw) is None:
                     raise ValueError("Invalid date")
                 dates.append(datetime.strptime(raw, "%Y-%m-%d").replace(tzinfo=timezone.utc))
-            limits = ResearchLimits(max_model_cost_usd=payload["max_cost_usd"])
+            limits = ResearchLimits(max_model_cost_usd=payload.get("max_cost_usd", .10))
             if limits.max_model_cost_usd > 0.10:
                 raise ValueError("Web budget is limited to 0.10 USD")
             task = ResearchTask(payload["topic"], tuple(payload["questions"]), *dates,
@@ -136,7 +141,8 @@ class ResearchJobService:
                 raise WebResearchError("已有研究任务正在处理，请等待完成。", 409)
             task_id = "web-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:12]
             job = {"task_id": task_id, "status": "queued", "created_at": _now(), "finished_at": None,
-                   "stop_requested": False, "error": None, "request": json.loads(json.dumps(payload))}
+                   "stop_requested": False, "error": None,
+                   "request": json.loads(json.dumps({**payload, "max_cost_usd": task.limits.max_model_cost_usd}))}
             try:
                 directory = self._directory(task_id)
                 directory.mkdir(parents=True, exist_ok=False)
@@ -252,3 +258,99 @@ class ResearchJobService:
             for task_id, job in self._jobs.items():
                 if job["status"] in ACTIVE:
                     self.stop(task_id)
+            for task_id in list(self._chat_active):
+                self.stop_conversation(task_id)
+
+    def conversation(self, task_id):
+        with self._lock:
+            job = self._job(task_id)
+            directory = self._directory(task_id)
+            try:
+                store = ConversationStore(directory)
+                snapshot = store.snapshot(self._chat_active.get(task_id))
+                state = AgentState.load(directory / "runner_state.json")
+                manifest = _read_json(directory / "workspace.json")
+                ready = (job["status"] not in ACTIVE and state.status == "stopped"
+                         and bool(manifest.get("active_index")))
+                snapshot.update(available=ready, reason="" if ready else "请先完成研究并成功入库至少一篇论文。")
+                return snapshot
+            except (OSError, ValueError, KeyError, TypeError):
+                raise WebResearchError("当前任务还没有可用的对话资料，请先完成研究并成功入库。", 409) from None
+
+    def ask(self, task_id, payload):
+        if isinstance(payload, dict):
+            payload = {"max_cost_usd": .05, **payload}
+        with self._lock:
+            self._job(task_id)
+            store = ConversationStore(self._directory(task_id))
+            try:
+                store.validate(payload)
+                if store.existing(payload):
+                    return self.conversation(task_id)
+            except ValueError as error:
+                raise WebResearchError(str(error)) from None
+            if not self.conversation(task_id)["available"]:
+                raise WebResearchError("请先完成研究并成功入库，之后才能继续讨论。", 409)
+            if not valid_api_key_format(get_openai_api_key(self.project_root)):
+                raise WebResearchError("请先在 .env 配置 OPENAI_API_KEY。")
+            if self._closing or not self.work_lock.acquire(blocking=False):
+                raise WebResearchError("已有研究或追问正在执行，请等待完成。", 409)
+            try:
+                turn = store.begin(payload)
+                self._chat_active[task_id] = turn["id"]
+                worker = threading.Thread(target=self._chat_worker, args=(task_id, turn["id"]), daemon=True,
+                                          name="paper-discussion-" + turn["id"])
+                self._chat_workers[turn["id"]] = worker
+                worker.start()
+            except ValueError as error:
+                self._chat_active.pop(task_id, None)
+                self.work_lock.release()
+                raise WebResearchError(str(error)) from None
+            except Exception:
+                self._chat_active.pop(task_id, None)
+                self.work_lock.release()
+                raise
+            return self.conversation(task_id)
+
+    def _chat_worker(self, task_id, identifier):
+        store = ConversationStore(self._directory(task_id))
+        try:
+            with self._lock:
+                store.update(identifier, status="running")
+            command = [sys.executable, "-m", "paper_assistant", "chat", "--task-id", task_id,
+                       "--turn-id", identifier, "--root", str(self.root)]
+            code = self._execute(command, store.turn_directory(identifier))
+            with self._lock:
+                store.update(identifier, status="finished" if code == 0 else "failed", finished_at=_now(),
+                             error=None if code == 0 else "本轮未正常完成，请查看停止原因；不会自动重试。")
+        except Exception:
+            with self._lock:
+                store.update(identifier, status="failed", error="无法完成本轮讨论；不会自动重试。", finished_at=_now())
+        finally:
+            with self._lock:
+                self._chat_active.pop(task_id, None)
+                self.work_lock.release()
+
+    def stop_conversation(self, task_id):
+        with self._lock:
+            self._job(task_id)
+            identifier = self._chat_active.get(task_id)
+            if identifier:
+                store = ConversationStore(self._directory(task_id))
+                atomic_write_bytes(store.turn_directory(identifier) / "stop.request", b"stop after current step\n")
+                store.update(identifier, status="stopping")
+            return self.conversation(task_id)
+
+    def manage_conversation(self, task_id, action, payload):
+        with self._lock:
+            job = self._job(task_id)
+            if job["status"] in ACTIVE or self._closing or not self.work_lock.acquire(blocking=False):
+                raise WebResearchError("请先等待当前研究或追问结束，再新建、重置或切换对话。", 409)
+            try:
+                self.conversation(task_id)
+                ConversationStore(self._directory(task_id)).manage(action, payload)
+                return self.conversation(task_id)
+            except ValueError as error:
+                raise WebResearchError(str(error)) from None
+            finally:
+                self.work_lock.release()

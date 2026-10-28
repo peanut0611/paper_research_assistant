@@ -228,6 +228,71 @@ def test_completion_correction_survives_smallest_context_projection(tmp_path):
     assert not projected["completion"]["can_finish_sufficient_evidence"]
 
 
+@pytest.mark.parametrize("heading", ["Abstract", "摘要"])
+def test_evidence_projection_skips_front_matter_and_keeps_literal_offsets(tmp_path, heading):
+    runner, _ = controller(tmp_path)
+    view = runner.view()
+    header = "Paper title, authors and contact addresses. " * 5
+    text = header + heading + " We study retrieval failures and compare two detection methods. " * 30
+    view["evidence"] = {"E1": {"text": text, "source": {"document_id": "doc"},
+        "page_number": 1, "char_start": 0, "char_end": len(text)}}
+    before = digest(view)
+    row = _compact(view, evidence_chars=900)["evidence"][0]
+    assert row["text"].startswith(heading) and len(row["text"]) == 900
+    assert text[row["char_start"]:row["char_end"]] == row["text"]
+    assert row["text_truncated"] and digest(view) == before
+
+
+def test_method_window_offsets_are_relative_to_original_page(tmp_path):
+    runner, _ = controller(tmp_path)
+    view = runner.view()
+    view["binding"]["task"]["research_questions"] = ["What method does this paper propose?"]
+    text = "Earlier discussion. " * 100 + "2 Method We compare retrieval depths. " * 20
+    view["evidence"] = {"E1": {"text": text, "source": {"document_id": "doc"},
+        "page_number": 2, "char_start": 350, "char_end": 350 + len(text)}}
+    row = _compact(view, evidence_chars=900)["evidence"][0]
+    assert "2 Method" in row["text"] and len(row["text"]) == 900
+    assert text[row["char_start"] - 350:row["char_end"] - 350] == row["text"]
+    view["binding"]["task"]["research_questions"] = ["Describe the earlier discussion."]
+    assert _compact(view, evidence_chars=900)["evidence"][0]["char_start"] == 350
+
+
+def test_zero_history_omits_notes_but_preserves_latest_tool_exchange(tmp_path):
+    runner, _ = controller(tmp_path, FakeClient([response(envelope({
+        "kind": "tool", "tool": "list_documents", "arguments": {}}))]))
+    runner.run(max_steps_per_run=1)
+    view = runner.view()
+    view["queries"] = [{"query": "old query"}]
+    request = runner.policy._request(view, history=0, minimal=True)
+    prompt = json.loads(request["input"][0]["content"])
+    assert prompt["observations"] == [] and prompt["queries"] == []
+    assert prompt["omitted_observation_count"] == prompt["omitted_query_count"] == 1
+    assert request["input"][1]["call_id"] == request["input"][2]["call_id"]
+
+
+def test_byte_budget_compacts_metadata_before_discarding_usable_english_evidence(tmp_path):
+    runner, client = controller(tmp_path, runtime=tools(tmp_path, seed=candidates()))
+    view = runner.view()
+    template = view["candidates"][0]
+    view["candidates"] = [{**template, "arxiv_id": f"2401.{i:05d}",
+        "document_id": f"doc-{i}", "status": "fulltext_ready" if i == 0 else "abstract_only",
+        "abstract": "Long discovery abstract. " * 150} for i in range(5)]
+    text = "Paper title and author contact information. " * 5 + "Abstract " + (
+        "We compare detector scores under different retrieval depths and control answer length. " * 30)
+    view["evidence"] = {f"E{i}": {"text": text, "source": {"document_id": "doc-0", "source_sha256": "a" * 64},
+        "page_number": 1, "char_start": 0, "char_end": len(text), "rank": i} for i in range(1, 6)}
+    original = digest(view)
+    policy = OpenAIDecisionPolicy(client=client)
+    policy.estimate(view)
+    request = policy._prepared["request"]
+    prompt = json.loads(request["input"][0]["content"])
+    assert policy._count(request) <= 16000 and not client.calls
+    assert len(prompt["evidence"]) >= 2
+    assert all(len(row["text"]) >= 900 and row["text"].startswith("Abstract") for row in prompt["evidence"])
+    assert all(text[row["char_start"]:row["char_end"]] == row["text"] for row in prompt["evidence"])
+    assert digest(view) == original
+
+
 def test_malformed_call_gets_one_bounded_correction_and_keeps_both_actual_usages(tmp_path):
     bad = response()
     bad.output[0].arguments = "not JSON"

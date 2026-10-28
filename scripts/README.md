@@ -10,6 +10,8 @@ uv run python -m paper_assistant research --help
 
 `scripts/app.py` 和 `scripts/run_research.py` 保留为兼容入口，分别转交包内的 `web.cli` 和 `research.cli`，无需重复维护业务逻辑。网页后台直接启动包内研究命令。
 
+追问从网页的“继续讨论”发起，后台通过 `python -m paper_assistant chat` 执行已保存的轮次请求；`chat` 不是新建研究命令。每轮复用原任务已入库的论文，消息、预算与工具日志独立保存，不重置原研究记录。
+
 单项能力与开发工具集中在 `scripts/dev/`：
 
 | 脚本 | 用途 |
@@ -22,4 +24,4 @@ uv run python -m paper_assistant research --help
 
 例如：`uv run python scripts/dev/search_literature.py --help`。各脚本的 `--help` 不发起模型或文献请求。
 
-真实研究在根目录 `.env` 填写 `OPENAI_API_KEY`，已有环境变量优先。处理代码变更后使用新任务 ID；当前目录变更会触发旧工作区的指纹保护。详见 [README](../README.md) 和 [结构说明](../ARCHITECTURE.md)。
+真实研究在根目录 `.env` 填写 `OPENAI_API_KEY`，已有环境变量优先。处理代码变更后使用新任务 ID；目录变更会触发旧工作区的指纹保护。详见 [README](../README.md) 和 [研究执行流程](../src/paper_assistant/research/agent.py)。

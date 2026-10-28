@@ -7,3 +7,5 @@
 原故事 PDF 对应的检索标注、元数据及旧版检索评测已退役，并随旧论文归档至本机 `tmp/legacy-rag-20261025/`。现有 Agent 自动测试不依赖那些文件。
 
 用例包含虚构或待人工复核内容，不能将其描述为人工金标准或独立质量评测集。真实模型验收按 [MANUAL_TESTS.md](research/MANUAL_TESTS.md) 执行。
+
+多轮追问的验收场景见 [CONVERSATION_TESTS.md](research/CONVERSATION_TESTS.md)，覆盖指代理解、深入分析、证据不足、范围约束、刷新重连和停止。

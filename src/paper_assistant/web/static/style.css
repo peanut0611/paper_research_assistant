@@ -95,3 +95,15 @@ details p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
 }
 
 .header-label { color: var(--muted); font-size: 12px; }
+.conversation { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line, #d8e2d1); }
+.conversation h3 { margin: 0; }
+.conversation-form { padding: 16px 0 0; border: 0; }
+.conversation-form .composer-footer { gap: 16px; flex-wrap: wrap; }
+.chat-turn { margin: 18px 0; border-bottom: 1px solid #e3e8de; padding-bottom: 18px; }
+.chat-question { background: #edf2e8; padding: 12px 16px; border-radius: 10px; }
+.chat-answer { padding: 16px; }
+.chat-turn p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.chat-citations { margin-top: 12px; }
+.conversation-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+.conversation-toolbar select { width: auto; max-width: 100%; min-width: 160px; flex: 1; }
+.conversation-toolbar button { flex-shrink: 0; }

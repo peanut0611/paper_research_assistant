@@ -53,7 +53,7 @@ class ResearchAgent:
         self._mono_base, self._wall_base = monotonic(), self._now()
         binding = {"task_id": tools.workspace.task_id, "task": tools.task.to_dict(),
                    "config": asdict(self.config), "policy_id": policy.policy_id, "simulated": policy.simulated,
-                   "offline": tools.offline, "runner_protocol_version": 3}
+                   "offline": tools.offline, "runner_protocol_version": 5}
         if self.path.exists():
             if not resume:
                 raise ValueError("Runner state exists; explicit resume is required")
@@ -159,11 +159,84 @@ class ResearchAgent:
                         if row["tool"] == "verify_citations" and row["result"]["success"]), None)
         return bool(checked and not checked["insufficient_evidence"] and checked["citations"])
 
+    def _can_finish(self, action):
+        return action["reason"] != "sufficient_evidence" or self._has_verified_answer()
+
+    def _needs_evidence_review(self, action, reservation):
+        """One bounded opportunity to inspect fulltext before giving up early."""
+        if action["reason"] != "insufficient_evidence" or not self.state.evidence:
+            return False
+        if any(row.get("error") == "insufficient_evidence_needs_review" for row in self.state.decisions):
+            return False
+        if not any(row["status"] == "fulltext_ready" for row in self.state.candidates):
+            return False
+        searches = {row["arguments"].get("query", "").strip().casefold() for row in self.state.observations
+                    if row["tool"] == "search_documents"}
+        if len(searches) > 1 or any(row["tool"] == "read_pages" for row in self.state.observations):
+            return False
+        return (self.state.steps < self.config.max_steps
+                and self.tools.limits()["tool_calls"] < self.tools.task.limits.max_tool_calls
+                and can_reserve(self.tools.task, self.config, self.state.usage, reservation))
+
+    def _request_evidence_review(self, call_id):
+        code = "insufficient_evidence_needs_review"
+        self.state.decisions[-1]["error"] = code
+        evidence = next(iter(self.state.evidence.values()))
+        self.state.pending = None
+        self.state.last_error = {"code": code, "required_tool": "read_pages",
+            "suggested_arguments": {"document_id": evidence["source"]["document_id"],
+                "start_page": evidence["page_number"], "char_start": evidence["char_start"],
+                "max_chars": min(3000, self.tools.task.limits.max_read_chars)},
+            "message": "Read the source page or change the retrieval query before giving up. Titles are not proof of methods. If still unsupported, verify an honest insufficient answer and finish. One review only."}
+        self._tool_message(call_id, {"success": False, "data": None, "error": self.state.last_error})
+        self.state.status = "ready"
+        self._save()
+        return self.snapshot()
+
+    def _completion_requirement(self):
+        return {"code": "unverified_completion", "required_tool": "verify_citations",
+            "message": "Call verify_citations with an evidence-backed answer before finish. A finish action executes no future steps."}
+
+    def _repeats_successful_search(self, action):
+        if action["tool"] != "search_literature":
+            return False
+        args = action["arguments"]
+        query, count, sort = args.get("query"), args.get("max_results"), args.get("sort_by", "submittedDate")
+        if not isinstance(query, str) or (count is not None and type(count) is not int):
+            return False  # Invalid parameters still go through tool validation.
+        limits = self.tools.limits()
+        remaining = limits["max_candidates"] - limits["observed_candidates"]
+        cap = min(remaining, self.tools.task.limits.first_search_candidates if not limits["search_rounds"] else remaining)
+        count = cap if count is None else count
+        query = " ".join(query.casefold().split())
+        for row in self.state.observations:
+            data = row["result"]["data"] or {}
+            if row["tool"] != "search_literature" or not row["result"]["success"] or not data.get("candidates"):
+                continue
+            previous = data["request"]
+            if (query == " ".join(previous["query"].casefold().split())
+                    and sort == previous["sort_by"] and 0 < count <= previous["max_results"]):
+                return True
+        return False
+
+    def _reject_duplicate_search(self, call_id):
+        code = "duplicate_literature_search"
+        self.state.decisions[-1]["error"] = code
+        self.state.pending = None
+        self.state.last_error = {"code": code, "candidate_count": len(self.state.candidates),
+            "candidate_ids": [row["arxiv_id"] for row in self.state.candidates],
+            "message": "Search already succeeded; repeat was not executed. Evaluate current_context.candidates and fetch a relevant paper, ingest downloaded papers, or change keywords if none are relevant."}
+        self._tool_message(call_id, {"success": False, "data": None, "error": self.state.last_error})
+        if sum(row.get("error") == code for row in self.state.decisions) >= self.config.max_invalid_decisions:
+            return self._stop("repeated_action", "文献搜索已返回候选，但模型在纠正提示后仍重复相同搜索，已停止。")
+        self.state.status = "ready"
+        self._save()
+        return self.snapshot()
+
     def _reject_unverified_completion(self, call_id):
         self.state.decisions[-1]["error"] = "unverified_completion"
         self.state.pending = None
-        self.state.last_error = {"code": "unverified_completion", "required_tool": "verify_citations",
-            "message": "Call verify_citations with an evidence-backed answer before finish. A finish action executes no future steps."}
+        self.state.last_error = self._completion_requirement()
         self._tool_message(call_id, {"success": False, "data": None, "error": self.state.last_error})
         # Count persisted rejections across intervening tool actions and resume.
         rejected = sum(row.get("error") == "unverified_completion" for row in self.state.decisions)
@@ -184,8 +257,11 @@ class ResearchAgent:
 
     def _progress(self):
         self._sync_materials()
+        checked = next((row["result"]["data"] for row in reversed(self.state.observations)
+                        if row["tool"] == "verify_citations" and row["result"]["success"]), None)
         return digest({"documents": [{key: row.get(key) for key in ("arxiv_id", "version", "status", "source_sha256")}
-                                     for row in self.state.candidates], "evidence": sorted(self.state.evidence)})
+                                     for row in self.state.candidates], "evidence": sorted(self.state.evidence),
+                       "validated_answer": checked})
 
     def _stop(self, reason, summary=""):
         self.state.status, self.state.stop_reason, self.state.summary = "stopped", reason, summary
@@ -384,11 +460,15 @@ class ResearchAgent:
         self._update_notes(action)
         if action["kind"] == "finish":
             self.session.emit("tool_execution_start", turn=self.state.steps, call_id=call_id, tool="finish")
-            if action["reason"] == "sufficient_evidence" and not self._has_verified_answer():
+            if not self._can_finish(action):
                 return self._reject_unverified_completion(call_id)
+            if self._needs_evidence_review(action, estimate):
+                return self._request_evidence_review(call_id)
             self._tool_message(call_id, {"success": True, "data": {"reason": action["reason"], "summary": action["summary"]}, "error": None})
             return self._stop(action["reason"], _redact(action["summary"]))
         key = self._action_key(action)
+        if self._repeats_successful_search(action):
+            return self._reject_duplicate_search(call_id)
         if sum(row["action_key"] == key for row in self.state.observations) >= self.config.max_repeat_calls:
             self._tool_message(call_id, {"success": False, "data": None,
                                         "error": {"code": "repeated_action", "message": "Repeated action was not executed"}})
