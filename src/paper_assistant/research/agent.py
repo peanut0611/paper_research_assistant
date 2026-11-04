@@ -112,8 +112,21 @@ class ResearchAgent:
                                turn=self.state.steps, text=_redact(action.get("purpose", "")))
         return call["id"]
 
-    def _tool_message(self, call_id, result):
+    def _tool_message(self, call_id, result, *, tool=None):
         if call_id and not self.session.has_result(call_id):
+            data = result.get("data") or {}
+            summary = {key: data[key] for key in ("status", "document_id", "valid", "insufficient_evidence",
+                       "truncated", "next_page", "next_char_start") if key in data}
+            for key, identifier in (("candidates", "arxiv_id"), ("results", "evidence_id"), ("pages", "evidence_id")):
+                if key in data:
+                    summary[key + "_count"] = len(data[key])
+                    summary["candidate_ids" if key == "candidates" else "evidence_ids"] = [
+                        row[identifier] for row in data[key] if row.get(identifier)]
+            self.session.emit("tool_observation" if tool else "host_feedback", turn=self.state.steps,
+                              origin="tool" if tool else "host", call_id=call_id,
+                              tool=tool or self.state.decisions[-1].get("decision", {}).get("tool", "finish"),
+                              event_id=result.get("event_id"), success=result.get("success", False),
+                              error=_redact(result.get("error")), summary=_redact(summary))
             self.session.emit("tool_execution_end", turn=self.state.steps, call_id=call_id,
                               success=result.get("success", False))
             self.session.tool_result(call_id, _redact(result), turn=self.state.steps)
@@ -296,6 +309,9 @@ class ResearchAgent:
     def _stop(self, reason, summary=""):
         self.state.status, self.state.stop_reason, self.state.summary = "stopped", reason, summary
         self.state.pending = None
+        self.session.emit("execution_stopped", turn=self.state.steps, origin="host", reason=reason, summary=summary,
+                          materials=_redact([{key: row.get(key) for key in ("arxiv_id", "document_id", "status", "last_error")}
+                                             for row in self.state.candidates]))
         self._save()
         return self.snapshot()
 
@@ -391,7 +407,7 @@ class ResearchAgent:
         events = self.tools.export_trace()["events"]
         if not events or events[-1]["status"] != "completed":
             return self._stop("interrupted_unknown_tool_outcome")
-        self._tool_message((self.state.pending or {}).get("tool_call_id"), result)
+        self._tool_message((self.state.pending or {}).get("tool_call_id"), result, tool=action["tool"])
         self.state.observations.append({"step": self.state.steps, "tool": action["tool"],
             "arguments": _redact(action["arguments"]), "action_key": self._action_key(action), "result": _redact(result)})
         if action["tool"] in ("search_literature", "search_documents"):
@@ -406,14 +422,16 @@ class ResearchAgent:
             return self._stop(code)
         if self._elapsed() >= self.tools.task.limits.max_runtime_seconds:
             return self._stop("runtime_budget_exhausted")
-        if self.state.answer_phase and action["tool"] == "verify_citations":
+        if action["tool"] == "verify_citations":
             if result["success"]:
                 checked = self._checked_answer()
-                reason = "insufficient_evidence" if checked["insufficient_evidence"] else "sufficient_evidence"
-                return self._stop(reason, "已生成并校验回答。")
-            self.state.decisions[-1]["error"] = "answer_validation_failed"
-            if sum(row.get("error") == "answer_validation_failed" for row in self.state.decisions) >= self.config.max_invalid_decisions:
-                return self._stop("invalid_decision_limit", "回答引用校验持续失败，已停止。")
+                if self.state.answer_phase or self._has_verified_answer():
+                    reason = "insufficient_evidence" if checked["insufficient_evidence"] else "sufficient_evidence"
+                    return self._stop(reason, "已生成并完成引用可追溯性检查；结论支持度仍需人工核对。")
+            else:
+                self.state.decisions[-1]["error"] = "answer_validation_failed"
+                if sum(row.get("error") == "answer_validation_failed" for row in self.state.decisions) >= self.config.max_invalid_decisions:
+                    return self._stop("invalid_decision_limit", "回答引用校验持续失败，已停止。")
         if self._can_start_answer() and self.state.no_progress >= max(1, self.config.max_no_progress - 1):
             self._require_answer("no_progress")
         if self.state.no_progress >= self.config.max_no_progress and not self.state.answer_phase:
@@ -497,6 +515,8 @@ class ResearchAgent:
         except (ValueError, TypeError, KeyError):
             self.state.invalid_decisions += 1
             self.state.last_error = {"code": "invalid_decision", "message": "Return exactly one registered action with valid fields"}
+            self.session.emit("host_feedback", turn=self.state.steps, origin="host", success=False,
+                              error=self.state.last_error, summary={})
             self.state.pending = None
             if self.state.invalid_decisions >= self.config.max_invalid_decisions:
                 return self._stop("invalid_decision_limit")
@@ -505,6 +525,8 @@ class ResearchAgent:
             self._save()
             return self.snapshot()
         call_id = self._assistant_call(action, reply)
+        self.session.emit("model_decision", turn=self.state.steps, origin="model", simulated=self.policy.simulated,
+                          call_id=call_id, decision=_redact(action))
         self.state.invalid_decisions = 0
         self.state.last_error = None
         self.state.decisions.append({"step": self.state.steps, "decision": _redact(action)})

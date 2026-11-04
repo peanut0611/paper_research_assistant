@@ -1,0 +1,563 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "quality_pass_rate": null,
+  "baseline_quality_pass_rate": null,
+  "cases": [
+    {
+      "case_id": "tool-use-comparison",
+      "baseline": {
+        "status": "blocked",
+        "reasons": [
+          "case_missing"
+        ],
+        "quality_pass_rate": null
+      },
+      "candidate": {
+        "status": "blocked",
+        "eligible_for_quality_score": false,
+        "reasons": [
+          "network_policy_blocks:api.openai.com",
+          "network_policy_blocks:export.arxiv.org",
+          "network_policy_blocks:arxiv.org",
+          "api_key_not_ready",
+          "execution_not_requested",
+          "execution_not_complete:not_executed",
+          "real_model_events_not_verified",
+          "round_model_accounting_missing",
+          "tool_trace_missing",
+          "online_search_and_download_not_verified",
+          "human_review_pending",
+          "reviewer_missing",
+          "review_time_missing",
+          "claims_missing",
+          "rubric_checks_missing",
+          "unobserved_branches_missing",
+          "review_missing_turn:research"
+        ],
+        "execution_status": "not_executed",
+        "review_verdict": "not_reviewed",
+        "review": {
+          "verdict": "not_reviewed",
+          "claims": [],
+          "failure_reasons": []
+        },
+        "actual_materials": [],
+        "online_network_verified": false,
+        "collection_elapsed_seconds": 0.004036,
+        "started_at": "2026-11-04T09:21:15.794376+00:00",
+        "finished_at": "2026-11-04T09:21:15.798208+00:00",
+        "rounds": [
+          {
+            "round_id": "research",
+            "stop_reason": null,
+            "elapsed_seconds": null,
+            "accounting_source": "unavailable",
+            "charged_tokens": null,
+            "charged_or_reserved_usd": null,
+            "unknown_reserved_usd": null,
+            "unknown_usage_calls": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "cached_input_tokens": null,
+            "workspace_identity": null,
+            "model_events": [],
+            "binding": null,
+            "tool_trace": null,
+            "cache_records": [],
+            "state_usage_reference_only": null,
+            "materials": null,
+            "agent_events": [],
+            "answer": null
+          }
+        ],
+        "accounting": {
+          "charged_tokens": null,
+          "charged_or_reserved_usd": null,
+          "unknown_reserved_usd": null,
+          "unknown_usage_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cached_input_tokens": null,
+          "complete": false
+        },
+        "quality_pass_rate": null
+      },
+      "comparable": false,
+      "condition_differences": [
+        "missing_or_different:mode",
+        "missing_or_different:model_config",
+        "case_missing"
+      ],
+      "strategy_changed": true,
+      "processing_changed": true,
+      "actual_inputs": {
+        "baseline": {
+          "research": {},
+          "followups": []
+        },
+        "candidate": {
+          "research": {
+            "topic": "language model tool use ReAct Toolformer",
+            "questions": [
+              "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+            ],
+            "start_date": "2020-01-01",
+            "end_date": "2024-01-01",
+            "target_papers": 2,
+            "max_cost_usd": 0.1,
+            "source_mode": "online"
+          },
+          "followups": []
+        }
+      }
+    },
+    {
+      "case_id": "feedback-and-evidence",
+      "baseline": {
+        "status": "blocked",
+        "reasons": [
+          "case_missing"
+        ],
+        "quality_pass_rate": null
+      },
+      "candidate": {
+        "status": "blocked",
+        "eligible_for_quality_score": false,
+        "reasons": [
+          "network_policy_blocks:api.openai.com",
+          "network_policy_blocks:export.arxiv.org",
+          "network_policy_blocks:arxiv.org",
+          "api_key_not_ready",
+          "execution_not_requested",
+          "execution_not_complete:not_executed",
+          "real_model_events_not_verified",
+          "round_model_accounting_missing",
+          "tool_trace_missing",
+          "online_search_and_download_not_verified",
+          "human_review_pending",
+          "reviewer_missing",
+          "review_time_missing",
+          "claims_missing",
+          "rubric_checks_missing",
+          "unobserved_branches_missing",
+          "review_missing_turn:research"
+        ],
+        "execution_status": "not_executed",
+        "review_verdict": "not_reviewed",
+        "review": {
+          "verdict": "not_reviewed",
+          "claims": [],
+          "failure_reasons": []
+        },
+        "actual_materials": [],
+        "online_network_verified": false,
+        "collection_elapsed_seconds": 0.004467,
+        "started_at": "2026-11-04T09:21:15.809266+00:00",
+        "finished_at": "2026-11-04T09:21:15.812391+00:00",
+        "rounds": [
+          {
+            "round_id": "research",
+            "stop_reason": null,
+            "elapsed_seconds": null,
+            "accounting_source": "unavailable",
+            "charged_tokens": null,
+            "charged_or_reserved_usd": null,
+            "unknown_reserved_usd": null,
+            "unknown_usage_calls": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "cached_input_tokens": null,
+            "workspace_identity": null,
+            "model_events": [],
+            "binding": null,
+            "tool_trace": null,
+            "cache_records": [],
+            "state_usage_reference_only": null,
+            "materials": null,
+            "agent_events": [],
+            "answer": null
+          }
+        ],
+        "accounting": {
+          "charged_tokens": null,
+          "charged_or_reserved_usd": null,
+          "unknown_reserved_usd": null,
+          "unknown_usage_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cached_input_tokens": null,
+          "complete": false
+        },
+        "quality_pass_rate": null
+      },
+      "comparable": false,
+      "condition_differences": [
+        "missing_or_different:mode",
+        "missing_or_different:model_config",
+        "case_missing"
+      ],
+      "strategy_changed": true,
+      "processing_changed": true,
+      "actual_inputs": {
+        "baseline": {
+          "research": {},
+          "followups": []
+        },
+        "candidate": {
+          "research": {
+            "topic": "language model agents ReAct Reflexion",
+            "questions": [
+              "ReAct 与 Reflexion v1 如何利用环境反馈？请比较反馈如何影响后续行动及跨次尝试的信息，并区分论文直接报告的结果和你的解释。证据不足请说明。"
+            ],
+            "start_date": "2020-01-01",
+            "end_date": "2024-01-01",
+            "target_papers": 2,
+            "max_cost_usd": 0.1,
+            "source_mode": "online"
+          },
+          "followups": []
+        }
+      }
+    },
+    {
+      "case_id": "vision-transfer",
+      "baseline": {
+        "status": "blocked",
+        "reasons": [
+          "case_missing"
+        ],
+        "quality_pass_rate": null
+      },
+      "candidate": {
+        "status": "blocked",
+        "eligible_for_quality_score": false,
+        "reasons": [
+          "network_policy_blocks:api.openai.com",
+          "network_policy_blocks:export.arxiv.org",
+          "network_policy_blocks:arxiv.org",
+          "api_key_not_ready",
+          "execution_not_requested",
+          "execution_not_complete:not_executed",
+          "real_model_events_not_verified",
+          "round_model_accounting_missing",
+          "tool_trace_missing",
+          "online_search_and_download_not_verified",
+          "human_review_pending",
+          "reviewer_missing",
+          "review_time_missing",
+          "claims_missing",
+          "rubric_checks_missing",
+          "unobserved_branches_missing",
+          "review_missing_turn:research"
+        ],
+        "execution_status": "not_executed",
+        "review_verdict": "not_reviewed",
+        "review": {
+          "verdict": "not_reviewed",
+          "claims": [],
+          "failure_reasons": []
+        },
+        "actual_materials": [],
+        "online_network_verified": false,
+        "collection_elapsed_seconds": 0.001263,
+        "started_at": "2026-11-04T09:21:15.813338+00:00",
+        "finished_at": "2026-11-04T09:21:15.814499+00:00",
+        "rounds": [
+          {
+            "round_id": "research",
+            "stop_reason": null,
+            "elapsed_seconds": null,
+            "accounting_source": "unavailable",
+            "charged_tokens": null,
+            "charged_or_reserved_usd": null,
+            "unknown_reserved_usd": null,
+            "unknown_usage_calls": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "cached_input_tokens": null,
+            "workspace_identity": null,
+            "model_events": [],
+            "binding": null,
+            "tool_trace": null,
+            "cache_records": [],
+            "state_usage_reference_only": null,
+            "materials": null,
+            "agent_events": [],
+            "answer": null
+          }
+        ],
+        "accounting": {
+          "charged_tokens": null,
+          "charged_or_reserved_usd": null,
+          "unknown_reserved_usd": null,
+          "unknown_usage_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cached_input_tokens": null,
+          "complete": false
+        },
+        "quality_pass_rate": null
+      },
+      "comparable": false,
+      "condition_differences": [
+        "missing_or_different:mode",
+        "missing_or_different:model_config",
+        "case_missing"
+      ],
+      "strategy_changed": true,
+      "processing_changed": true,
+      "actual_inputs": {
+        "baseline": {
+          "research": {},
+          "followups": []
+        },
+        "candidate": {
+          "research": {
+            "topic": "visual representation learning CLIP Vision Transformer",
+            "questions": [
+              "比较 Vision Transformer 和 CLIP 的训练监督信号及迁移使用方式。哪些差异有正文实验或方法描述支持？请保留实验条件，避免将不同评测设置下的数字直接排名。"
+            ],
+            "start_date": "2020-01-01",
+            "end_date": "2024-01-01",
+            "target_papers": 2,
+            "max_cost_usd": 0.1,
+            "source_mode": "online"
+          },
+          "followups": []
+        }
+      }
+    },
+    {
+      "case_id": "contextual-followups",
+      "baseline": {
+        "status": "blocked",
+        "reasons": [
+          "case_missing"
+        ],
+        "quality_pass_rate": null
+      },
+      "candidate": {
+        "status": "blocked",
+        "eligible_for_quality_score": false,
+        "reasons": [
+          "network_policy_blocks:api.openai.com",
+          "network_policy_blocks:export.arxiv.org",
+          "network_policy_blocks:arxiv.org",
+          "api_key_not_ready",
+          "execution_not_requested",
+          "execution_not_complete:not_executed",
+          "real_model_events_not_verified",
+          "round_model_accounting_missing",
+          "tool_trace_missing",
+          "online_search_and_download_not_verified",
+          "human_review_pending",
+          "reviewer_missing",
+          "review_time_missing",
+          "claims_missing",
+          "rubric_checks_missing",
+          "unobserved_branches_missing",
+          "review_missing_turn:research"
+        ],
+        "execution_status": "not_executed",
+        "review_verdict": "not_reviewed",
+        "review": {
+          "verdict": "not_reviewed",
+          "claims": [],
+          "failure_reasons": []
+        },
+        "actual_materials": [],
+        "online_network_verified": false,
+        "collection_elapsed_seconds": 0.001159,
+        "started_at": "2026-11-04T09:21:15.815569+00:00",
+        "finished_at": "2026-11-04T09:21:15.816572+00:00",
+        "rounds": [
+          {
+            "round_id": "research",
+            "stop_reason": null,
+            "elapsed_seconds": null,
+            "accounting_source": "unavailable",
+            "charged_tokens": null,
+            "charged_or_reserved_usd": null,
+            "unknown_reserved_usd": null,
+            "unknown_usage_calls": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "cached_input_tokens": null,
+            "workspace_identity": null,
+            "model_events": [],
+            "binding": null,
+            "tool_trace": null,
+            "cache_records": [],
+            "state_usage_reference_only": null,
+            "materials": null,
+            "agent_events": [],
+            "answer": null
+          }
+        ],
+        "accounting": {
+          "charged_tokens": null,
+          "charged_or_reserved_usd": null,
+          "unknown_reserved_usd": null,
+          "unknown_usage_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cached_input_tokens": null,
+          "complete": false
+        },
+        "quality_pass_rate": null
+      },
+      "comparable": false,
+      "condition_differences": [
+        "missing_or_different:mode",
+        "missing_or_different:model_config",
+        "candidate:frozen_actual_inputs_mismatch",
+        "case_missing"
+      ],
+      "strategy_changed": true,
+      "processing_changed": true,
+      "actual_inputs": {
+        "baseline": {
+          "research": {},
+          "followups": []
+        },
+        "candidate": {
+          "research": {
+            "topic": "language model agents ReAct Reflexion",
+            "questions": [
+              "阅读 ReAct 与 Reflexion v1，概述它们如何处理交互中的错误及各自局限，给出正文证据。"
+            ],
+            "start_date": "2020-01-01",
+            "end_date": "2024-01-01",
+            "target_papers": 2,
+            "max_cost_usd": 0.1,
+            "source_mode": "online"
+          },
+          "followups": []
+        }
+      }
+    },
+    {
+      "case_id": "unsupported-business-cost",
+      "baseline": {
+        "status": "blocked",
+        "reasons": [
+          "case_missing"
+        ],
+        "quality_pass_rate": null
+      },
+      "candidate": {
+        "status": "blocked",
+        "eligible_for_quality_score": false,
+        "reasons": [
+          "network_policy_blocks:api.openai.com",
+          "network_policy_blocks:export.arxiv.org",
+          "network_policy_blocks:arxiv.org",
+          "api_key_not_ready",
+          "execution_not_requested",
+          "execution_not_complete:not_executed",
+          "real_model_events_not_verified",
+          "round_model_accounting_missing",
+          "tool_trace_missing",
+          "online_search_and_download_not_verified",
+          "human_review_pending",
+          "reviewer_missing",
+          "review_time_missing",
+          "claims_missing",
+          "rubric_checks_missing",
+          "unobserved_branches_missing",
+          "review_missing_turn:research"
+        ],
+        "execution_status": "not_executed",
+        "review_verdict": "not_reviewed",
+        "review": {
+          "verdict": "not_reviewed",
+          "claims": [],
+          "failure_reasons": []
+        },
+        "actual_materials": [],
+        "online_network_verified": false,
+        "collection_elapsed_seconds": 0.00176,
+        "started_at": "2026-11-04T09:21:15.817808+00:00",
+        "finished_at": "2026-11-04T09:21:15.819269+00:00",
+        "rounds": [
+          {
+            "round_id": "research",
+            "stop_reason": null,
+            "elapsed_seconds": null,
+            "accounting_source": "unavailable",
+            "charged_tokens": null,
+            "charged_or_reserved_usd": null,
+            "unknown_reserved_usd": null,
+            "unknown_usage_calls": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "cached_input_tokens": null,
+            "workspace_identity": null,
+            "model_events": [],
+            "binding": null,
+            "tool_trace": null,
+            "cache_records": [],
+            "state_usage_reference_only": null,
+            "materials": null,
+            "agent_events": [],
+            "answer": null
+          }
+        ],
+        "accounting": {
+          "charged_tokens": null,
+          "charged_or_reserved_usd": null,
+          "unknown_reserved_usd": null,
+          "unknown_usage_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cached_input_tokens": null,
+          "complete": false
+        },
+        "quality_pass_rate": null
+      },
+      "comparable": false,
+      "condition_differences": [
+        "missing_or_different:mode",
+        "missing_or_different:model_config",
+        "case_missing"
+      ],
+      "strategy_changed": true,
+      "processing_changed": true,
+      "actual_inputs": {
+        "baseline": {
+          "research": {},
+          "followups": []
+        },
+        "candidate": {
+          "research": {
+            "topic": "language model tool use ReAct Toolformer",
+            "questions": [
+              "仅根据 ReAct 和 Toolformer 的正文，能否给出在企业部署它们各自每月维护成本的美元金额及核算方法？如果取得的证据不足，请明确说明检索范围与缺口，不要推算不存在的成本数据。"
+            ],
+            "start_date": "2020-01-01",
+            "end_date": "2024-01-01",
+            "target_papers": 2,
+            "max_cost_usd": 0.1,
+            "source_mode": "online"
+          },
+          "followups": []
+        }
+      }
+    }
+  ],
+  "code_snapshots": {
+    "baseline": null,
+    "candidate": {
+      "head": "74896b992d1431925ea9cf4f1a6df107af50a55c",
+      "workspace_sha256": "4ca043eae8e2f60dd38f671a7bed007837fdf6fbb7b08afb71302e4770f90f6d",
+      "tracked_diff_sha256": "e9dfc1f315ff346e3d3be1c1973e9b5319312e86f65e62bab64c8a1d07805f88"
+    }
+  },
+  "limitations": [
+    "Five cases are not a population accuracy estimate or statistically significant improvement.",
+    "Reviewer identity and semantic support require human verification; validator checks recorded evidence only.",
+    "origin=live does not prove network success in this run; inspect from_cache in tool traces.",
+    "Lifecycle/default-budget automated tests are separate from frozen-budget model quality acceptance."
+  ]
+}

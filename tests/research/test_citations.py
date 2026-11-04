@@ -60,3 +60,9 @@ def test_short_quote_repair_does_not_fall_back_to_author_header_in_long_pdf_text
                         {"E1": CitationEvidence(text, (SOURCE,))})
     hint = caught.value.errors[0]["example_source_quote"]
     assert hint.startswith("Evidence constrains") and "an-swer" in hint and hint in text
+
+
+@pytest.mark.parametrize("sources", [(), (EvidenceSource("chunk", "paper", "paper.pdf", 0, 0, 0, 3, 0, 10, 1, .8),)])
+def test_literal_text_without_locatable_original_page_is_not_a_traceable_citation(sources):
+    with pytest.raises(ValueError, match="locatable"):
+        validate_answer(output(), {"E1": CitationEvidence("ABC test", sources)})

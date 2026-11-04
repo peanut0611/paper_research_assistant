@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "suite_id": "agent-v1-five-cases-v1",
+  "frozen_inputs": {
+    "frozen_at": "2026-11-04T09:21:14.781881+00:00",
+    "sha256": {
+      "suite.json": "a1051032549b9fcb35005453fb9827768b6a8ea5af31d9c8ffb9ba36c0b3acb9",
+      "sources.json": "5af8cd8368234a5237ce3a32ae968e6230cbf0ce1466c8904767fcbdb4d78371",
+      "rubric.md": "d94dc0282c787fed4a20174a943a2722ecc6e3ed94c97aa0590125df0cd0b7be",
+      "workspace.json": "9d7775de85072d72585f9df21dd2ee8b7eed97d2ccb83ae356629b71d7e0fc13"
+    }
+  },
+  "workspace": {
+    "head": "74896b992d1431925ea9cf4f1a6df107af50a55c",
+    "workspace_sha256": "4ca043eae8e2f60dd38f671a7bed007837fdf6fbb7b08afb71302e4770f90f6d",
+    "tracked_diff_sha256": "e9dfc1f315ff346e3d3be1c1973e9b5319312e86f65e62bab64c8a1d07805f88"
+  },
+  "mode": "online",
+  "model_config": {
+    "model": "gpt-5.4-mini",
+    "max_input_tokens": 16000,
+    "max_output_tokens": 1200,
+    "timeout_seconds": 45,
+    "trust_env": true
+  },
+  "rates": {
+    "input": 0.75,
+    "cached_input": 0.075,
+    "output": 4.5
+  },
+  "price_checked_at": "2026-10-23",
+  "research_instructions_sha256": "439e817e33684c24380d90c6395806cad236bbf23ac05f78bb3e03861e816495",
+  "generation_note": "Current provider uses reasoning effort none; binding/model events record actual policy. No quality score is inferred.",
+  "cases": [
+    {
+      "case_id": "tool-use-comparison",
+      "started_at": "2026-11-04T09:21:15.794376+00:00",
+      "mode": "online",
+      "evidence_kind": "real_model_http",
+      "execution_status": "not_executed",
+      "input": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "online"
+      },
+      "blockers": [
+        "network_policy_blocks:api.openai.com",
+        "network_policy_blocks:export.arxiv.org",
+        "network_policy_blocks:arxiv.org",
+        "api_key_not_ready",
+        "execution_not_requested"
+      ],
+      "research": null,
+      "followups": [],
+      "http_log": [
+        {
+          "method": "GET",
+          "path": "/api/research/status",
+          "status": 200
+        }
+      ],
+      "review": {
+        "verdict": "not_reviewed",
+        "claims": [],
+        "failure_reasons": []
+      },
+      "initial_request_identity": {
+        "mode": "legacy",
+        "support": "not_required_by_legacy_collector"
+      },
+      "readiness": {
+        "key_ready": false,
+        "busy": false,
+        "active_job_id": null,
+        "cached_example_ready": false,
+        "model": "gpt-5.4-mini",
+        "max_cost_usd": 0.5,
+        "report_reserve_usd": 0.02,
+        "max_runtime_seconds": 300
+      },
+      "collection_elapsed_seconds": 0.004036,
+      "finished_at": "2026-11-04T09:21:15.798208+00:00",
+      "local_artifacts": {}
+    },
+    {
+      "case_id": "feedback-and-evidence",
+      "started_at": "2026-11-04T09:21:15.809266+00:00",
+      "mode": "online",
+      "evidence_kind": "real_model_http",
+      "execution_status": "not_executed",
+      "input": {
+        "topic": "language model agents ReAct Reflexion",
+        "questions": [
+          "ReAct 与 Reflexion v1 如何利用环境反馈？请比较反馈如何影响后续行动及跨次尝试的信息，并区分论文直接报告的结果和你的解释。证据不足请说明。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "online"
+      },
+      "blockers": [
+        "network_policy_blocks:api.openai.com",
+        "network_policy_blocks:export.arxiv.org",
+        "network_policy_blocks:arxiv.org",
+        "api_key_not_ready",
+        "execution_not_requested"
+      ],
+      "research": null,
+      "followups": [],
+      "http_log": [
+        {
+          "method": "GET",
+          "path": "/api/research/status",
+          "status": 200
+        }
+      ],
+      "review": {
+        "verdict": "not_reviewed",
+        "claims": [],
+        "failure_reasons": []
+      },
+      "initial_request_identity": {
+        "mode": "legacy",
+        "support": "not_required_by_legacy_collector"
+      },
+      "readiness": {
+        "key_ready": false,
+        "busy": false,
+        "active_job_id": null,
+        "cached_example_ready": false,
+        "model": "gpt-5.4-mini",
+        "max_cost_usd": 0.5,
+        "report_reserve_usd": 0.02,
+        "max_runtime_seconds": 300
+      },
+      "collection_elapsed_seconds": 0.004467,
+      "finished_at": "2026-11-04T09:21:15.812391+00:00",
+      "local_artifacts": {}
+    },
+    {
+      "case_id": "vision-transfer",
+      "started_at": "2026-11-04T09:21:15.813338+00:00",
+      "mode": "online",
+      "evidence_kind": "real_model_http",
+      "execution_status": "not_executed",
+      "input": {
+        "topic": "visual representation learning CLIP Vision Transformer",
+        "questions": [
+          "比较 Vision Transformer 和 CLIP 的训练监督信号及迁移使用方式。哪些差异有正文实验或方法描述支持？请保留实验条件，避免将不同评测设置下的数字直接排名。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "online"
+      },
+      "blockers": [
+        "network_policy_blocks:api.openai.com",
+        "network_policy_blocks:export.arxiv.org",
+        "network_policy_blocks:arxiv.org",
+        "api_key_not_ready",
+        "execution_not_requested"
+      ],
+      "research": null,
+      "followups": [],
+      "http_log": [
+        {
+          "method": "GET",
+          "path": "/api/research/status",
+          "status": 200
+        }
+      ],
+      "review": {
+        "verdict": "not_reviewed",
+        "claims": [],
+        "failure_reasons": []
+      },
+      "initial_request_identity": {
+        "mode": "legacy",
+        "support": "not_required_by_legacy_collector"
+      },
+      "readiness": {
+        "key_ready": false,
+        "busy": false,
+        "active_job_id": null,
+        "cached_example_ready": false,
+        "model": "gpt-5.4-mini",
+        "max_cost_usd": 0.5,
+        "report_reserve_usd": 0.02,
+        "max_runtime_seconds": 300
+      },
+      "collection_elapsed_seconds": 0.001263,
+      "finished_at": "2026-11-04T09:21:15.814499+00:00",
+      "local_artifacts": {}
+    },
+    {
+      "case_id": "contextual-followups",
+      "started_at": "2026-11-04T09:21:15.815569+00:00",
+      "mode": "online",
+      "evidence_kind": "real_model_http",
+      "execution_status": "not_executed",
+      "input": {
+        "topic": "language model agents ReAct Reflexion",
+        "questions": [
+          "阅读 ReAct 与 Reflexion v1，概述它们如何处理交互中的错误及各自局限，给出正文证据。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "online"
+      },
+      "blockers": [
+        "network_policy_blocks:api.openai.com",
+        "network_policy_blocks:export.arxiv.org",
+        "network_policy_blocks:arxiv.org",
+        "api_key_not_ready",
+        "execution_not_requested"
+      ],
+      "research": null,
+      "followups": [],
+      "http_log": [
+        {
+          "method": "GET",
+          "path": "/api/research/status",
+          "status": 200
+        }
+      ],
+      "review": {
+        "verdict": "not_reviewed",
+        "claims": [],
+        "failure_reasons": []
+      },
+      "initial_request_identity": {
+        "mode": "legacy",
+        "support": "not_required_by_legacy_collector"
+      },
+      "readiness": {
+        "key_ready": false,
+        "busy": false,
+        "active_job_id": null,
+        "cached_example_ready": false,
+        "model": "gpt-5.4-mini",
+        "max_cost_usd": 0.5,
+        "report_reserve_usd": 0.02,
+        "max_runtime_seconds": 300
+      },
+      "collection_elapsed_seconds": 0.001159,
+      "finished_at": "2026-11-04T09:21:15.816572+00:00",
+      "local_artifacts": {}
+    },
+    {
+      "case_id": "unsupported-business-cost",
+      "started_at": "2026-11-04T09:21:15.817808+00:00",
+      "mode": "online",
+      "evidence_kind": "real_model_http",
+      "execution_status": "not_executed",
+      "input": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "仅根据 ReAct 和 Toolformer 的正文，能否给出在企业部署它们各自每月维护成本的美元金额及核算方法？如果取得的证据不足，请明确说明检索范围与缺口，不要推算不存在的成本数据。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "online"
+      },
+      "blockers": [
+        "network_policy_blocks:api.openai.com",
+        "network_policy_blocks:export.arxiv.org",
+        "network_policy_blocks:arxiv.org",
+        "api_key_not_ready",
+        "execution_not_requested"
+      ],
+      "research": null,
+      "followups": [],
+      "http_log": [
+        {
+          "method": "GET",
+          "path": "/api/research/status",
+          "status": 200
+        }
+      ],
+      "review": {
+        "verdict": "not_reviewed",
+        "claims": [],
+        "failure_reasons": []
+      },
+      "initial_request_identity": {
+        "mode": "legacy",
+        "support": "not_required_by_legacy_collector"
+      },
+      "readiness": {
+        "key_ready": false,
+        "busy": false,
+        "active_job_id": null,
+        "cached_example_ready": false,
+        "model": "gpt-5.4-mini",
+        "max_cost_usd": 0.5,
+        "report_reserve_usd": 0.02,
+        "max_runtime_seconds": 300
+      },
+      "collection_elapsed_seconds": 0.00176,
+      "finished_at": "2026-11-04T09:21:15.819269+00:00",
+      "local_artifacts": {}
+    }
+  ],
+  "publication_note": "Readiness GETs only; no --execute. Workspace file inventory omitted from public projection. No real model acceptance evidence.",
+  "raw_report_sha256": "36e6fb73946fea9eb7e69eb6ff24580306750def6384d32ff043ab491a7c7484"
+}

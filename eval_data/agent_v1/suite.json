@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "id": "agent-v1-five-cases-v1",
+  "frozen_intent": "Freeze inputs and rubric before changing business behavior. Missing local materials and real executions are explicit blockers, never successful baselines.",
+  "rubric": "rubric.md",
+  "baseline_profile": {
+    "research_max_cost_usd": 0.1,
+    "followup_max_cost_usd": 0.05,
+    "max_runtime_seconds": 300,
+    "reason": "Current Web interface's accepted budget. Do not silently change it or substitute the target V1 profile."
+  },
+  "target_profile": {
+    "research_max_cost_usd": 0.5,
+    "followup_max_cost_usd": 0.1,
+    "followup_runtime_seconds": 120,
+    "followup_total_max_cost_usd": 0.5,
+    "followup_max_turns": 20
+  },
+  "cases": [
+    {
+      "id": "tool-use-comparison",
+      "name": "工具使用方法对比",
+      "source_ids": [
+        "react-v1",
+        "toolformer-v1"
+      ],
+      "web_payload": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1
+      },
+      "followups": [],
+      "coverage": [
+        "autonomous_selection",
+        "multi_paper_answer",
+        "source_attribution"
+      ],
+      "expected": {
+        "review_only": true,
+        "checks": [
+          "筛选与问题相关的两篇论文，说明选择依据，固定材料按指定版本核对。",
+          "从各自正文核对训练与工具选择方法，不把两篇不同设置的结果直接当作同条件胜负。",
+          "关键结论分别指向正确论文、原文与物理 PDF 页码。"
+        ],
+        "conditional_branch_note": "只有实际遇到缺口或失败才要求合理调整；一次已取得充分证据无需人为增加工具调用。没有触发的分支标为未观察，不能宣称真实模型已覆盖。"
+      }
+    },
+    {
+      "id": "feedback-and-evidence",
+      "name": "反馈机制与补查",
+      "source_ids": [
+        "react-v1",
+        "reflexion-v1"
+      ],
+      "web_payload": {
+        "topic": "language model agents ReAct Reflexion",
+        "questions": [
+          "ReAct 与 Reflexion v1 如何利用环境反馈？请比较反馈如何影响后续行动及跨次尝试的信息，并区分论文直接报告的结果和你的解释。证据不足请说明。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1
+      },
+      "followups": [],
+      "coverage": [
+        "observation_driven_search",
+        "evidence_gap_handling"
+      ],
+      "expected": {
+        "review_only": true,
+        "checks": [
+          "核对固定 v1 的 Reflexion，而非用后续修订版本的题名或实验细节代替。",
+          "对反馈和记忆的结论使用相应正文证据，不仅引用摘要。",
+          "若取得的材料不充分，观察是否合理改写查询或读页；记录实际分支，不强制重复工具调用。"
+        ],
+        "conditional_branch_note": "只有实际遇到缺口或失败才要求合理调整；一次已取得充分证据无需人为增加工具调用。没有触发的分支标为未观察，不能宣称真实模型已覆盖。"
+      }
+    },
+    {
+      "id": "vision-transfer",
+      "name": "跨研究领域的论文对比",
+      "source_ids": [
+        "vit-v1",
+        "clip-v1"
+      ],
+      "web_payload": {
+        "topic": "visual representation learning CLIP Vision Transformer",
+        "questions": [
+          "比较 Vision Transformer 和 CLIP 的训练监督信号及迁移使用方式。哪些差异有正文实验或方法描述支持？请保留实验条件，避免将不同评测设置下的数字直接排名。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1
+      },
+      "followups": [],
+      "coverage": [
+        "user_selected_domain",
+        "multi_paper_answer"
+      ],
+      "expected": {
+        "review_only": true,
+        "checks": [
+          "视觉主题由本例输入决定，研究流程不依赖 RAG 或 Agent 关键词。",
+          "核对两篇固定版本中的监督信号和迁移设置，用正文支持差异。",
+          "明确可比条件及证据缺口，不杜撰统一实验。"
+        ],
+        "conditional_branch_note": "只有实际遇到缺口或失败才要求合理调整；一次已取得充分证据无需人为增加工具调用。没有触发的分支标为未观察，不能宣称真实模型已覆盖。"
+      }
+    },
+    {
+      "id": "contextual-followups",
+      "name": "连续追问与来源范围",
+      "source_ids": [
+        "react-v1",
+        "reflexion-v1"
+      ],
+      "web_payload": {
+        "topic": "language model agents ReAct Reflexion",
+        "questions": [
+          "阅读 ReAct 与 Reflexion v1，概述它们如何处理交互中的错误及各自局限，给出正文证据。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1
+      },
+      "followups": [
+        "你刚才提到的后者，与前者相比，哪些处理错误的机制不同？",
+        "这些机制的实验结果是否足以支持在所有交互任务中都更好？请指出依据和边界。"
+      ],
+      "coverage": [
+        "continuous_followup",
+        "pronoun_resolution",
+        "fresh_evidence"
+      ],
+      "expected": {
+        "review_only": true,
+        "checks": [
+          "两轮追问使用同一研究的论文，结合历史理解指代。",
+          "每轮正文事实重新取得所需证据，不能把上一轮生成的回答当作原文。",
+          "追问历史、轮次及模型用量按实际结果记录。"
+        ],
+        "conditional_branch_note": "只有实际遇到缺口或失败才要求合理调整；一次已取得充分证据无需人为增加工具调用。没有触发的分支标为未观察，不能宣称真实模型已覆盖。"
+      }
+    },
+    {
+      "id": "unsupported-business-cost",
+      "name": "缺少业务指标时的证据边界",
+      "source_ids": [
+        "react-v1",
+        "toolformer-v1"
+      ],
+      "web_payload": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "仅根据 ReAct 和 Toolformer 的正文，能否给出在企业部署它们各自每月维护成本的美元金额及核算方法？如果取得的证据不足，请明确说明检索范围与缺口，不要推算不存在的成本数据。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1
+      },
+      "followups": [],
+      "coverage": [
+        "insufficient_evidence",
+        "bounded_failure_handling"
+      ],
+      "expected": {
+        "review_only": true,
+        "checks": [
+          "不预先声称全文不存在某数据；人工依据实际取得的正文判断。",
+          "不能把训练或推理成本改写为企业月度维护成本，不能虚构金额。",
+          "遇到工具失败要准确暴露失败和已取得材料；没有实际失败时不能宣称覆盖失败恢复。"
+        ],
+        "conditional_branch_note": "只有实际遇到缺口或失败才要求合理调整；一次已取得充分证据无需人为增加工具调用。没有触发的分支标为未观察，不能宣称真实模型已覆盖。"
+      }
+    }
+  ]
+}

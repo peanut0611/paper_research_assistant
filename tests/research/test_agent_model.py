@@ -419,7 +419,7 @@ def test_injected_model_branches_on_observations_and_checks_real_returned_quotes
         return envelope({"kind": "finish", "reason": "sufficient_evidence", "summary": "Injected transport validation only"})
     runner, client = controller(tmp_path, FakeClient(choose=choose), runtime=runtime)
     result = runner.run()
-    assert result["stop_reason"] == "sufficient_evidence" and len(client.calls) == 6 + skip_ingestion_once + premature_finish_once
+    assert result["stop_reason"] == "sufficient_evidence" and len(client.calls) == 5 + skip_ingestion_once + premature_finish_once
     assert result["usage"]["tokens"] == 130 * len(client.calls) and result["tool_event_count"] == 5 + skip_ingestion_once
     assert not any(row["simulated"] for row in result["model_events"])  # Adapter path; transport is explicitly injected.
     assert result["selections"]["2401.00396"]["selected"]

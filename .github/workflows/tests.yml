@@ -1,0 +1,30 @@
+name: Offline behavior checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  behavior:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENAI_API_KEY: ""
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.23"
+          enable-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: uv python install 3.12
+      - run: uv sync --locked --python 3.12
+      - run: uv run --no-sync pytest -q
+      - run: node --test tests/web/research_client.test.cjs tests/web/conversation_client.test.cjs

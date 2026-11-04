@@ -26,6 +26,29 @@ def gathering(view):
     return action("list_documents") if view["evidence"] else normal_policy(view)
 
 
+def test_verified_sufficient_answer_finishes_before_another_model_request(tmp_path, sample_pdf):
+    def choose(view):
+        assert not view["completion"]["can_finish_sufficient_evidence"], "Verified answers must not request another model decision"
+        return checked_action(view) if view["evidence"] else normal_policy(view)
+    result = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf)).run()
+    assert result["stop_reason"] == "sufficient_evidence"
+    assert result["answer_phase"] is None
+    assert result["usage"]["calls"] == result["tool_event_count"] == 5
+
+
+def test_repeated_citation_failures_are_bounded_before_forced_answer_phase(tmp_path, sample_pdf):
+    def choose(view):
+        if not view["evidence"]:
+            return normal_policy(view)
+        return checked_action(view, bad_quote=True)
+    result = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf),
+                    config=RunnerConfig(max_no_progress=10)).run()
+    assert result["stop_reason"] == "invalid_decision_limit"
+    assert result["usage"]["calls"] == 6
+    assert result["answer_phase"] is None
+    assert not any(row["tool"] == "verify_citations" and row["result"]["success"] for row in result["observations"])
+
+
 @pytest.mark.parametrize("insufficient", [False, True])
 def test_no_progress_hands_off_to_checked_answer_and_finishes_without_extra_model_call(tmp_path, sample_pdf, insufficient):
     def choose(view):

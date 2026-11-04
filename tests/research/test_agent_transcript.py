@@ -114,6 +114,28 @@ def test_duplicate_search_returns_linked_correction_instead_of_executing_again(t
     assert result["tool_event_count"] == result["tool_limits"]["search_rounds"] == 1
 
 
+def test_execution_events_distinguish_decisions_observations_and_host_corrections(tmp_path):
+    search = envelope({"kind": "tool", "tool": "search_literature", "arguments": {"query": "retrieval", "max_results": 3}})
+    runner, _ = controller(tmp_path, FakeClient([response(search), response(search), response()]))
+    result = runner.run()
+    decisions = [event["data"] for event in result["agent_events"] if event["type"] == "model_decision"]
+    observations = [event["data"] for event in result["agent_events"] if event["type"] == "tool_observation"]
+    corrections = [event["data"] for event in result["agent_events"] if event["type"] == "host_feedback"]
+    assert decisions[0]["decision"]["arguments"]["query"] == "retrieval"
+    assert decisions[0]["origin"] == "model" and decisions[0]["simulated"] is False
+    assert len(observations) == 1
+    assert observations[0]["origin"] == "tool" and observations[0]["tool"] == "search_literature"
+    assert observations[0]["summary"]["candidate_ids"] == ["2401.00544", "2401.00396", "2401.00280"]
+    assert observations[0]["event_id"] == runner.tools.export_trace()["events"][0]["event_id"]
+    correction = next(row for row in corrections if not row["success"])
+    assert correction["origin"] == "host" and correction["error"]["code"] == "duplicate_literature_search"
+    assert correction["tool"] == "search_literature"
+    stopped = next(event["data"] for event in result["agent_events"] if event["type"] == "execution_stopped")
+    assert stopped["origin"] == "host" and stopped["reason"] == "insufficient_evidence"
+    assert stopped["materials"][0]["status"] == "abstract_only"
+    assert AgentState.load(runner.path).agent_events == result["agent_events"]
+
+
 def test_real_sdk_serializes_complete_exchanges_with_original_call_ids(tmp_path):
     import httpx2 as httpx
     from openai import DefaultHttpxClient, OpenAI

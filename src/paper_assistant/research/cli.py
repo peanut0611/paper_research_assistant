@@ -43,8 +43,9 @@ def main():
     parser.add_argument("--end")
     parser.add_argument("--question", action="append")
     parser.add_argument("--target-papers", type=int)
-    parser.add_argument("--max-cost-usd", type=float, help="Task budget, default 0.10; must be above report reserve")
+    parser.add_argument("--max-cost-usd", type=float, help="Task budget, default 0.50; must be above report reserve")
     parser.add_argument("--report-reserve-usd", type=float)
+    parser.add_argument("--max-runtime-seconds", type=int)
     parser.add_argument("--max-steps", type=int)
     parser.add_argument("--max-model-tokens", type=int)
     parser.add_argument("--max-output-tokens", type=int)
@@ -72,7 +73,7 @@ def main():
         model_path = directory / "model_config.json"
         if args.resume:
             if any(value is not None for value in (args.topic, args.start, args.end, args.question, args.target_papers,
-                args.max_cost_usd, args.report_reserve_usd, args.max_steps, args.max_model_tokens, args.max_output_tokens, args.seed_search_results)):
+                args.max_cost_usd, args.max_runtime_seconds, args.report_reserve_usd, args.max_steps, args.max_model_tokens, args.max_output_tokens, args.seed_search_results)):
                 parser.error("Resume reuses the saved task/model/budgets; omit scope and budget overrides")
             state = AgentState.load(directory / "runner_state.json")
             task = ResearchTask.from_dict(state.binding["task"])
@@ -95,8 +96,11 @@ def main():
         else:
             if not all((args.topic, args.start, args.end)):
                 parser.error("New tasks require --topic/--start/--end")
-            limits = ResearchLimits(max_model_cost_usd=args.max_cost_usd if args.max_cost_usd is not None else 0.10,
+            limits = ResearchLimits(max_model_cost_usd=args.max_cost_usd if args.max_cost_usd is not None else 0.50,
+                                    max_runtime_seconds=args.max_runtime_seconds if args.max_runtime_seconds is not None else 300,
                                     report_reserve_usd=args.report_reserve_usd if args.report_reserve_usd is not None else 0.02)
+            if limits.max_model_cost_usd > .50:
+                parser.error("New research tasks are limited to 0.50 USD")
             task = ResearchTask(args.topic, tuple(args.question or [args.topic]), datetime.fromisoformat(args.start),
                 datetime.fromisoformat(args.end), target_papers=args.target_papers if args.target_papers is not None else 1, limits=limits)
             runner_config = RunnerConfig(max_steps=args.max_steps if args.max_steps is not None else 12,

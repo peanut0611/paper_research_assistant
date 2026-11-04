@@ -21,6 +21,20 @@
         <p>输入研究问题，自动查找文献、阅读正文并核对来源。</p>
       </header>
       <div id="research-notice" class="notice" role="status" aria-live="polite">正在连接研究服务…</div>
+      <div class="conversation-toolbar">
+        <label for="research-dialogue-select">研究对话</label>
+        <select id="research-dialogue-select" aria-label="选择研究对话"><option value="">新建研究对话</option></select>
+        <button id="research-dialogue-new" type="button" class="secondary">新建研究对话</button>
+        <button id="research-dialogue-delete" type="button" class="secondary" disabled>删除研究对话</button>
+        <button id="research-dialogue-refresh" type="button" class="text-button">刷新列表</button>
+      </div>
+      <div id="research-delete-confirmation" class="notice" hidden role="group" aria-label="确认删除研究对话">
+        <p id="research-delete-scope"></p>
+        <button id="research-delete-confirm" type="button">确认永久删除</button>
+        <button id="research-delete-cancel" type="button" class="secondary">取消</button>
+      </div>
+      <p id="research-dialogue-status" class="muted" role="status"></p>
+      <p class="muted">初始研究最多 $0.50、5 分钟；追问每轮最多 $0.10、2 分钟，每段研究对话累计最多 20 轮 / $0.50，总估算上限 $1.00。未知结果保守占用额度。应用估算与服务商实际账单可能不同，不代表账户硬限额。</p>
       <details id="research-editor" class="task-editor" open>
         <summary>研究设置 <span class="summary-note">主题、问题与日期</span></summary>
       <form id="research-form" class="research-form">
@@ -54,12 +68,10 @@
         <section id="conversation-panel" class="conversation" hidden aria-label="继续讨论当前论文">
           <div class="section-heading"><h3>继续讨论</h3><button id="conversation-refresh" type="button" class="text-button">重新连接</button></div>
           <div class="conversation-toolbar">
-            <label for="conversation-select" class="sr-only">选择对话</label><select id="conversation-select" aria-label="选择对话"></select>
-            <button id="conversation-new" type="button" class="secondary" disabled>新建对话</button>
-            <button id="conversation-reset" type="button" class="text-button" disabled>重置当前对话</button>
+            <label for="conversation-select" class="sr-only">选择历史追问线程</label><select id="conversation-select" aria-label="选择历史追问线程"></select>
           </div>
           <p class="muted">围绕本任务已入库的论文追问，可补检索和读页；不会添加新论文。</p>
-          <p class="muted">新建后可切换回旧对话；重置清空当前追问上下文。原研究结果、历史记录和本任务累计费用保留。</p>
+          <p class="muted">需要添加论文时请在页面上方新建研究对话，重新填写领域、问题和日期。旧共享论文的追问线程仍可读取，不代表独立研究范围。</p>
           <p id="conversation-status" role="status" aria-live="polite"></p>
           <p id="conversation-usage" class="muted"></p>
           <div id="conversation-messages" class="conversation-messages" aria-live="polite"></div>

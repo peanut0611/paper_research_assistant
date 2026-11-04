@@ -30,15 +30,17 @@ function snapshot(finished = false) {
         citations: [{evidence_id: 'E1', quote: '<script>quote</script>', source: {title: 'RAGTruth'}, sources: [{page_number: 1}]}]} : null},
     events: [{event_id: 1, tool: 'search_literature', purpose: '<script>purpose</script>', status: 'completed', success: true, duration_ms: 10}]};
 }
-async function setup(fetch, stored = null) {
+async function setup(fetch, stored = null, dialogues = [], view = undefined) {
   const html = fs.readFileSync(path.join(__dirname, '../../src/paper_assistant/web/static/index.html'), 'utf8');
   const ids = [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
   const nodes = Object.fromEntries(ids.map(id => [id, new Element()]));
   nodes['research-source'].value = 'online'; nodes['research-papers'].value = '1';
   const timers = new Map(); let sequence = 0;
   const storage = new Map(stored ? [['paper-assistant-research-job', stored]] : []);
-  const context = vm.createContext({document: {getElementById: id => nodes[id], createElement: tag => new Element(tag)}, fetch,
-    localStorage: {getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value)},
+  const context = vm.createContext({document: {getElementById: id => nodes[id], createElement: tag => new Element(tag)}, fetch: (url, options) => url === '/api/research/jobs' && !options?.method
+      ? Promise.resolve(reply({dialogues, unreadable_dialogue_ids: []})) : fetch(url, options),
+    localStorage: {getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key)},
+    paperResearchView: view,
     setTimeout: callback => { timers.set(++sequence, callback); return sequence; }, clearTimeout: id => timers.delete(id), URL, Blob, TypeError});
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../../src/paper_assistant/web/static/research.js'), 'utf8'), context);
   await new Promise(resolve => setImmediate(resolve));
@@ -66,7 +68,9 @@ test('example only fills inputs; explicit submit starts exactly one job and poll
   assert.equal(n['research-submit'].disabled, true);
   await n['research-form'].requestSubmit(); assert.equal(calls.length, 2);
   const {max_cost_usd, ...formSettings} = settings;
-  assert.deepEqual(JSON.parse(calls[1].options.body), formSettings);
+  const {request_id, ...posted} = JSON.parse(calls[1].options.body);
+  assert.deepEqual(posted, formSettings);
+  assert.ok(request_id.length >= 16);
   finish(reply(snapshot())); await pending;
   assert.equal(app.storage.get('paper-assistant-research-job'), id);
   await app.tick();
@@ -155,4 +159,151 @@ test('reconnecting focuses results while polling preserves manually expanded set
   app.nodes['research-editor'].open = true;
   await app.tick();
   assert.equal(app.nodes['research-editor'].open, true);
+});
+
+test('execution details show model actions, actual feedback and host stopping separately', async () => {
+  const data = snapshot(true);
+  data.state.agent_events = [
+    {sequence: 1, type: 'model_decision', data: {origin: 'model', simulated: true,
+      decision: {kind: 'tool', tool: 'read_pages', arguments: {document_id: 'current-paper', start_page: 2}, purpose: '<script>补查正文</script>'}}},
+    {sequence: 2, type: 'tool_observation', data: {origin: 'tool', tool: 'read_pages', success: true,
+      summary: {pages_count: 1, evidence_ids: ['E4']}}},
+    {sequence: 3, type: 'host_feedback', data: {origin: 'host', tool: 'search_literature', success: false,
+      error: {code: 'duplicate_literature_search', message: '相同搜索未执行'}}},
+    {sequence: 4, type: 'execution_stopped', data: {origin: 'host', reason: 'sufficient_evidence', summary: '已保留回答',
+      materials: [{arxiv_id: '2401.00396', status: 'fulltext_ready'}]}}
+  ];
+  const {nodes} = await setup(async url => reply(url === '/api/research/status' ? status : data), id);
+  const visible = texts(nodes['research-events']).join('\n');
+  assert.ok(visible.includes('模型决策（模拟策略）'));
+  assert.ok(visible.includes('阅读页面') && visible.includes('current-paper') && visible.includes('第 2 页'));
+  assert.ok(visible.includes('<script>补查正文</script>'));
+  assert.ok(visible.includes('工具反馈') && visible.includes('E4'));
+  assert.ok(visible.includes('宿主反馈') && visible.includes('相同搜索未执行'));
+  assert.ok(visible.includes('停止原因') && visible.includes('已保留回答'));
+  assert.ok(visible.includes('2401.00396') && visible.includes('全文可检索'));
+});
+
+test('research dialogue selection restores saved inputs; new dialogue clears scope before explicit submit', async () => {
+  const calls = [];
+  const app = await setup(async (url, options) => {
+    calls.push([url, options]);
+    const data = snapshot(true);
+    if (url.includes('bbbbbbbbbbbb')) { data.job.task_id = id.replace('aaaaaaaaaaaa', 'bbbbbbbbbbbb'); data.job.request = {...settings, topic: '另一个领域', questions: ['另一个问题']}; }
+    return reply(url === '/api/research/status' ? status : data);
+  }, null, [{task_id: id, request: settings}, {task_id: id.replace('aaaaaaaaaaaa', 'bbbbbbbbbbbb'), request: {...settings, topic: '另一个领域'}}]);
+  assert.equal(app.nodes['research-dialogue-select'].children.length, 3);
+  assert.ok(texts(app.nodes['research-dialogue-select']).join('').includes('另一个领域'));
+  app.nodes['research-dialogue-select'].value = id;
+  await app.nodes['research-dialogue-select'].listeners.change();
+  assert.equal(app.nodes['research-topic'].value, settings.topic);
+  assert.equal(app.storage.get('paper-assistant-research-job'), id);
+  app.nodes['research-dialogue-select'].value = id.replace('aaaaaaaaaaaa', 'bbbbbbbbbbbb');
+  await app.nodes['research-dialogue-select'].listeners.change();
+  assert.equal(app.nodes['research-topic'].value, '另一个领域');
+  assert.equal(app.nodes['research-questions'].value, '另一个问题');
+  const count = calls.length;
+  await app.nodes['research-dialogue-new'].click();
+  assert.equal(app.nodes['research-topic'].value, '');
+  assert.equal(app.nodes['research-questions'].value, '');
+  assert.equal(app.nodes['research-start'].value, '');
+  assert.equal(app.nodes['research-end'].value, '');
+  assert.equal(app.nodes['research-result'].hidden, true);
+  assert.equal(calls.length, count);
+  assert.equal(app.storage.get('paper-assistant-research-job'), undefined);
+});
+
+
+test('lost initial POST response retains request identity for explicit retry', async () => {
+  const posted = [];
+  const app = await setup(async (url, options) => {
+    if (url === '/api/research/status') return reply(status);
+    posted.push(JSON.parse(options.body));
+    throw new TypeError('response lost');
+  });
+  app.nodes['research-example'].click();
+  await app.nodes['research-form'].requestSubmit();
+  assert.ok(app.storage.get('paper-assistant-research-pending'));
+  await app.nodes['research-form'].requestSubmit();
+  assert.equal(posted.length, 2);
+  assert.ok(posted[0].request_id);
+  assert.deepEqual(posted[0], posted[1]);
+});
+
+test('evidence viewer identifies each pinned paper and page and separates traceability from claim support', async () => {
+  const data = snapshot(true);
+  data.job.request = {...settings, target_papers: 3};
+  data.state.candidates.push({arxiv_id: '2401.00544', version: 2, title: '第二篇', status: 'unavailable', last_error: 'PDF 404'});
+  data.state.evidence_answer.citations[0].source = {title: 'RAGTruth', arxiv_id: '2401.00396', version: 2, document_id: 'arxiv--2401.00396--v2'};
+  data.state.evidence_answer.citations[0].sources = [{document_id: 'arxiv--2401.00396--v2', page_number: 4}];
+  const {nodes} = await setup(async url => reply(url === '/api/research/status' ? status : data), id);
+  const evidence = texts(nodes['research-citations']).join(' ');
+  assert.ok(evidence.includes('2401.00396v2'));
+  assert.ok(evidence.includes('第 4 页'));
+  assert.ok(evidence.includes('原文摘录'));
+  assert.ok(evidence.includes('引用可追溯性'));
+  assert.ok(evidence.includes('结论支持度：未经自动语义核验'));
+  const detail = nodes['research-citations'].children.find(child => child.tag === 'details');
+  const link = detail.children.find(child => child.tag === 'a');
+  assert.equal(link.href, 'https://arxiv.org/pdf/2401.00396v2#page=4');
+  assert.ok(texts(nodes['research-candidates']).join(' ').includes('实际入库正文 1 / 目标 3 篇'));
+  assert.ok(texts(nodes['research-candidates']).join(' ').includes('PDF 404'));
+});
+
+test('deletion requires explicit confirmation, cancellation keeps data, confirmed deletion clears selection', async () => {
+  const calls = [];
+  const app = await setup(async (url, options) => {
+    calls.push({url, options});
+    if (url === '/api/research/status') return reply(status);
+    if (url.endsWith('/delete')) return reply({deleted_dialogue_id: id});
+    return reply(snapshot(true));
+  }, id, [snapshot(true).job]);
+  const n = app.nodes;
+  assert.equal(n['research-dialogue-delete'].disabled, false);
+  await n['research-dialogue-delete'].click();
+  assert.equal(n['research-delete-confirmation'].hidden, false);
+  assert.ok(n['research-delete-scope'].textContent.includes('专属索引'));
+  await n['research-delete-cancel'].click();
+  assert.equal(n['research-delete-confirmation'].hidden, true);
+  assert.equal(calls.filter(row => row.options?.method === 'POST').length, 0);
+  assert.equal(n['research-dialogue-select'].value, id);
+  await n['research-dialogue-delete'].click();
+  await n['research-delete-confirm'].click();
+  const posted = calls.filter(row => row.options?.method === 'POST');
+  assert.equal(posted.length, 1);
+  assert.equal(posted[0].url, `/api/research/jobs/${id}/delete`);
+  assert.deepEqual(JSON.parse(posted[0].options.body), {confirmed: true});
+  assert.equal(n['research-dialogue-select'].value, '');
+  assert.equal(n['research-result'].hidden, true);
+  assert.equal(n['research-dialogue-delete'].disabled, true);
+  assert.equal(app.storage.has('paper-assistant-research-job'), false);
+});
+
+test('running research cannot open deletion confirmation', async () => {
+  const app = await setup(async url => reply(url === '/api/research/status' ? status : snapshot()), id);
+  assert.equal(app.nodes['research-dialogue-delete'].disabled, true);
+  await app.nodes['research-dialogue-delete'].click();
+  assert.notEqual(app.nodes['research-delete-confirmation'].hidden, false);
+});
+
+
+test('active followup prevents deletion even when initial research has finished', async () => {
+  const app = await setup(async url => reply(url === '/api/research/status' ? status : snapshot(true)), id,
+    [snapshot(true).job], (_data, {setBusy}) => setBusy(true));
+  assert.equal(app.nodes['research-dialogue-delete'].disabled, true);
+  await app.nodes['research-dialogue-delete'].click();
+  assert.equal(app.nodes['research-delete-confirmation'].hidden, true);
+});
+
+test('a deleted saved dialogue clears stale selection on refresh without re-creation', async () => {
+  const calls = [];
+  const app = await setup(async (url, options) => {
+    calls.push({url, options});
+    return url === '/api/research/status' ? reply(status) : {ok: false, status: 410, json: async () => ({error: '已删除'})};
+  }, id);
+  assert.equal(app.nodes['research-dialogue-select'].value, '');
+  assert.equal(app.nodes['research-result'].hidden, true);
+  assert.equal(app.nodes['research-dialogue-delete'].disabled, true);
+  assert.equal(app.storage.has('paper-assistant-research-job'), false);
+  assert.ok(calls.every(call => !call.options?.method));
 });

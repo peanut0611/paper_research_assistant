@@ -66,8 +66,10 @@ def normal_policy(view):
         return action("search_documents", query="retrieval", method="bm25")
     if not any(row["tool"] == "verify_citations" for row in view["observations"]):
         identifier, evidence = next(iter(view["evidence"].items()))
-        return action("verify_citations", answer=f"Mock excerpt [{identifier}]", insufficient_evidence=False,
-                      citations=[{"evidence_id": identifier, "quote": evidence["text"][:10]}])
+        result = action("verify_citations", answer=f"Mock excerpt [{identifier}]", insufficient_evidence=False,
+                        citations=[{"evidence_id": identifier, "quote": evidence["text"][:10]}])
+        result["updates"] = {"gaps": []}
+        return result
     result = finish("sufficient_evidence")
     result["updates"] = {"gaps": []}
     return result
@@ -76,8 +78,8 @@ def normal_policy(view):
 def test_observation_driven_mock_completes_discovery_to_citation_check(tmp_path, sample_pdf):
     controller = runner(tmp_path, normal_policy, runtime=tools(tmp_path, sample_pdf))
     result = controller.run()
-    assert result["stop_reason"] == "sufficient_evidence" and result["steps"] == 6
-    assert result["tool_event_count"] == 5 and result["usage"]["calls"] == 6
+    assert result["stop_reason"] == "sufficient_evidence" and result["steps"] == 5
+    assert result["tool_event_count"] == 5 and result["usage"]["calls"] == 5
     assert result["evidence"] and not result["gaps"] and result["selections"]["2401.00396"]["selected"]
     assert all(event["simulated"] for event in result["model_events"])
     assert controller.tools.workspace._embedder is not None
@@ -124,7 +126,7 @@ def test_duplicate_literature_search_can_be_corrected_without_spending_search_ro
     assert result["stop_reason"] == "sufficient_evidence"
     assert result["tool_limits"]["search_rounds"] == 1 and result["tool_event_count"] == 5
     assert sum(row.get("error") == "duplicate_literature_search" for row in result["decisions"]) == 1
-    assert result["steps"] == result["usage"]["calls"] == 7
+    assert result["steps"] == result["usage"]["calls"] == 6
 
 
 def test_duplicate_search_correction_limit_survives_resume(tmp_path):
@@ -181,7 +183,8 @@ def test_independent_global_step_and_tool_limits_stop_before_model_call(tmp_path
                                            (ModelEstimate(81, 0), RunnerConfig(max_model_tokens=100, report_reserve_tokens=20))])
 def test_report_reserve_prevents_decision_before_it_is_called(tmp_path, estimate, config):
     calls = []
-    result = runner(tmp_path, lambda view: calls.append(True), estimate=estimate, config=config).run()
+    result = runner(tmp_path, lambda view: calls.append(True), estimate=estimate, config=config,
+                    runtime=tools(tmp_path, research_task=task(limits=ResearchLimits(max_model_cost_usd=.10)))).run()
     assert result["stop_reason"] == "model_budget_exhausted" and not calls and result["steps"] == 0
 
 
@@ -223,6 +226,8 @@ def test_policy_exception_uses_conservative_unknown_charge_without_logging_raw_e
 def test_invalid_decisions_have_bounded_corrections_and_still_cost_steps(tmp_path, decision):
     result = runner(tmp_path, lambda view: decision).run()
     assert result["stop_reason"] == "invalid_decision_limit" and result["usage"]["calls"] == 2
+    feedback = [event["data"] for event in result["agent_events"] if event["type"] == "host_feedback"]
+    assert len(feedback) == 2 and all(row["error"]["code"] == "invalid_decision" for row in feedback)
     assert result["tool_event_count"] == 0
 
 
@@ -308,7 +313,7 @@ def test_premature_finish_can_be_corrected_by_real_citation_validation(tmp_path,
     controller = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf))
     result = controller.run()
     assert result["stop_reason"] == "sufficient_evidence"
-    assert result["steps"] == result["usage"]["calls"] == 7
+    assert result["steps"] == result["usage"]["calls"] == 6
     assert result["tool_event_count"] == 5 and result["last_error"] is None
     assert sum(row.get("error") == "unverified_completion" for row in result["decisions"]) == 1
     assert controller.view()["completion"]["can_finish_sufficient_evidence"]
@@ -347,7 +352,7 @@ def test_completion_correction_cannot_bypass_existing_budgets(tmp_path, boundary
     assert result["usage"]["calls"] == 1 and result["tool_event_count"] == 0
 
 
-def test_later_insufficient_answer_cannot_finish_using_an_older_positive_check(tmp_path, sample_pdf):
+def test_verified_answer_stops_before_model_can_replace_it_with_another_answer(tmp_path, sample_pdf):
     def choose(view):
         checks = [row for row in view["observations"] if row["tool"] == "verify_citations"]
         if len(checks) == 1:
@@ -355,8 +360,9 @@ def test_later_insufficient_answer_cannot_finish_using_an_older_positive_check(t
         return finish("sufficient_evidence") if len(checks) == 2 else normal_policy(view)
     controller = runner(tmp_path, choose, runtime=tools(tmp_path, sample_pdf), config=RunnerConfig(max_invalid_decisions=1))
     result = controller.run()
-    assert result["stop_reason"] == "unverified_completion"
-    assert not controller.view()["completion"]["can_finish_sufficient_evidence"]
+    assert result["stop_reason"] == "sufficient_evidence"
+    assert controller.view()["completion"]["can_finish_sufficient_evidence"]
+    assert len([row for row in result["observations"] if row["tool"] == "verify_citations"]) == 1
 
 
 def test_mutating_policy_view_cannot_change_task_limits_or_private_evidence(tmp_path):
@@ -399,8 +405,8 @@ def test_clean_checkpoint_resume_preserves_usage_evidence_and_selection(tmp_path
     restored = resumed(controller)
     assert restored.state.usage == before["usage"] and restored.state.evidence == before["evidence"]
     result = restored.run()
-    assert result["stop_reason"] == "sufficient_evidence" and result["steps"] == 6
-    assert result["tool_limits"]["search_rounds"] == 1 and result["usage"]["calls"] == 6
+    assert result["stop_reason"] == "sufficient_evidence" and result["steps"] == 5
+    assert result["tool_limits"]["search_rounds"] == 1 and result["usage"]["calls"] == 5
     assert result["selections"] == before["selections"]
 
 

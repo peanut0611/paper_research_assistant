@@ -76,6 +76,13 @@ def test_two_followups_retrieve_again_keep_history_and_preserve_original_artifac
     assert captured[-1]["task"]["research_questions"] == ["它的局限是什么？"]
     snapshot = store.snapshot()
     assert len(snapshot["turns"]) == 2 and snapshot["usage"]["tokens"] > 0
+    for row in snapshot["turns"]:
+        events = row["agent_events"]
+        assert any(event["type"] == "model_decision" for event in events)
+        observations = [event["data"] for event in events if event["type"] == "tool_observation"]
+        assert [event["tool"] for event in observations] == ["search_documents", "verify_citations"]
+        stopped = next(event["data"] for event in events if event["type"] == "execution_stopped")
+        assert stopped["reason"] == "sufficient_evidence"
     assert snapshot["remaining_usd"] < .50
     for name, content in originals.items():
         assert (directory / name).read_bytes() == content
@@ -297,25 +304,28 @@ def test_new_dialogue_has_isolated_history_and_can_switch_back_without_resetting
     assert restored["usage"]["cost_usd"] > before["usage"]["cost_usd"]
 
 
-def test_reset_archives_context_preserves_logs_and_rejects_stale_questions(parent):
+def test_reset_is_retired_without_changing_history_or_budget(parent):
     store = ConversationStore(parent.directory)
-    turn = finish_discussion(store, parent, "重置前的独有问题", "request-reset-000001")
+    turn = finish_discussion(store, parent, "保留已有问题", "request-reset-000001")
     before = store.snapshot()
-    journal = (store.turn_directory(turn["id"]) / "tool_trace.json").read_bytes()
-    operation = manage_payload(before)
-    store.manage("reset", operation)
-    store.manage("reset", operation)  # Idempotent even though the generation advanced.
-    reset = store.snapshot()
-    assert reset["thread_id"] == before["thread_id"] and reset["generation"] == 1
-    assert reset["turns"] == [] and reset["threads"][0]["archived_turn_count"] == 1
-    assert reset["usage"] == before["usage"] and reset["remaining_usd"] == before["remaining_usd"]
-    assert (store.turn_directory(turn["id"]) / "tool_trace.json").read_bytes() == journal
-    with pytest.raises(ValueError, match="已切换或重置"):
-        store.begin({**payload(request_id="request-stale-000001"), "thread_id": before["thread_id"], "generation": 0})
-    new = store.begin({**payload("重置后的问题", "request-after-reset1"), "thread_id": reset["thread_id"], "generation": 1})
-    history = json.loads((store.turn_directory(new["id"]) / "request.json").read_bytes())["history"]
-    assert not any("重置前的独有问题" in row["text"] for row in history)
-    assert store.existing(payload("重置前的独有问题", "request-reset-000001"))["id"] == turn["id"]
+    with pytest.raises(ValueError, match="重置"):
+        store.manage("reset", manage_payload(before))
+    assert store.snapshot() == before
+    assert store.snapshot()["turns"][0]["id"] == turn["id"]
+
+
+def test_legacy_reset_archives_remain_readable_without_entering_new_context(parent):
+    store = ConversationStore(parent.directory)
+    turn = finish_discussion(store, parent, "历史归档的问题", "request-reset-000001")
+    data = store.load()
+    data["threads"][0]["generation"] = 1  # Existing record from the retired reset operation.
+    store.save(data)
+    before = store.path.read_bytes()
+    snapshot = store.snapshot()
+    assert snapshot["turns"] == []
+    assert snapshot["archived_turns"][0]["id"] == turn["id"]
+    assert snapshot["archived_turns"][0]["answer"]
+    assert store.path.read_bytes() == before
 
 
 def test_legacy_thread_migration_is_readonly_until_an_explicit_action(parent):
@@ -335,7 +345,7 @@ def test_legacy_thread_migration_is_readonly_until_an_explicit_action(parent):
     assert len(store.load()["turns"]) == 1 and len(store.load()["threads"]) == 2
 
 
-@pytest.mark.parametrize("action", ["new", "reset"])
+@pytest.mark.parametrize("action", ["new"])
 def test_changing_context_never_releases_unknown_call_reservations(parent, action):
     store = ConversationStore(parent.directory)
     for index in range(5):

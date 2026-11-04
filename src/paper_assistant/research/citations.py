@@ -80,6 +80,9 @@ def validate_answer(raw_output: str, evidence: Mapping[str, CitationEvidence]) -
             raise ValueError("Answer cites an unknown evidence ID")
         if not isinstance(quote, str) or not normalize_evidence(quote):
             raise ValueError("Citation quote cannot be blank")
+        sources = mapping[identifier].sources
+        if not sources or any(not source.document_id or type(source.page_number) is not int or source.page_number < 1 for source in sources):
+            raise ValueError("Citation needs a locatable original document and page")
         normalized = normalize_evidence(quote)
         if normalized not in normalize_evidence(mapping[identifier].text):
             quote_errors.append(_quote_hint(identifier, quote, mapping[identifier].text) if len(quote_errors) < 3

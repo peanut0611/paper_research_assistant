@@ -20,7 +20,7 @@ class ResearchLimits:
     max_read_chars: int = 12000
     max_runtime_seconds: int = 300
     max_pdf_bytes: int = 20_000_000
-    max_model_cost_usd: float = 0.10
+    max_model_cost_usd: float = 0.50
     report_reserve_usd: float = 0.02
 
     def __post_init__(self) -> None:

@@ -1,0 +1,15 @@
+{
+  "report_kind": "unavailable_baseline_reference_not_capture",
+  "cases": [],
+  "frozen_inputs": {
+    "frozen_at": "2026-11-04T08:31:32.921470+00:00",
+    "sha256": {
+      "suite.json": "a1051032549b9fcb35005453fb9827768b6a8ea5af31d9c8ffb9ba36c0b3acb9",
+      "sources.json": "5af8cd8368234a5237ce3a32ae968e6230cbf0ce1466c8904767fcbdb4d78371",
+      "rubric.md": "d94dc0282c787fed4a20174a943a2722ecc6e3ed94c97aa0590125df0cd0b7be",
+      "workspace.json": "741e5ea91113b1f0afbcc88bde976b900c3a4b8735208d727a54acc6407bbbb3"
+    }
+  },
+  "status": "blocked_before_real_model_baseline",
+  "note": "No original real-model baseline exists. This reference preserves missing cases; it is not a baseline execution."
+}

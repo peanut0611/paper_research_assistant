@@ -63,6 +63,8 @@ class PaperRequestHandler(BaseHTTPRequestHandler):
         if self.path in assets:
             name, mime = assets[self.path]
             self._send(200, (ASSETS / name).read_bytes(), mime)
+        elif self.path == "/api/research/jobs":
+            self._json(200, self.server.research.dialogues())
         elif self.path == "/api/research/status":
             self._json(200, self.server.research.status())
         elif self.path.startswith("/api/research/jobs/") and self.path.endswith("/conversation"):
@@ -87,7 +89,7 @@ class PaperRequestHandler(BaseHTTPRequestHandler):
             self._json(403, {"error": "仅接受本机页面提交的研究任务。"})
             return
         if self.path != "/api/research/jobs" and not (
-                self.path.startswith("/api/research/jobs/") and self.path.endswith(("/stop", "/conversation", "/conversation/new", "/conversation/reset", "/conversation/select"))):
+                self.path.startswith("/api/research/jobs/") and self.path.endswith(("/stop", "/delete", "/conversation", "/conversation/new", "/conversation/reset", "/conversation/select"))):
             self._json(404, {"error": "接口不存在。"})
             return
         if self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
@@ -106,6 +108,9 @@ class PaperRequestHandler(BaseHTTPRequestHandler):
         try:
             if self.path == "/api/research/jobs":
                 self._json(202, self.server.research.start(payload))
+            elif self.path.endswith("/delete"):
+                task_id = self.path.removeprefix("/api/research/jobs/").removesuffix("/delete")
+                self._json(200, self.server.research.delete(task_id, payload))
             elif self.path.endswith(("/conversation/new", "/conversation/reset", "/conversation/select")):
                 task_path, action = self.path.rsplit("/", 1)
                 task_id = task_path.removeprefix("/api/research/jobs/").removesuffix("/conversation")

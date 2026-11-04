@@ -4,9 +4,11 @@ GET requests only inspect snapshots. A new explicit POST generates a fresh task;
 refreshing, polling and reconnecting never start or resume model calls.
 """
 
+import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -14,7 +16,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from paper_assistant.research.state import AgentState
+from paper_assistant.research.state import AgentState, cost
 from paper_assistant.research.toolset import _redact
 from paper_assistant.tools.arxiv.fetch import load_search_candidates
 from paper_assistant.research.task import ResearchLimits, ResearchTask
@@ -76,9 +78,57 @@ class ResearchJobService:
         if not isinstance(task_id, str) or JOB_ID.fullmatch(task_id) is None:
             raise WebResearchError("未找到这个页面任务。", 404)
         directory = self.root / task_id
-        if not directory.resolve().is_relative_to(self.root.resolve()):
+        if (self.root.resolve() != self.root or directory.is_symlink()
+                or directory.resolve() != directory):
             raise WebResearchError("任务目录无效。", 404)
         return directory
+
+    def _deleted(self):
+        """Keep only opaque identities, never deleted research content or questions."""
+        path = self.root / ".deleted"
+        if path.is_symlink():
+            raise WebResearchError("删除记录路径无效，请检查本地文件。", 503)
+        try:
+            data = _read_json(path)
+            if (not isinstance(data, dict) or any(JOB_ID.fullmatch(key) is None for key in data)
+                    or any(value is not None and (not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None) for value in data.values())):
+                raise ValueError("Invalid deletion ledger")
+            return data
+        except FileNotFoundError:
+            return {}
+        except (OSError, ValueError, TypeError):
+            raise WebResearchError("删除记录无法读取；为防止重复执行，已停止提交。", 503) from None
+
+    def delete(self, task_id, payload):
+        if payload != {"confirmed": True} or type(payload.get("confirmed")) is not bool:
+            raise WebResearchError("请明确确认删除研究问题、历史、专属索引、回答及执行记录。")
+        with self._lock:
+            directory = self._directory(task_id)
+            deleted = self._deleted()
+            if task_id not in deleted:
+                job = self._job(task_id)
+                worker = self._workers.get(task_id)
+                chat_running = False
+                if (directory / "conversation.json").exists():
+                    try:
+                        chat_running = any(row["status"] in ACTIVE for row in ConversationStore(directory).load()["turns"])
+                    except (OSError, ValueError, KeyError, TypeError):
+                        raise WebResearchError("追问执行状态无法确认，请保留记录并检查本地文件。", 409) from None
+                if (job["status"] in ACTIVE or job["status"] == "interrupted"
+                        or task_id in self._chat_active or chat_running or (worker and worker.is_alive())):
+                    raise WebResearchError("请先停止研究或追问，并等待执行真正结束后再删除。", 409)
+                # Persist the refusal before removing files. Any stale worker or POST
+                # must see this marker even if cleanup is interrupted by a crash.
+                request_id = job["request"].get("request_id")
+                deleted[task_id] = hashlib.sha256(request_id.encode()).hexdigest() if request_id else None
+                atomic_write_bytes(self.root / ".deleted", json.dumps(deleted).encode())
+            elif not directory.exists():
+                raise WebResearchError("这个研究对话已删除。", 410)
+            if directory.exists():
+                shutil.rmtree(directory)  # Does not follow symlinks inside the owned directory.
+            self._jobs.pop(task_id, None)
+            self._workers.pop(task_id, None)
+            return {"deleted_dialogue_id": task_id}
 
     def status(self):
         try:
@@ -95,14 +145,34 @@ class ResearchJobService:
             active_id = next((task_id for task_id, job in self._jobs.items() if job["status"] in ACTIVE), None)
             active_id = active_id or next(iter(self._chat_active), None)
         return {"key_ready": key_ready, "busy": self.work_lock.locked(), "active_job_id": active_id,
-                "cached_example_ready": cached, "model": "gpt-5.4-mini", "max_cost_usd": 0.10,
+                "cached_example_ready": cached, "model": "gpt-5.4-mini", "max_cost_usd": 0.50,
                 "report_reserve_usd": 0.02, "max_runtime_seconds": 300}
 
+    def dialogues(self):
+        """List persisted research scopes; listing never initializes or executes one."""
+        with self._lock:
+            rows, unreadable = [], []
+            deleted = self._deleted()
+            if self.root.exists():
+                for directory in self.root.iterdir():
+                    if (not directory.is_dir() or JOB_ID.fullmatch(directory.name) is None
+                            or directory.name in deleted):
+                        continue
+                    try:
+                        job = self.snapshot(directory.name)["job"]
+                        rows.append(job)
+                    except (WebResearchError, OSError, ValueError, KeyError, TypeError):
+                        unreadable.append(directory.name)
+            rows.sort(key=lambda row: (row["created_at"], row["task_id"]), reverse=True)
+            return {"dialogues": rows, "unreadable_dialogue_ids": unreadable}
+
     def _validate(self, payload):
-        allowed = {"topic", "start_date", "end_date", "questions", "target_papers", "max_cost_usd", "source_mode"}
-        required = allowed - {"max_cost_usd"}
+        allowed = {"topic", "start_date", "end_date", "questions", "target_papers", "max_cost_usd", "source_mode", "request_id"}
+        required = allowed - {"max_cost_usd", "request_id"}
         if not isinstance(payload, dict) or set(payload) - allowed or not required <= set(payload):
             raise WebResearchError("请填写主题、UTC 日期范围、研究问题和篇数。")
+        if "request_id" in payload and (not isinstance(payload["request_id"], str) or re.fullmatch(r"[A-Za-z0-9_-]{16,80}", payload["request_id"]) is None):
+            raise WebResearchError("研究请求标识无效。")
         if not isinstance(payload["questions"], list):
             raise WebResearchError("研究问题格式无效。")
         mode = payload["source_mode"]
@@ -115,9 +185,9 @@ class ResearchJobService:
                 if not isinstance(raw, str) or re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw) is None:
                     raise ValueError("Invalid date")
                 dates.append(datetime.strptime(raw, "%Y-%m-%d").replace(tzinfo=timezone.utc))
-            limits = ResearchLimits(max_model_cost_usd=payload.get("max_cost_usd", .10))
-            if limits.max_model_cost_usd > 0.10:
-                raise ValueError("Web budget is limited to 0.10 USD")
+            limits = ResearchLimits(max_model_cost_usd=payload.get("max_cost_usd", .50))
+            if limits.max_model_cost_usd > 0.50:
+                raise ValueError("Web budget is limited to 0.50 USD")
             task = ResearchTask(payload["topic"], tuple(payload["questions"]), *dates,
                                 target_papers=payload["target_papers"], limits=limits)
             if mode == "cached_example":
@@ -125,11 +195,18 @@ class ResearchJobService:
                 if not candidates or any(not dates[0] <= row.submitted_at < dates[1] for row in candidates):
                     raise ValueError("Cached candidates do not fit the requested dates")
         except (OSError, ValueError, KeyError, TypeError):
-            raise WebResearchError("请检查日期先后、问题长度、1–3 篇目标及大于 $0.02 且不超过 $0.10 的预算；缓存示例需包含其候选提交日期。") from None
+            raise WebResearchError("请检查日期先后、问题长度、1–3 篇目标及大于 $0.02 且不超过 $0.50 的预算；缓存示例需包含其候选提交日期。") from None
         return task
 
     def start(self, payload):
+        # Resolve persisted identities before source/key/busy checks: retries are reads.
+        if isinstance(payload, dict) and isinstance(payload.get("request_id"), str):
+            with self._lock:
+                existing = self._existing_request({"max_cost_usd": .50, **payload})
+                if existing:
+                    return self.snapshot(existing)
         task = self._validate(payload)
+        normalized = json.loads(json.dumps({**payload, "max_cost_usd": task.limits.max_model_cost_usd}))
         try:
             key = get_openai_api_key(self.project_root)
         except ValueError:
@@ -137,6 +214,9 @@ class ResearchJobService:
         if not valid_api_key_format(key):
             raise WebResearchError("请在项目根目录 .env 中填写有效格式的 OPENAI_API_KEY 后刷新页面。")
         with self._lock:
+            existing = self._existing_request(normalized)
+            if existing:
+                return self.snapshot(existing)
             if self._closing or not self.work_lock.acquire(blocking=False):
                 raise WebResearchError("已有研究任务正在处理，请等待完成。", 409)
             task_id = "web-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:12]
@@ -156,14 +236,35 @@ class ResearchJobService:
                 raise
             return self.snapshot(task_id)
 
+    def _existing_request(self, payload):
+        request_id = payload.get("request_id")
+        deleted = self._deleted()
+        if request_id is not None and hashlib.sha256(request_id.encode()).hexdigest() in deleted.values():
+            raise WebResearchError("该研究请求所属对话已删除，不能重新执行。", 410)
+        if request_id is None or not self.root.exists():
+            return None
+        for directory in self.root.iterdir():
+            if (not directory.is_dir() or JOB_ID.fullmatch(directory.name) is None
+                    or directory.name in deleted):
+                continue
+            job = self._job(directory.name)
+            if job["request"].get("request_id") == request_id:
+                if job["request"] != payload:
+                    raise WebResearchError("该研究请求标识已用于不同内容，请重新提交。", 409)
+                return directory.name
+        return None
+
     def _save_job(self, job):
+        if job["task_id"] in self._deleted():
+            raise WebResearchError("这个研究对话已删除。", 410)
         atomic_write_bytes(self._directory(job["task_id"]) / "web_job.json",
                            json.dumps(_redact(job), ensure_ascii=False, allow_nan=False).encode("utf-8"))
 
     def _command(self, job, task):
         command = [sys.executable, "-m", "paper_assistant", "research", "--task-id", job["task_id"],
             "--root", str(self.root), "--topic=" + task.topic, "--start", task.start_at.isoformat(), "--end", task.end_at.isoformat(),
-            "--target-papers", str(task.target_papers), "--max-cost-usd", str(task.limits.max_model_cost_usd), "--stop-on-request"]
+            "--target-papers", str(task.target_papers), "--max-cost-usd", str(task.limits.max_model_cost_usd),
+            "--max-runtime-seconds", str(task.limits.max_runtime_seconds), "--stop-on-request"]
         for question in task.research_questions:
             command += ["--question=" + question]
         if job["request"]["source_mode"] == "cached_example":
@@ -203,6 +304,8 @@ class ResearchJobService:
 
     def _job(self, task_id):
         directory = self._directory(task_id)
+        if task_id in self._deleted():
+            raise WebResearchError("这个研究对话已删除。", 410)
         if task_id in self._jobs:
             return dict(self._jobs[task_id])
         try:
@@ -240,7 +343,15 @@ class ResearchJobService:
                 job["error"] = "工具记录暂不可读；不会自动重执行调用。"
             if job["status"] == "interrupted" and state and state["status"] == "stopped":
                 job["status"] = "failed" if state["last_error"] else "finished"
-            return _redact({"job": job, "state": state, "events": events})
+            actual = cost(state["usage"]["cost_usd"]) if state else cost(0)
+            maximum = cost(job["request"].get("max_cost_usd", .10))
+            confirmed = state and state["status"] == "stopped" and not state["pending"]
+            charged = actual if confirmed else max(actual, maximum)
+            budget = {"max_cost_usd": float(maximum), "cost_usd": float(actual),
+                      "charged_or_reserved_usd": float(charged),
+                      "remaining_usd": float(max(cost(0), maximum - charged)),
+                      "max_runtime_seconds": 300, "usage_unconfirmed": not bool(confirmed)}
+            return _redact({"job": job, "state": state, "events": events, "budget": budget})
 
     def stop(self, task_id):
         with self._lock:
@@ -272,14 +383,14 @@ class ResearchJobService:
                 manifest = _read_json(directory / "workspace.json")
                 ready = (job["status"] not in ACTIVE and state.status == "stopped"
                          and bool(manifest.get("active_index")))
-                snapshot.update(available=ready, reason="" if ready else "请先完成研究并成功入库至少一篇论文。")
+                snapshot.update(research_dialogue_id=task_id, legacy_shared_threads=len(snapshot.get("threads", [])) > 1, available=ready, reason="" if ready else "请先完成研究并成功入库至少一篇论文。")
                 return snapshot
             except (OSError, ValueError, KeyError, TypeError):
                 raise WebResearchError("当前任务还没有可用的对话资料，请先完成研究并成功入库。", 409) from None
 
     def ask(self, task_id, payload):
         if isinstance(payload, dict):
-            payload = {"max_cost_usd": .05, **payload}
+            payload = {"max_cost_usd": .10, **payload}
         with self._lock:
             self._job(task_id)
             store = ConversationStore(self._directory(task_id))
@@ -342,10 +453,12 @@ class ResearchJobService:
             return self.conversation(task_id)
 
     def manage_conversation(self, task_id, action, payload):
+        if action != "select":
+            raise WebResearchError("请新建研究对话并重新填写研究领域、问题和日期；旧追问线程不能新建或重置。", 410)
         with self._lock:
             job = self._job(task_id)
             if job["status"] in ACTIVE or self._closing or not self.work_lock.acquire(blocking=False):
-                raise WebResearchError("请先等待当前研究或追问结束，再新建、重置或切换对话。", 409)
+                raise WebResearchError("请先等待当前研究或追问结束，再切换历史追问线程。", 409)
             try:
                 self.conversation(task_id)
                 ConversationStore(self._directory(task_id)).manage(action, payload)

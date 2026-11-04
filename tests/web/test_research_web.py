@@ -25,7 +25,7 @@ def test_start_accepts_key_from_project_env_without_environment_variable(jobs, m
     request = payload()
     request.pop("max_cost_usd")
     result = service.start(request)
-    assert result["job"]["request"]["max_cost_usd"] == .10
+    assert result["job"]["request"]["max_cost_usd"] == .50
     assert started.wait(5)
     assert result["job"]["task_id"].startswith("web-")
     assert len(calls) == 1
@@ -69,7 +69,7 @@ def test_status_load_and_snapshot_do_not_execute_or_expose_key(jobs):
 
 
 @pytest.mark.parametrize("changes", [{"topic": ""}, {"target_papers": True}, {"target_papers": 4},
-    {"max_cost_usd": .02}, {"max_cost_usd": .11}, {"max_cost_usd": float("nan")},
+    {"max_cost_usd": .02}, {"max_cost_usd": .51}, {"max_cost_usd": float("nan")},
     {"start_date": "2024-01-01"}, {"end_date": "2023-02-30"}, {"start_date": "2023-01-01T00:00:00Z"},
     {"questions": "question"}, {"questions": []}, {"questions": ["q"*1001]}, {"source_mode": "file"},
     {"source_mode": "cached_example"}, {"api_key": "not-accepted"}, {"path": "arbitrary"}])
@@ -196,3 +196,49 @@ def test_real_cli_child_honors_marker_before_any_api_call(tmp_path, monkeypatch)
     result = service.snapshot(task_id)
     assert result["job"]["status"] == "finished"
     assert result["state"]["stop_reason"] == "user_stopped" and result["state"]["usage"]["calls"] == 0
+
+
+def test_research_dialogues_list_and_restore_two_independent_requests_without_execution(jobs):
+    service, _, release, calls = jobs
+    release.set()
+    identifiers = []
+    for topic, question in (("图神经网络", "如何传播消息？"), ("蛋白质", "如何预测结构？")):
+        identifier = service.start(payload(topic=topic, questions=[question]))["job"]["task_id"]
+        wait_finished(service, identifier)
+        identifiers.append(identifier)
+    restarted = ResearchJobService(service.project_root, threading.Lock(), execute=lambda *a: pytest.fail("read replayed execution"))
+    server = SimpleNamespace(research=restarted, server_address=("127.0.0.1", 8501))
+    code, _, body = send_request(server, "/api/research/jobs", method="GET")
+    assert code == 200
+    listed = json.loads(body)["dialogues"]
+    assert {row["task_id"] for row in listed} == set(identifiers)
+    assert {row["request"]["topic"] for row in listed} == {"图神经网络", "蛋白质"}
+    for identifier in identifiers:
+        code, _, body = send_request(server, "/api/research/jobs/" + identifier, method="GET")
+        restored = json.loads(body)
+        assert code == 200 and restored["job"]["task_id"] == identifier
+        assert restored["state"]["evidence_answer"]["answer"]
+    assert len(calls) == 2
+
+
+def test_initial_request_id_is_idempotent_conflict_checked_and_survives_restart(jobs):
+    service, started, release, calls = jobs
+    request = payload(request_id="research-request-0001")
+    first = service.start(request)
+    identifier = first["job"]["task_id"]
+    assert started.wait(2)
+    assert service.start(request)["job"]["task_id"] == identifier
+    with pytest.raises(WebResearchError, match="请求标识") as error:
+        service.start({**request, "topic": "different"})
+    assert error.value.status == 409
+    with pytest.raises(WebResearchError) as invalid_conflict:
+        service.start({**request, "topic": ""})
+    assert invalid_conflict.value.status == 409
+    restarted = ResearchJobService(service.project_root, threading.Lock(), execute=lambda *a: pytest.fail("unknown request replayed"))
+    assert restarted.start(request)["job"]["status"] == "interrupted"
+    assert restarted.snapshot(identifier)["budget"]["charged_or_reserved_usd"] == .10
+    assert restarted.snapshot(identifier)["budget"]["remaining_usd"] == 0
+    assert len(calls) == 1
+    assert service.status()["max_cost_usd"] == .50
+    assert "--max-runtime-seconds" in calls[0]
+    release.set()

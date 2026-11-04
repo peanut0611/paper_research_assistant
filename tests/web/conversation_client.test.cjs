@@ -49,6 +49,24 @@ test('restoring the thread only reads; answer and quotations render as literal t
   assert.equal(nodes['conversation-submit'].disabled, false);
 });
 
+test('followup details expose observed actions, correction and stopping without interpreting source text as HTML', async () => {
+  const agent_events = [
+    {sequence: 1, type: 'model_decision', data: {simulated: true, decision: {kind: 'tool', tool: 'search_documents',
+      arguments: {query: '<script>revised query</script>'}, purpose: '补查实验条件'}}},
+    {sequence: 2, type: 'tool_observation', data: {tool: 'search_documents', success: true, summary: {results_count: 0, evidence_ids: []}}},
+    {sequence: 3, type: 'host_feedback', data: {tool: 'verify_citations', success: false, error: {code: 'answer_required', message: '基于现有材料回答'}}},
+    {sequence: 4, type: 'execution_stopped', data: {reason: 'insufficient_evidence', summary: '缺少实验条件'}}
+  ];
+  const {nodes} = await setup(async () => reply(snapshot({turns: [turn({agent_events})]})));
+  const visible = text(nodes['conversation-messages']);
+  assert.ok(visible.includes('本轮执行详情'));
+  assert.ok(visible.includes('模型决策（模拟策略）') && visible.includes('检索正文'));
+  assert.ok(visible.includes('<script>revised query</script>') && visible.includes('补查实验条件'));
+  assert.ok(visible.includes('工具反馈') && visible.includes('检索命中 0 条'));
+  assert.ok(visible.includes('宿主反馈') && visible.includes('基于现有材料回答'));
+  assert.ok(visible.includes('停止原因') && visible.includes('缺少实验条件'));
+});
+
 test('one explicit submit starts a turn; polling and repeated clicks never duplicate it', async () => {
   const calls = []; let posted = null;
   const ui = await setup(async (url, options) => {
@@ -108,78 +126,19 @@ test('stop targets only the active discussion turn', async () => {
   assert.ok(calls.at(-1)[0].endsWith('/conversation/stop'));
 });
 
-test('reset clears current messages and draft, retaining task-wide usage and turn count', async () => {
-  const calls = []; let operation;
-  const ui = await setup(async (url, options) => {
-    calls.push([url, options]);
-    if (url.endsWith('/reset')) {
-      operation = JSON.parse(options.body);
-      return reply(snapshot({thread_id: 'initial', generation: 1, turns: [], all_turn_count: 1,
-        usage: {tokens: 500, cost_usd: .001}, remaining_usd: .499,
-        acknowledged_actions: [operation.request_id], threads: [{id: 'initial', name: '对话 1', generation: 1, turn_count: 0}]}));
-    }
-    return reply(snapshot({thread_id: 'initial', generation: 0, turns: [turn()], all_turn_count: 1,
-      usage: {tokens: 500, cost_usd: .001}, remaining_usd: .499}));
-  });
-  ui.nodes['conversation-question'].value = 'unfinished draft';
-  await ui.nodes['conversation-reset'].click();
-  assert.equal(operation.thread_id, 'initial'); assert.equal(operation.generation, 0);
-  assert.equal(ui.nodes['conversation-messages'].children.length, 0);
-  assert.equal(ui.nodes['conversation-question'].value, '');
-  assert.ok(ui.nodes['conversation-usage'].textContent.includes('本任务追问累计 1 / 20'));
-  assert.ok(ui.nodes['conversation-usage'].textContent.includes('500 token'));
-  assert.equal(calls.filter(([,o]) => o.method === 'POST').length, 1);
-  assert.equal(ui.storage.size, 0);
-});
-
-test('new dialogue is blank and switching back restores the previous thread', async () => {
+test('legacy shared-paper threads can still be selected without starting model work', async () => {
   const calls = [];
-  const threads = [{id: 'initial', name: '对话 1', turn_count: 1}, {id: 'chat-new', name: '对话 2', turn_count: 0}];
+  const threads = [{id: 'initial', name: '对话 1', turn_count: 1}, {id: 'chat-old', name: '对话 2', turn_count: 0}];
   const ui = await setup(async (url, options) => {
     calls.push([url, options]);
-    if (url.endsWith('/new')) {
-      const operation = JSON.parse(options.body);
-      return reply(snapshot({thread_id: 'chat-new', generation: 0, threads, turns: [], all_turn_count: 1,
-        acknowledged_actions: [operation.request_id]}));
-    }
-    if (url.endsWith('/select')) {
-      assert.equal(JSON.parse(options.body).thread_id, 'initial');
-      return reply(snapshot({thread_id: 'initial', generation: 0, threads, turns: [turn()], all_turn_count: 1}));
-    }
-    return reply(snapshot({thread_id: 'initial', generation: 0, turns: [turn()]}));
+    return reply(snapshot({thread_id: options.method === 'POST' ? 'initial' : 'chat-old', generation: 0,
+      threads, turns: options.method === 'POST' ? [turn()] : []}));
   });
-  await ui.nodes['conversation-new'].click();
-  assert.equal(ui.nodes['conversation-messages'].children.length, 0);
-  assert.equal(ui.nodes['conversation-select'].value, 'chat-new');
-  assert.equal(ui.nodes['conversation-select'].children.length, 2);
+  assert.equal(ui.nodes['conversation-new'], undefined);
+  assert.equal(ui.nodes['conversation-reset'], undefined);
   ui.nodes['conversation-select'].value = 'initial'; await ui.nodes['conversation-select'].change();
   assert.ok(text(ui.nodes['conversation-messages']).includes('它有什么局限'));
-  assert.equal(calls.filter(([,o]) => o.method === 'POST').length, 2);
-});
-
-test('active followup disables new/reset/select and programmatic clicks do nothing', async () => {
-  const calls = [];
-  const ui = await setup(async (url, options) => {calls.push([url, options]); return reply(snapshot({active_turn_id: turnId}));});
-  assert.equal(ui.nodes['conversation-new'].disabled, true);
-  assert.equal(ui.nodes['conversation-reset'].disabled, true);
-  assert.equal(ui.nodes['conversation-select'].disabled, true);
-  await ui.nodes['conversation-new'].click(); await ui.nodes['conversation-reset'].click(); await ui.nodes['conversation-select'].change();
-  assert.equal(calls.length, 1);
-});
-
-test('lost context-change response reconnects without creating another dialogue', async () => {
-  let operation = null, posts = 0;
-  const ui = await setup(async (url, options) => {
-    if (options.method === 'POST') {posts++; operation = JSON.parse(options.body); throw TypeError('response lost');}
-    return reply(snapshot(operation ? {thread_id: 'chat-new', generation: 0, acknowledged_actions: [operation.request_id],
-      threads: [{id: 'initial', name: '对话 1', turn_count: 0}, {id: 'chat-new', name: '对话 2', turn_count: 0}]} : {thread_id: 'initial', generation: 0}));
-  });
-  await ui.nodes['conversation-new'].click();
-  assert.equal(posts, 1); assert.equal(ui.storage.size, 1);
-  assert.equal(ui.nodes['conversation-submit'].disabled, true);
-  await ui.nodes['conversation-refresh'].click();
-  assert.equal(posts, 1); assert.equal(ui.storage.size, 0);
-  assert.equal(ui.nodes['conversation-select'].value, 'chat-new');
+  assert.ok(calls.at(-1)[0].endsWith('/select'));
 });
 
 test('archived submit acknowledgement clears pending input after reset; quotas remain global', async () => {
@@ -188,8 +147,7 @@ test('archived submit acknowledgement clears pending input after reset; quotas r
     acknowledged_request_ids: [pending.request_id]})), [[`paper-assistant-chat-pending:${id}`, JSON.stringify(pending)]]);
   assert.equal(ui.storage.size, 0);
   assert.equal(ui.nodes['conversation-submit'].disabled, true);
-  assert.equal(ui.nodes['conversation-new'].disabled, false);
-  assert.ok(ui.nodes['conversation-usage'].textContent.includes('本任务追问累计 20 / 20'));
+  assert.ok(ui.nodes['conversation-usage'].textContent.includes('本研究对话追问累计 20 / 20'));
 });
 
 test('reload acknowledges a saved management request using GET only', async () => {
@@ -221,4 +179,23 @@ test('missing reference records show a scope explanation without invented citati
   const rendered = text(ui.nodes['conversation-messages']);
   assert.ok(rendered.includes('未找到该范围的可追溯引用记录'));
   assert.ok(!rendered.includes('查看 1 条引用'));
+});
+
+test('switching research dialogue clears the previous draft and restores only selected history', async () => {
+  const other = id.replace('aaaaaaaaaaaa', 'bbbbbbbbbbbb');
+  const ui = await setup(async url => reply(snapshot({task_id: url.includes(other) ? other : id,
+    turns: url.includes(other) ? [] : [turn()]})));
+  ui.nodes['conversation-question'].value = '只属于旧研究的问题';
+  ui.view(other); await flush();
+  assert.equal(ui.nodes['conversation-question'].value, '');
+  assert.equal(ui.nodes['conversation-messages'].children.length, 0);
+});
+
+test('retired reset history remains readable as an archive outside current followup context', async () => {
+  const {nodes} = await setup(async () => reply(snapshot({archived_turns: [turn({question: '旧归档问题', generation: 0})]})));
+  const visible = text(nodes['conversation-messages']);
+  assert.ok(visible.includes('旧归档问题'));
+  assert.ok(visible.includes('历史归档') && visible.includes('不加入当前追问上下文'));
+  assert.ok(visible.includes('<script>literal answer</script>'));
+  assert.equal(nodes['conversation-submit'].disabled, false);
 });

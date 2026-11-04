@@ -51,9 +51,9 @@ def test_get_and_duplicate_post_are_read_only_or_idempotent_and_lock_out_other_t
     request = payload()
     request.pop("max_cost_usd")
     first = service.ask(JOB, request)
-    assert first["turns"][0]["max_cost_usd"] == .05
+    assert first["turns"][0]["max_cost_usd"] == .10
     assert started.wait(3)
-    second = service.ask(JOB, payload())
+    second = service.ask(JOB, {**payload(), "max_cost_usd": .10})
     assert first["active_turn_id"] == second["active_turn_id"]
     assert len(calls) == 1
     assert service.status()["active_job_id"] == JOB and service.status()["busy"]
@@ -76,7 +76,7 @@ def test_get_and_duplicate_post_are_read_only_or_idempotent_and_lock_out_other_t
     restarted = ResearchJobService(service.project_root, threading.Lock(), execute=lambda *args: pytest.fail("GET replayed model"))
     assert restarted.conversation(JOB)["turns"] == result["turns"]
     assert restarted.conversation(JOB)["remaining_usd"] == result["remaining_usd"]
-    assert service.ask(JOB, payload())["turns"] == result["turns"]
+    assert service.ask(JOB, {**payload(), "max_cost_usd": .10})["turns"] == result["turns"]
     assert len(calls) == 1
 
 
@@ -131,30 +131,23 @@ def test_restart_does_not_reexecute_unknown_turn_and_reserves_whole_budget(discu
     assert result["remaining_usd"] == .45 and not discussion[3]
 
 
-def test_manage_routes_create_switch_and_reset_without_model_requests(discussion, monkeypatch):
+def test_legacy_threads_remain_readable_but_new_and_reset_are_retired(discussion, monkeypatch):
     service = discussion[0]
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)  # Context management is local.
+    store = ConversationStore(service._directory(JOB))
+    first = store.snapshot()
+    store.manage("new", manage_payload(first))  # Existing shared-paper history.
+    second = store.snapshot()
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     server = SimpleNamespace(research=service, server_address=("127.0.0.1", 8501))
     route = f"/api/research/jobs/{JOB}/conversation"
-    first = service.conversation(JOB)
-    operation = manage_payload(first)
-    assert send_request(server, route + "/new", payload=operation, origin="https://other.invalid")[0] == 403
-    assert len(service.conversation(JOB)["threads"]) == 1
-    status, _, body = send_request(server, route + "/new", payload=operation)
-    assert status == 200
-    new = json.loads(body)
-    assert new["thread_id"] != first["thread_id"] and new["turns"] == []
-    assert send_request(server, route + "/new", payload=operation)[0] == 200
-    assert len(service.conversation(JOB)["threads"]) == 2
+    for action in ("new", "reset"):
+        status, _, body = send_request(server, route + "/" + action, payload=manage_payload(second))
+        assert status == 410 and "新建研究对话" in json.loads(body)["error"]
     assert send_request(server, route + "/select", payload={"thread_id": first["thread_id"]})[0] == 200
-    status, _, body = send_request(server, route + "/reset", payload=manage_payload(first, "reset-http-00000001"))
-    assert status == 200 and json.loads(body)["generation"] == 1
-    assert send_request(server, route + "/select", payload={"thread_id": ["invalid"]})[0] == 400
-    assert send_request(server, route + "/select", payload={"thread_id": "nonexistent"})[0] == 400
+    restored = service.conversation(JOB)
+    assert restored["legacy_shared_threads"] and len(restored["threads"]) == 2
+    assert restored["research_dialogue_id"] == JOB
     assert not discussion[3] and not service.work_lock.locked()
-    restarted = ResearchJobService(service.project_root, threading.Lock(), execute=lambda *a: pytest.fail("management called model"))
-    assert restarted.conversation(JOB)["generation"] == 1
-    assert len(restarted.conversation(JOB)["threads"]) == 2
 
 
 def test_active_turn_blocks_all_context_changes_and_stale_question_does_not_run(discussion):
@@ -166,14 +159,166 @@ def test_active_turn_blocks_all_context_changes_and_stale_question_does_not_run(
                               ("select", {"thread_id": original["thread_id"]})):
         with pytest.raises(WebResearchError) as error:
             service.manage_conversation(JOB, action, operation)
-        assert error.value.status == 409
+        assert error.value.status == (409 if action == "select" else 410)
         assert service.work_lock.locked()
     release.set()
     service._chat_workers[active["active_turn_id"]].join(timeout=5)
-    service.manage_conversation(JOB, "reset", manage_payload(original))
+    legacy = ConversationStore(service._directory(JOB))
+    data = legacy.load()
+    data["threads"][0]["generation"] += 1  # Persisted legacy reset, no longer callable.
+    legacy.save(data)
     with pytest.raises(WebResearchError) as stale:
         service.ask(JOB, {**payload(request_id="stale-question-000001"), "thread_id": original["thread_id"], "generation": 0})
     assert stale.value.status == 400 and len(calls) == 1
     snapshot = service.conversation(JOB)
     assert snapshot["turns"] == [] and snapshot["all_turn_count"] == 1
     assert not service.work_lock.locked()
+
+
+def test_two_web_research_dialogues_keep_papers_history_permissions_and_usage_after_restart(tmp_path, sample_pdf, monkeypatch):
+    from paper_assistant.research.agent import MockPolicy, ResearchAgent
+    from paper_assistant.research.task import ResearchTask
+    from paper_assistant.research.toolset import ResearchTools
+    from paper_assistant.research.workspace import ResearchWorkspace, ExtractedPDF
+    from paper_assistant.tools.knowledge.pdf_parser import PageDocument
+    from tests.research.test_conversation import answer_action
+    from tests.research.test_research_workspace import warmed, WorkspaceEmbedder
+    from tests.tools.test_paper_fetcher import candidates
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-isolated-no-network")
+    fetcher = warmed(tmp_path, sample_pdf, count=2)
+    scopes, projected = {}, {}
+    def workspace_factory(*args, **kwargs):
+        marker = "ALPHA_ONLY_MARKER" if args[2][0].arxiv_id == candidates()[0].arxiv_id else "BETA_ONLY_MARKER"
+        def controlled_parser(path, config):
+            return ExtractedPDF((PageDocument("fixture", path.name, 1, f"Hybrid Retrieval describes {marker}."),))
+        return ResearchWorkspace(*args, **kwargs, fetcher=fetcher,
+                                 embedder_factory=WorkspaceEmbedder, parser=controlled_parser)
+    def execute(command, directory):
+        if "chat" in command:
+            run_turn(directory.parent.parent, directory.name, workspace_factory=workspace_factory,
+                     policy_factory=policy_factory(projected[directory.parent.parent.name]))
+            return 0
+        topic = next(arg.split("=", 1)[1] for arg in command if arg.startswith("--topic="))
+        number = 0 if topic == "研究 A" else 1
+        task = ResearchTask(topic, (f"问题 {number}",), candidates()[0].submitted_at.replace(month=1, day=1),
+                            candidates()[0].submitted_at.replace(year=2024, month=1, day=1), target_papers=1)
+        source = workspace_factory(directory.name, task, (candidates()[number],), root=directory.parent)
+        scopes[directory.name] = source
+        projected[directory.name] = []
+        def choose(view):
+            row = view["candidates"][0]
+            if row["status"] in {"abstract_only", "downloaded"}:
+                return {"kind": "tool", "tool": "fetch_paper" if row["status"] == "abstract_only" else "ingest_paper",
+                        "arguments": {"arxiv_id": row["arxiv_id"]}}
+            return answer_action(view)
+        assert ResearchAgent(ResearchTools(source), MockPolicy(choose)).run()["stop_reason"] == "sufficient_evidence"
+        return 0
+    service = ResearchJobService(tmp_path, threading.Lock(), execute=execute)
+    server = SimpleNamespace(research=service, server_address=("127.0.0.1", 8501))
+    ids, snapshots = [], []
+    try:
+        for number, topic in enumerate(("研究 A", "研究 B")):
+            code, _, body = send_request(server, "/api/research/jobs", payload=research_payload(topic=topic, questions=[f"问题 {number}"]))
+            assert code == 202
+            identifier = json.loads(body)["job"]["task_id"]
+            ids.append(identifier)
+            service._workers[identifier].join(5)
+            assert service.snapshot(identifier)["job"]["status"] == "finished"
+            assert service.conversation(identifier)["usage"]["cost_usd"] == 0
+            route = f"/api/research/jobs/{identifier}/conversation"
+            code, _, body = send_request(server, route, payload=payload(f"只讨论 {topic}", request_id=f"isolated-question-{number:04d}"))
+            assert code == 202
+            active = json.loads(body)["active_turn_id"]
+            service._chat_workers[active].join(5)
+            chat = service.conversation(identifier)
+            assert len(chat["turns"]) == 1 and chat["usage"]["cost_usd"] > 0
+            cited = chat["turns"][0]["answer"]["citations"]
+            assert {row["source"]["arxiv_id"] for row in cited} == {candidates()[number].arxiv_id}
+            snapshots.append(chat)
+        assert scopes[ids[0]].index_directory != scopes[ids[1]].index_directory
+        assert service.conversation(ids[0]) == snapshots[0]
+        foreign_id = scopes[ids[0]].list_documents()[0]["document_id"]
+        from paper_assistant.research.conversation import ConversationTools, ConversationWorkspace
+        restricted = ConversationTools(ConversationWorkspace(scopes[ids[1]], tmp_path / "permission-probe", "范围", .05), offline=True)
+        absent = restricted.call("search_documents", {"query": "ALPHA_ONLY_MARKER", "method": "bm25"})
+        assert absent["success"] and absent["data"]["results"] == []
+        for tool, args in (("read_pages", {"document_id": foreign_id, "start_page": 1}),
+                           ("search_documents", {"query": "Hybrid", "document_ids": [foreign_id]}),
+                           ("verify_citations", {"answer": "历史证据 [E1]", "insufficient_evidence": False,
+                                                 "citations": [{"evidence_id": "E1", "quote": "Hybrid"}]})):
+            assert not restricted.call(tool, args)["success"]
+        assert all("只讨论 研究 A" not in json.dumps(view.get("conversation_history", []), ensure_ascii=False)
+                   for view in projected[ids[1]])
+        restarted = ResearchJobService(tmp_path, threading.Lock(), execute=lambda *a: pytest.fail("read executed model"))
+        assert len(restarted.dialogues()["dialogues"]) == 2
+        for identifier, previous in zip(ids, snapshots):
+            assert restarted.conversation(identifier) == previous
+            assert restarted.snapshot(identifier)["state"]["candidates"][0]["arxiv_id"] in {row.arxiv_id for row in candidates()[:2]}
+    finally:
+        service.close()
+
+
+def test_discussion_workspace_enforces_two_minute_deadline_through_web(discussion):
+    service, started, release, calls, views = discussion
+    first = service.ask(JOB, payload())
+    release.set()
+    service._chat_workers[first["active_turn_id"]].join(timeout=5)
+    assert views
+    assert views[0]["task"]["limits"]["max_runtime_seconds"] == 120
+    assert service.conversation(JOB)["max_turn_cost_usd"] == .10
+    assert service.conversation(JOB)["max_runtime_seconds"] == 120
+
+
+def test_followup_timeout_during_model_request_preserves_charge_and_stops_tools(discussion, parent):
+    from tests.research.test_agent_runner import Clock
+    from paper_assistant.research.agent import MockPolicy
+    service, started, release, calls, views = discussion
+    clock = Clock()
+    decisions = []
+    def choose(view):
+        decisions.append(view)
+        clock.seconds = 121
+        return {"kind": "tool", "tool": "list_documents", "arguments": {}}
+    def execute(command, directory):
+        run_turn(directory.parent.parent, directory.name, workspace_factory=lambda *a, **kw: parent,
+                 policy_factory=lambda history: MockPolicy(choose), now=clock.now, monotonic=clock.mono)
+        return 0
+    service._execute = execute
+    result = service.ask(JOB, payload())
+    service._chat_workers[result["turns"][0]["id"]].join(timeout=5)
+    turn = service.conversation(JOB)["turns"][0]
+    assert turn["stop_reason"] == "runtime_budget_exhausted"
+    assert turn["usage"]["calls"] == 1 and turn["usage"]["cost_usd"] > 0
+    assert len(decisions) == 1
+    assert turn["answer"] is None
+
+
+def test_delete_waits_for_stopped_followup_and_stale_followup_cannot_recreate(discussion):
+    service, started, release, calls, views = discussion
+    server = SimpleNamespace(research=service, server_address=("127.0.0.1", 8501))
+    route = f"/api/research/jobs/{JOB}"
+    turn = service.ask(JOB, payload())
+    assert started.wait(3)
+    assert send_request(server, route + "/delete", payload={"confirmed": True})[0] == 409
+    assert send_request(server, route + "/conversation/stop", payload={})[0] == 200
+    assert send_request(server, route + "/delete", payload={"confirmed": True})[0] == 409
+    release.set()
+    service._chat_workers[turn["active_turn_id"]].join(timeout=5)
+    assert send_request(server, route + "/delete", payload={"confirmed": True})[0] == 200
+    assert send_request(server, route + "/conversation", payload=payload())[0] == 410
+    assert not (service.root / JOB).exists() and len(calls) == 1
+
+
+def test_restart_does_not_allow_deleting_a_still_running_followup(discussion):
+    service, started, release, calls, _ = discussion
+    turn = service.ask(JOB, payload())
+    assert started.wait(3)
+    restarted = ResearchJobService(service.project_root, threading.Lock(), execute=lambda *a: 99)
+    server = SimpleNamespace(research=restarted, server_address=("127.0.0.1", 8501))
+    route = f"/api/research/jobs/{JOB}/delete"
+    assert send_request(server, route, payload={"confirmed": True})[0] == 409
+    release.set()
+    service._chat_workers[turn["active_turn_id"]].join(timeout=5)
+    assert send_request(server, route, payload={"confirmed": True})[0] == 200
+    assert len(calls) == 1 and not (service.root / JOB).exists()

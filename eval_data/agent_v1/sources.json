@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "metadata_checked_at": "2026-11-04",
+  "metadata_evidence": "Official version-specific arXiv abstract pages, read through the connected web tool. This verifies bibliographic metadata only, not local PDFs, page numbers or substantive claims.",
+  "material_status": "blocked_missing_pdfs_seed_and_page_evidence",
+  "fixed_seed": {
+    "path": "data/literature_search/smoke/20261023.json",
+    "sha256": null,
+    "required_origin": "live_arxiv_api"
+  },
+  "sources": {
+    "react-v1": {
+      "arxiv_id": "2210.03629",
+      "version": 1,
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "submitted_at": "2022-10-06T01:00:32Z",
+      "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+      "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+      "pdf_path": null,
+      "pdf_sha256": null,
+      "page_count": null,
+      "evidence": [],
+      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+    },
+    "toolformer-v1": {
+      "arxiv_id": "2302.04761",
+      "version": 1,
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "submitted_at": "2023-02-09T16:49:57Z",
+      "abstract_url": "https://arxiv.org/abs/2302.04761v1",
+      "pdf_url": "https://arxiv.org/pdf/2302.04761v1",
+      "pdf_path": null,
+      "pdf_sha256": null,
+      "page_count": null,
+      "evidence": [],
+      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+    },
+    "reflexion-v1": {
+      "arxiv_id": "2303.11366",
+      "version": 1,
+      "title": "Reflexion: an autonomous agent with dynamic memory and self-reflection",
+      "submitted_at": "2023-03-20T18:08:50Z",
+      "abstract_url": "https://arxiv.org/abs/2303.11366v1",
+      "pdf_url": "https://arxiv.org/pdf/2303.11366v1",
+      "pdf_path": null,
+      "pdf_sha256": null,
+      "page_count": null,
+      "evidence": [],
+      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+    },
+    "vit-v1": {
+      "arxiv_id": "2010.11929",
+      "version": 1,
+      "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+      "submitted_at": "2020-10-22T17:55:59Z",
+      "abstract_url": "https://arxiv.org/abs/2010.11929v1",
+      "pdf_url": "https://arxiv.org/pdf/2010.11929v1",
+      "pdf_path": null,
+      "pdf_sha256": null,
+      "page_count": null,
+      "evidence": [],
+      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+    },
+    "clip-v1": {
+      "arxiv_id": "2103.00020",
+      "version": 1,
+      "title": "Learning Transferable Visual Models From Natural Language Supervision",
+      "submitted_at": "2021-02-26T19:04:58Z",
+      "abstract_url": "https://arxiv.org/abs/2103.00020v1",
+      "pdf_url": "https://arxiv.org/pdf/2103.00020v1",
+      "pdf_path": null,
+      "pdf_sha256": null,
+      "page_count": null,
+      "evidence": [],
+      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+    }
+  }
+}

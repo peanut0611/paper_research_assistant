@@ -33,6 +33,13 @@ __pycache__/
 
 # Local planning and handoff documents (existing project convention)
 /docs/
+!/docs/
+/docs/*
+!/docs/agents/
+/docs/agents/*
+!/docs/agents/issue-tracker.md
+!/docs/agents/triage-labels.md
+!/docs/agents/domain.md
 /PROJECT_CONTEXT.md
 
 # Secrets and local configuration; configuration examples may be committed

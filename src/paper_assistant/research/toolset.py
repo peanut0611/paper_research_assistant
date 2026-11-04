@@ -387,6 +387,7 @@ class ResearchTools:
             except ValueError as error:
                 raise ToolError("citation_validation_failed", str(error)) from error
             return {"valid": True, "answer": answer, "insufficient_evidence": insufficient,
+                    "traceability": "passed" if citations else "not_applicable", "claim_support": "not_assessed",
                     "citations": [{**asdict(citation), "source": self._evidence[citation.evidence_id]["source"]} for citation in citations],
                     "validation_scope": "ID existence, inline/list agreement, literal quote containment; not semantic entailment"}, warnings
         raise ToolError("unknown_tool", "Tool is not registered")
