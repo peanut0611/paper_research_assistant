@@ -108,6 +108,8 @@ eval_data/research/# Agent 开发场景与人工验收用例
 
 [命令入口](scripts/README.md) · [Agent 测试资料](eval_data/README.md) · [人工验收步骤](eval_data/research/MANUAL_TESTS.md)
 
+Agent V1 的五例输入、基线冻结、Web 接口采集及人工评分见 [本地基线与五例验收](eval_data/agent_v1/README.md)。当前真实模型基线尚未执行，材料与环境阻塞单独记录，不以模拟测试代替效果结果。
+
 ## 验证
 
 ```powershell
