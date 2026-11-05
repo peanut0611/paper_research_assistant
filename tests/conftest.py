@@ -1,4 +1,12 @@
 from pathlib import Path
+import os
+import sys
+
+from scripts.checks.offline_guard import install
+
+if not getattr(sys, '_paper_offline_guard', False):
+    os.environ['OPENAI_API_KEY'] = ''
+install()
 
 import pytest
 from pypdf import PdfWriter

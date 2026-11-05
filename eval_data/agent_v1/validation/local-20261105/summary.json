@@ -1,0 +1,23 @@
+{
+  "status": "pending_human_review_and_quality_gaps",
+  "quality_pass_rate": null,
+  "issues_to_keep_open": [
+    1,
+    2,
+    8
+  ],
+  "request_budgets": {
+    "research_usd": 0.1,
+    "followup_usd": 0.05
+  },
+  "declared_batch_ceiling_usd": 1.4,
+  "charged_or_reserved_usd": 0.36598185,
+  "unknown_reserved_usd": 0.030015,
+  "charged_tokens_including_unknown": 362260,
+  "fixed_cases_per_version": 5,
+  "online_smoke_cases_per_version": 1,
+  "human_reviews_completed": 0,
+  "online_complete_chain_verified": false,
+  "unknown_paid_requests_replayed": 0,
+  "code_note": "Baseline is a present-day run of the published pre-V1 source, not a historical pre-change execution. Candidate retains local engineering/UI changes. Subsequent UTF-8/test portability fixes do not change the measured Agent policy."
+}

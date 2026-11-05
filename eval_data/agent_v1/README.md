@@ -6,20 +6,20 @@
 
 五例输入和人工评分规则已建立，官方 arXiv 版本页面的书目信息已核对。
 最初基线预检记录缺少可用 API Key、对应 PDF、兼容固定来源报告和核对过的页级原文依据，当时网络策略未放行 OpenAI 和 arXiv。这是历史记录；后续环境是否就绪须重新预检。
-因此**尚未形成真实模型基线，也没有质量通过率**。状态记录见 `baseline/status.json`；业务改造前的原始本地文件指纹见 `baseline/workspace-before.json`。
+截至 2026-11-05，已在保留的旧版源码上重新运行固定材料五例，并在旧版与集成版各运行一例在线冒烟；这是当前取得的真实模型记录，不是历史上业务改造前已执行的证明。人工来源语义核查与逐例评分仍待完成，**没有质量通过率，Issue #2 保持打开**。逐条验收状态与证据索引见 [Issue #2 状态](validation/local-20261105/issue-2-status.md)，公开脱敏实测见 [本机验收记录](validation/local-20261105/README.md)。`baseline/status.json` 保留最初阻塞的历史事实；业务改造前的原始本地文件指纹见 `baseline/workspace-before.json`。
 
 已有旧的单篇缓存实测不能替代这五例。新增自动化测试只证明采集工具正确处理 HTTP 结果、连续追问、拒绝、缺失材料和结果未知等情况。
 
 ## 文件与输入
 
 - `suite.json`：五例公开研究输入、日期、目标论文、追问与人工预期。比较工具使用、反馈机制、视觉论文方法、连续追问及业务成本证据缺口。
-- `sources.json`：固定版本的官方地址和书目信息；PDF 校验值、物理页数及人工原文证据当前为空，表示未完成，不能伪填。
+- 根目录 `sources.json`：初始固定版本的官方地址和书目信息；其未填写字段保留初始状态。2026-11-05 实跑实际使用的来源及 PDF 校验值、物理页数和 AI 辅助定位原文见 `validation/local-20261105/sources.json`，人工语义核查仍待完成；复核实跑须以记录中的冻结哈希为准。
 - `rubric.md`：冻结前已定义的评分规则和硬性失败。
 - 采集输出分离执行状态与人工评分。`executed` 不自动赋予通过分数，Key 格式就绪不代表凭证有效。
 
 ## 公开版本入口
 
-当前实现见 `origin/codex/agent-v1-integration`；改造前基线源码单独发布于 `origin/codex/agent-v1-baseline`。请在不同 checkout 中运行，以免服务与采集器混用代码或覆盖数据：
+当前交付集成分支为 `codex/agent-v1-delivery-20261105`，此前发布的 `origin/codex/agent-v1-integration` 保留用于追溯；改造前基线源码单独发布于 `origin/codex/agent-v1-baseline`。请在不同 checkout 中运行，以免服务与采集器混用代码或覆盖数据：
 
 ```bash
 git fetch origin
@@ -69,7 +69,7 @@ uv run python -m paper_assistant.evaluation run --frozen data/evaluations/v1-inp
 5. 固定材料检查会核验 PDF 字节校验值、应用下载缓存的真实来源与相同文件校验值、页数，以及页内原文匹配。它不能替代人工判断语义支持度。
 6. 重新冻结完整材料版本。预检无相关阻塞后，再执行下面的真实采集。
 
-目前材料完整性未满足，不能据此宣称 Issue #2 的真实基线已完成，也不能改造后补跑并将其标为改造前基线。
+最初预检时材料完整性未满足；2026-11-05 已取得固定版本 PDF、校验信息与 AI 辅助页级定位，并执行旧版五例，人工语义核查仍未完成。不能据此宣称 Issue #2 全部完成，也不能把此次旧版重跑标为历史上的改造前执行。
 
 ## 真实模型采集
 
@@ -127,7 +127,7 @@ uv run python -m paper_assistant.evaluation freeze --out data/evaluations/v1-inp
 uv run python -m paper_assistant.evaluation run --frozen data/evaluations/v1-inputs-002 --out data/evaluations/preflight-fixed-002 --mode fixed
 ```
 
-`fixed_seed.sha256` 已由准备器根据输出 seed 的真实字节计算；复制时保持原始字节。`20261023.json` 是当前 Web 宿主的兼容路径名，不代表此次材料采集日期；真实时间记录在 API/PDF 元数据中。预检继续检查 seed、应用真实 PDF 缓存、页码、原文与人工填写字段，缺任何条件都不能进入真实固定材料基线。模型 Key 与模型网络在下一步真实 Web 采集时单独检查，材料准备完成不代表它们就绪。
+`fixed_seed.sha256` 已由准备器根据输出 seed 的真实字节计算；复制时保持原始字节。`20261023.json` 是当前 Web 宿主的兼容路径名，不代表此次材料采集日期；真实时间记录在 API/PDF 元数据中。预检继续检查 seed、应用真实 PDF 缓存、页码、原文与人工填写字段，新采集应满足这些检查；本轮来源只有 AI 辅助定位、未取得人工签署的事实必须随实测保留，不能倒填为已审。模型 Key 与模型网络在下一步真实 Web 采集时单独检查，材料准备完成不代表它们就绪。
 
 在业务改造前保留的基线工作树运行时，应从该工作树执行上述准备与冻结命令（或完整复制经过核验的 `data/paper_cache` 及同字节 seed，并保留相对路径）；不要只复制 PDF 而遗漏 manifest。不能在改造后的工作树执行后标为旧版本基线。
 
@@ -182,7 +182,7 @@ compare 对齐冻结五例，核对 suite/sources/rubric SHA、实际请求及�
 
 五例存在未执行、未评审、非真实模型记录、缺失轮次用量或条件差异时，整体保持 blocked，quality_pass_rate 为 null。完整且同条件时才给出五例中通过比例及至少 4/5 的结果。固定材料质量复测、在线链路验证与自动化生命周期/默认预算测试分别留证，不把 controlled_web_test 算入模型效果。
 
-公开的历史阻塞样例位于 `validation/preflight-20261104/`：它记录当时只读预检，未提交真实模型请求，没有人工质量判定。`baseline-unavailable` 明确是不存在原始真实基线的引用记录，不是补造的运行；当前环境是否已解除阻塞应重新预检。可无 Key、无模型费用复现比较命令：
+公开的历史阻塞样例位于 `validation/preflight-20261104/`：它记录当时只读预检，未提交真实模型请求，没有人工质量判定。`baseline-unavailable` 明确记录当时不存在原始真实基线，不是补造的运行；它不覆盖 2026-11-05 新取得的旧版实跑，当前状态见上述 Issue #2 状态页。可无 Key、无模型费用复现比较命令：
 
 ```bash
 uv run python -m paper_assistant.evaluation_review compare --baseline eval_data/agent_v1/validation/preflight-20261104/baseline-unavailable --candidate eval_data/agent_v1/validation/preflight-20261104/fixed --out data/evaluations/blocked-example-001

@@ -57,7 +57,9 @@ def jobs(tmp_path, monkeypatch):
 
 
 def wait_finished(service, task_id):
-    service._workers[task_id].join(timeout=3)
+    # Multi-paper indexing/checkpoint writes can exceed three seconds on
+    # Windows. This bounds the harness wait, not the task's execution budget.
+    service._workers[task_id].join(timeout=15)
     return service.snapshot(task_id)
 
 

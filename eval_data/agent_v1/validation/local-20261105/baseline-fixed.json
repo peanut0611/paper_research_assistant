@@ -1,0 +1,4247 @@
+{
+  "mode": "fixed",
+  "workspace": {
+    "head": "805c312c30ff320b5aca93c9221840c50f8cdb24",
+    "files": {
+      ".env.example": "cc519bc3f6b9a957eb14f86f158d079f6c30c64c3817f2e3540012c69f55eb30",
+      ".gitignore": "8577ea1eb437f7dd968956b2db16224b105b983cfc54a6bb566c370000391463",
+      "eval_data/agent_v1/baseline/status.json": "0909cad68f4dfd7d61cc7d681de622472aa4a13cda3eaea1ca18f9dd2b0a8b62",
+      "eval_data/agent_v1/baseline/workspace-before.json": "04e1af5977dd3f639f60b104cfa7268e12bfaabadc90e80895b10f7c2295d6dc",
+      "eval_data/agent_v1/README.md": "128d6343050526a798a11db2d2092f74a68131de9b1a32400850b3f11fcf0a86",
+      "eval_data/agent_v1/rubric.md": "7120c6b78db3578d19b3cf4a780d02978c13c23816d9ce72a30726dcd42c515e",
+      "eval_data/agent_v1/sources.json": "7beb3ef372a607b9a1117e1a1f61406bef9c4d62a6b6380faa6a37902d39ded8",
+      "eval_data/agent_v1/suite.json": "359c816481b070979bb09c9cb0bd827f6254dd4972f7be67dee98ba2c4398765",
+      "eval_data/README.md": "0f5bcf8d2954ef6231075b07fa362d5035616ba0860d1a14706c854ac41a759e",
+      "eval_data/research/CONVERSATION_TESTS.md": "c014ecc893f1e4decca22ec6eb821dec49d8e93b10d9eab80a93f38492933e1a",
+      "eval_data/research/E2E_VALIDATION_20261028.md": "bc0e38e62c387c4eb543f55be941d3293f3c5f0282d296593038c0a5a42b4d72",
+      "eval_data/research/manual_cases.json": "39a9b7ded3da0f42cba39f619d51efc3f41623c94228eed6059e1b4413c5a7d4",
+      "eval_data/research/MANUAL_TESTS.md": "323c0a382aed71181da41f4675cc5dfceacca97b43f71bfe9f396b93ebebddc7",
+      "eval_data/research/README.md": "ec354b2bea37fab1e84f524d1382ebd4ce426f1de49d17a31add7131a02813a0",
+      "eval_data/research/synthetic_candidates.json": "182d7559bf728ad11a19a20de7a48d0cc96fbfe1374c87b4358037ff9bbed6c9",
+      "eval_data/research/tasks.jsonl": "7436c61aefc5d8a685544c11e76410781c458a6d332367ffee05e843232029e7",
+      "eval_data/research/tool_calls_example.jsonl": "a139367c2313bb58d7f1b6f107b6b6533400797ba73142968c6f1117a1028d03",
+      "pyproject.toml": "f985ae697271f56861cfdafe9663a9faab12d1974ba14c4a29fcaa03e273aa94",
+      "README.md": "dfd1803cb587848ae75c8f292d07473f86832cac82023827459206fccda20db4",
+      "scripts/app.py": "299c92738f4f144aa21c575ee84671106ae1a1c1cc689a8703b633b35407f014",
+      "scripts/dev/fetch_papers.py": "f344b0d17630d5cb1028a7abf8c1deee541c42c31e531ac340a8d0e26005c46b",
+      "scripts/dev/ingest_research_papers.py": "119f85792d9b93d760d3e814a856fedad227bd61414507702269ccb932a62325",
+      "scripts/dev/run_mock_research.py": "8753accc77fba206fa4d2fb701b567dfcb117f956bca2f454a909c399d3f5ab2",
+      "scripts/dev/run_tool_calls.py": "8b8bad7248323fd1929fe5f1629122b3df891c9ebc11f6ba0aa7d33ab6113577",
+      "scripts/dev/search_literature.py": "a07a64aa99e542f0c378f8c78c29923d0dbdfbaf38c6bf55a4a40fae9e2eeccc",
+      "scripts/README.md": "328e70b03dcf36918f9528f7b48a37706d24611a47f40b84996b74b3514db773",
+      "scripts/run_research.py": "2526b7bbd4d3335b37f82fe2efb85de8fdcbff29737d3334adecc785f182e481",
+      "src/paper_assistant/__init__.py": "e68caa02afb597c3757546a6f03de1cada8eefde5826c9b8635ea1de13a5096d",
+      "src/paper_assistant/__main__.py": "38039ba845101ca52e0994ffcabaf6de794866c11646c0d4b00ab9465d77ff6b",
+      "src/paper_assistant/agent/__init__.py": "ebd0cbf8a3f32a65be08d66d8940ee22f2113b08baaebb96bd5fff6ceae49054",
+      "src/paper_assistant/agent/loop.py": "454ab50b7c366212e1b8520b8b0e7a81ac757abdfb53758bbdb65a15f4b38abf",
+      "src/paper_assistant/agent/messages.py": "091c8680322de87263d438747b07e93d2bfb0aa471e3a5bdd126ded91ff73d96",
+      "src/paper_assistant/agent/tools.py": "7b2192ef00e9ac7bfb45e38bd8de27aa79a4f6da73a56455890f01ed23691705",
+      "src/paper_assistant/ai/__init__.py": "9bf98375150ac2f344fb97a534cf47601fdce81cec3eac87d0662fd63fa7a323",
+      "src/paper_assistant/ai/openai.py": "3ee9865ec415bb18288aca2eb3b1e7067215eaab830f7a0f0ca9ddcf3c77a202",
+      "src/paper_assistant/ai/types.py": "694b803349d2c219c44f1714e3aedcea05415657c86eb8017ea63140c91459dd",
+      "src/paper_assistant/config.py": "58e9cc26de61e116eb0d40a69df5c7e1b908214294002957480751083c6fa851",
+      "src/paper_assistant/evaluation.py": "c8629e997ab5ab9345bf3eefd41658978f03f11cf01b7ddffa7f506729a7b868",
+      "src/paper_assistant/research/__init__.py": "e4997f767e0668cef78a840b5bfd529dcaa92f8893e75be4b1afd3df6e64ea18",
+      "src/paper_assistant/research/agent.py": "c58e3877101a05a5c674baca1b161d118f931c75f753700042ac5551e567299e",
+      "src/paper_assistant/research/citations.py": "b572544071cc091289e00f7425e29e6a71923e00538450bc97dfaed3131f83d2",
+      "src/paper_assistant/research/cli.py": "d35a5734a7816b243ad0f7952f69f61b11ca509f2c24e0629b553179f61c9462",
+      "src/paper_assistant/research/context.py": "eb39a08dba5c118b81907f6fed3f7fcbd36d94b8ad10b9a5f99b76ffd6dfc2c6",
+      "src/paper_assistant/research/conversation.py": "09470275cdabb433851f23fda88aea09fd40f5a368f568245d2ae5ac8c3be7e4",
+      "src/paper_assistant/research/model.py": "3c827bda05d81fd075962be42b5ad33dbbe331719b62cf80749ae207b4bbc2ec",
+      "src/paper_assistant/research/state.py": "21bdc532e5064f5de7986b259f978394662a9ebdb2477673ac7dca6e753a435c",
+      "src/paper_assistant/research/task.py": "e46f3ad9fec32cebdad4ec65af5cac15b1e17275125685bad84d8e1647820f0f",
+      "src/paper_assistant/research/toolset.py": "df36d218bc6bc7b5e2d86147ea4e20d6a8be919d0a45a18961e1b5bdd90db786",
+      "src/paper_assistant/research/workspace.py": "7f861461caf6ef601162682317fcdfcf74cd641413eb03907c35e5386a993a43",
+      "src/paper_assistant/storage.py": "ca3075c90987d47125e7eae62d662a2bd9fea536ae10c574b443bab7276a37d2",
+      "src/paper_assistant/tools/__init__.py": "ed414daf97dc01100646789637d39e55259da77b2198c9dbc240f6f1b0fcceb5",
+      "src/paper_assistant/tools/arxiv/__init__.py": "5c858587451e1ddff81cd779ce350e6def716c3efe84912fcb647f9d97d2760f",
+      "src/paper_assistant/tools/arxiv/fetch.py": "617d499cd0675b42adafee9ed66ca0978c4038cf5d3067e23ef9fb9809f5fad8",
+      "src/paper_assistant/tools/arxiv/search.py": "7c92820b78513355c7717c71f44fed6fde44890b9fb7b79f934483e6f75d0cac",
+      "src/paper_assistant/tools/knowledge/__init__.py": "bb1ebed1b1cd321e7c27ffd176f7c5dd1af6152836cef9d65ed59595178fbe8a",
+      "src/paper_assistant/tools/knowledge/chunking.py": "33abe0622de336c0444434ef893227dbb7fb3512d1aa40c4be0fb3a6592bdaf3",
+      "src/paper_assistant/tools/knowledge/embedding.py": "c8916251010f620a3acbcf16d8dfe0e572f60d11108fcdc97c42e0423a6d665c",
+      "src/paper_assistant/tools/knowledge/ingestion.py": "4914c1bbc28f569ede5741d1d7706ce8a8f9a20bccb5652fbe7d319c0e6b6cac",
+      "src/paper_assistant/tools/knowledge/lexical.py": "8edc0dd7648a9fcdbfce592aa4998ad4f7e9899bab0f196cd26f6cba9b8f6489",
+      "src/paper_assistant/tools/knowledge/pdf_parser.py": "f95243e1a37a7d11d844d6638b804de9a3bf5b32ed81fdd341e522b4ca892778",
+      "src/paper_assistant/tools/knowledge/pdf_worker.py": "efe6cd255a5da9f905118f998282b68d14e9093a0fbc68049fe9451dcd238081",
+      "src/paper_assistant/tools/knowledge/scope.py": "3b2518fdb11e79a0ab2848d63424a6a960dad8bcd2733beb7a06f3c52f55e467",
+      "src/paper_assistant/tools/knowledge/store.py": "8fc18b2a492de1532af3513c134fc8e2ee7896697bf9b1107e0577a42bed26e1",
+      "src/paper_assistant/tools/knowledge/text_cleaner.py": "b2983afd56da743db71a60d32e4c257898e8a68f1157d3f89bc40dec10081d9d",
+      "src/paper_assistant/web/__init__.py": "2bc0c499b1c0104494b88748f9964d113b29432866eea4017c90a305491d7476",
+      "src/paper_assistant/web/cli.py": "ac81464d8e3a37fc28c7e38be9a1eeeb8c39a46274ed8bc4431d51290167f05d",
+      "src/paper_assistant/web/jobs.py": "d10b2501d980e87f134fc37bfc9d15b7ec46160b752c989f4ef9435d3b8ed222",
+      "src/paper_assistant/web/server.py": "2a73584cc5cd39b05623a5cd9f7c5dde7c35bc81b5cd2a7b2882e1cb7a5d9698",
+      "src/paper_assistant/web/static/conversation.js": "cc6199f1cc8c96ef2a82868f00906ff0da1044ddeae7af508a9c552d01af302a",
+      "src/paper_assistant/web/static/index.html": "54cd849c44742568f17dee6b922cf947ab587a253be620e08a3f9251f01a9839",
+      "src/paper_assistant/web/static/research.js": "1a150d56c8061f42bd6c6dfce872c3e18655b25aeac068567912a3462790bad3",
+      "src/paper_assistant/web/static/style.css": "2f2f1701627bb837d6d924486ca211cbcf0443987a5d30e9f56601336fa57073",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/agent/test_agent_core.py": "21acb60b5b2877201f2b1fccae0dc9eb40d7e1a84a6145ca33ac5635c502a9fe",
+      "tests/agent/test_architecture.py": "037a3eafb46f2da746d943fff0fbcbde01e2fbc7a4e2966bcb2b6a3a0cf121fa",
+      "tests/ai/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/ai/test_openai_client.py": "7b5195fe18f30b0b9323fdfca8a7958215dec7c8ce2576de671a90c6248b6b2a",
+      "tests/conftest.py": "ec2fc23870ae17e7eeb564eafce4bb382856190a12b2dd34c9ce21ad331addea",
+      "tests/fixtures/arxiv/live_20261023.meta.json": "eb482b1756db4a982cd47e2a555476e88e7a9757c183694755a043b6488a649d",
+      "tests/fixtures/arxiv/live_20261023.xml": "ed59bcbe0ebc865129b20922f4ce022ea8127c185fd067b17b0baa88b826d1e7",
+      "tests/fixtures/arxiv/README.md": "0e5e765269b76d7e2d9bc97e97fa4e13db9b7b6358abfe0456f662bff18da63d",
+      "tests/fixtures/arxiv/synthetic_feed.xml": "4b21abc611b6d90a26d354da20643bc1e14380ff3e949e3df409c26db1b694d9",
+      "tests/research/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/research/test_agent_model.py": "a40b2c56b7ec11bc8d7dfbadd0bba712ce0bbb19f52cfef21f50d307a35b5c49",
+      "tests/research/test_agent_runner.py": "785fa65d378d3cd0bb0efa3deaf7f3d065043b04722a233757e9fd92f7bf24b0",
+      "tests/research/test_agent_tools.py": "126e7b65eee3c69e731fe92daf2ee858e54064413c5a79b7a295ce926d90b3df",
+      "tests/research/test_agent_transcript.py": "ffa535fbc9c3e185acd589191e6a877c5ecaa05bdbcff6ea24acd3385426a235",
+      "tests/research/test_answer_phase.py": "0c54e1e7e7468f8c404c20833e2dbc1e43465b8a01ea1781ed61e4a8986fcbc5",
+      "tests/research/test_citations.py": "cddff7c5e38a9b4584f6f8aadcce4fa68b7c7b43a5aab55103235cfadfc752b7",
+      "tests/research/test_conversation.py": "677a54b89aad0447f44786ba6797ad6961ca364c25b0ee3f4455ccf71d5f12ba",
+      "tests/research/test_research_task.py": "75fdfd330b1bd530cca7a3e1daa4cdea7a143e914276fbe68c88afddcc63e41d",
+      "tests/research/test_research_workspace.py": "e805edc2c5a93bd95258bcca5eff11565456eb734d5cbde058c24053d98b4868",
+      "tests/retrieval_fixtures.py": "664164b4d070809e2773c2de84691af6f5f6ca1d16a90c22fae6f65c1c8302e0",
+      "tests/test_cli.py": "8ebae8eb5101564ade022af22ad4c39f3e81f39eddaaf05c969af53689847cbf",
+      "tests/test_config.py": "6df5613993372d25ad7606a10b309dabf37c638948d9382232bbad6c47c1d1e1",
+      "tests/test_storage.py": "642c6f25db5fe43cfc5c3cc28810a40bb59ee4350c2202119cfd0c7158ac8a04",
+      "tests/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/tools/test_chunking.py": "d447712dfb0750b6bb4ba787e7e2bad15a40ba09ed3485e235d2b6de1c6fc5b0",
+      "tests/tools/test_corpus_ingestion.py": "4f9f1d092f4a0e9265f5bac15dc2260eab5cfbfa8e8856df7180be0bf9a1f231",
+      "tests/tools/test_document_store.py": "95b260d6e02205a53b4d520587528467d30b92ff594cbcb994ce4f93b4234dfd",
+      "tests/tools/test_embedding.py": "7be9251ce30afab2f997b68b44b26d642a4e1c3e8b2cdace004d13e7471f12f0",
+      "tests/tools/test_lexical_retrieval.py": "38f5666155f2eccf52dba5a4e14da45b15e9f7c600d16eec17a6b0facbbc89fa",
+      "tests/tools/test_literature_search.py": "cfb73610867275b459894438b984afa0b4c54e9c4bf5a490f5f9862eebcac4cd",
+      "tests/tools/test_paper_fetcher.py": "2bef298b66068790a925980069f82258d785f225c4805af0d2a25c99976b1365",
+      "tests/tools/test_pdf_parser.py": "cf876304d90088312dd97215d619778eb533d7460059f0b47e8253124460d282",
+      "tests/tools/test_retrieval_scope.py": "799b873a1097596298e3926d4f17291a37ec7950f61fc6927466f68c85c29d58",
+      "tests/tools/test_text_cleaner.py": "95835f32a55a6c41b6745615886b28c01cb5515a850852091c68d2949f652d02",
+      "tests/tools/test_token_chunking.py": "a56f0bb8ab105f3c074f707f75ef75491e42aa9316c9c187e3da990c707f6bc0",
+      "tests/web/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/web/conversation_client.test.cjs": "4504ff9df3dd6785301990721b27a20119f55332135b50f9f764a1d37a29eaa0",
+      "tests/web/research_client.test.cjs": "cef0471c561809fd7f23b6e95d7546cdbf1b724384bb513ed6eab5df8b70245c",
+      "tests/web/test_baseline_capture.py": "e5ae5722d438ad1081d1dcf802f64e73533df9a752df31b6ccbfdacf74948f6e",
+      "tests/web/test_conversation_web.py": "55e4f216fa87a09d10d041a389da02b6e6ff29de50805be57c3432e7a4b510e5",
+      "tests/web/test_research_web.py": "92305e29ebfc8b5cfc3824258035eca7f18e439abf5b3bf55241a5e5b11c6d3c",
+      "tests/web/test_web_app.py": "c11854cb4be727fa9471fb4d2cbdae5238ce7cc913c30315e0b21b8a84698cb2",
+      "uv.lock": "cf52721de1b581f3af3fa80c951d63c8f5d92a29d53c80f2764f9c6b07aded99"
+    },
+    "untracked_files": [],
+    "tracked_diff_sha256": "66af9e38f2c91d113f71e9073bffdfa6791b7a02f5df4a545b9d7d8abdc07228",
+    "workspace_sha256": "11ba29b859c37da97e1807e1f00d039c9963c842faa043712e5cc2b8b8380908",
+    "exclusions": [
+      "credentials",
+      "virtual environments",
+      "data and model caches",
+      ".git",
+      "third-party skill bodies"
+    ]
+  },
+  "model_config": {
+    "model": "gpt-5.4-mini",
+    "max_input_tokens": 16000,
+    "max_output_tokens": 1200,
+    "timeout_seconds": 45,
+    "trust_env": true
+  },
+  "rates": {
+    "input": 0.75,
+    "cached_input": 0.075,
+    "output": 4.5
+  },
+  "price_checked_at": "2026-10-23",
+  "frozen_inputs": {
+    "frozen_at": "2026-11-04T15:24:09.599453+00:00",
+    "sha256": {
+      "suite.json": "a1051032549b9fcb35005453fb9827768b6a8ea5af31d9c8ffb9ba36c0b3acb9",
+      "sources.json": "ae529159149fbee15b14e0a75799dc469dc04e32f713ade0bde4f7ed821d49da",
+      "rubric.md": "7120c6b78db3578d19b3cf4a780d02978c13c23816d9ce72a30726dcd42c515e",
+      "workspace.json": "22c7bd5c24d0c8c4b4849ea1ecef270ec64e887c9a90e8cfa3564ad03c95ce9d"
+    }
+  },
+  "raw_report_sha256": "c74ea460249a3724a3b5b321dc589586e9956affe03bfe6cd0f592ebc47a9b75",
+  "cases": [
+    {
+      "case_id": "tool-use-comparison",
+      "input": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "cached_example"
+      },
+      "followup_inputs": [],
+      "execution_status": "executed",
+      "evidence_kind": "real_model_http",
+      "review_status": "not_reviewed",
+      "quality_verdict": null,
+      "accounting": {
+        "charged_tokens": 33273,
+        "charged_or_reserved_usd": 0.03388725,
+        "unknown_reserved_usd": 0,
+        "unknown_usage_calls": 0,
+        "input_tokens": 30891,
+        "output_tokens": 2382,
+        "cached_input_tokens": 0,
+        "complete": true
+      },
+      "online_network_verified": false,
+      "actual_materials": [
+        {
+          "arxiv_id": "2210.03629",
+          "version": 1,
+          "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+          "origin": "live_arxiv_pdf"
+        }
+      ],
+      "blockers": [
+        "human_review_pending",
+        "reviewer_missing",
+        "review_time_missing",
+        "claims_missing",
+        "rubric_checks_missing",
+        "unobserved_branches_missing",
+        "review_missing_turn:research"
+      ],
+      "rounds": [
+        {
+          "round_id": "research",
+          "stop_reason": "insufficient_evidence",
+          "elapsed_seconds": 70.131433,
+          "charged_tokens": 33273,
+          "charged_or_reserved_usd": 0.03388725,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 30891,
+          "output_tokens": 2382,
+          "cached_input_tokens": 0,
+          "answer": {
+            "answer": "ReAct is presented as a novel prompt-based paradigm that synergizes reasoning and acting in language models for general task solving, and the paper emphasizes a few-shot learning setup rather than training a separate tool-use policy. It also shows that actions are interleaved with reasoning traces to support decisions in interactive environments. [E1] [E12]",
+            "citations": [
+              {
+                "evidence_id": "E1",
+                "quote": "we introduce ReAct, a novel prompt-based paradigm to synergize reasoning and acting in language models for general task solving",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 2936,
+                    "char_start": 1304,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0003::chunk-0002",
+                    "chunk_index": 2,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 3,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.03278688524590164,
+                    "word_end": 244,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E12",
+                "quote": "This tight synergy between “acting” and “reasoning” allows humans to learn new tasks quickly and perform robust decision making or reasoning",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 3513,
+                    "char_start": 2482,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0001::chunk-0003",
+                    "chunk_index": 3,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 1,
+                    "retrieval_rank": 2,
+                    "retrieval_score": 0.03200204813108039,
+                    "word_end": 161,
+                    "word_start": 0
+                  }
+                ]
+              }
+            ],
+            "insufficient_evidence": true,
+            "valid": true,
+            "validation_scope": "ID existence, inline/list agreement, literal quote containment; not semantic entailment"
+          },
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 12,
+              "report_reserve_tokens": 2000
+            },
+            "offline": true,
+            "policy_id": "openai-research-v1:a64e3f2558ea7b5882c8a5f17000352befcbf37d7d78c69a068fead3818f59a0",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.1,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.02
+              },
+              "research_questions": [
+                "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model tool use ReAct Toolformer",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "web-20261104T152424-54aa363c07e9"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.003288,
+              "charged_tokens": 3254,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 600,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15763,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "125ea364a2440bc237589c3cbf89a0e1c0fec4505b6b9ed03727518175874035",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_093eca332b94cbc9016aeb4e2c286887d18675386c9848e315",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01722225,
+                "max_tokens": 16963
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.003288,
+                "input_tokens": 3028,
+                "output_tokens": 226
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00338025,
+              "charged_tokens": 3317,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15841,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "651b10807605c9a969d57fe0c9aa81ca8bb298f4b42fdedabfc5d2fc48e673f0",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_066557016ef7ad92016aeb4e2eeb3487d1b826532f20a97647",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01728075,
+                "max_tokens": 17041
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.00338025,
+                "input_tokens": 3079,
+                "output_tokens": 238
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00340875,
+              "charged_tokens": 3360,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15961,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "8c67e4ad67337f89f234780b0975f804ef786cd00f088186f7defbcabf648a91",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0dae4b24fff31487016aeb4e31da1887d1af4fa9bc8002c0ab",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01737075,
+                "max_tokens": 17161
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.00340875,
+                "input_tokens": 3123,
+                "output_tokens": 237
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00317775,
+              "charged_tokens": 3302,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15921,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "a438465212c78d695fdf5a8b238b076a46b52fb42fc0dc0ab4d473bf4022d32f",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0afd2d5f77761e60016aeb4e5e55e887d1b3fbfcf43929a67d",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01734075,
+                "max_tokens": 17121
+              },
+              "simulated": false,
+              "step": 4,
+              "usage": {
+                "cost_usd": 0.00317775,
+                "input_tokens": 3115,
+                "output_tokens": 187
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00294375,
+              "charged_tokens": 3180,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15379,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "b460473d4c09bb8e9e40ca7198aa982d73e9cd56e063fcb316804b5773847c11",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_05c755cc29ac2aa1016aeb4e60df0c87d181c3c0aa7bc2c24c",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01693425,
+                "max_tokens": 16579
+              },
+              "simulated": false,
+              "step": 5,
+              "usage": {
+                "cost_usd": 0.00294375,
+                "input_tokens": 3031,
+                "output_tokens": 149
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0031095,
+              "charged_tokens": 3231,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15593,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "3ccbad4d2d02f148bfd44d979370271f97c53c12ff7381e92e0109be21927cc4",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_084883e103b4ac77016aeb4e632e7487d19e53ac980cf9cb09",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01709475,
+                "max_tokens": 16793
+              },
+              "simulated": false,
+              "step": 6,
+              "usage": {
+                "cost_usd": 0.0031095,
+                "input_tokens": 3048,
+                "output_tokens": 183
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0030525,
+              "charged_tokens": 3250,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15302,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "ffc51576739b8612ecee33054b84727da1e0758329bd0f23f829ed11468fee50",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0311af2ce557ce40016aeb4e655ad887d19fb58ffe8edf07b9",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0168765,
+                "max_tokens": 16502
+              },
+              "simulated": false,
+              "step": 7,
+              "usage": {
+                "cost_usd": 0.0030525,
+                "input_tokens": 3086,
+                "output_tokens": 164
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0031635,
+              "charged_tokens": 3223,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15242,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "744539bcb999a503c6b5de7343f7ec86f1fb24bd16e088dd373ffaf9cd3a96d0",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_046bdd077e65d56d016aeb4e67c8f487d1b4b406a48f19f6d1",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0168315,
+                "max_tokens": 16442
+              },
+              "simulated": false,
+              "step": 8,
+              "usage": {
+                "cost_usd": 0.0031635,
+                "input_tokens": 3024,
+                "output_tokens": 199
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0046515,
+              "charged_tokens": 3657,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 14374,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "b1a95e9af254630235c106d58d42092d36562634ff1ec415ccb253da05a7d34d",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0a15dfeb5e86942e016aeb4e6a16f487d18d8cb1bb5b423f20",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0161805,
+                "max_tokens": 15574
+              },
+              "simulated": false,
+              "step": 9,
+              "usage": {
+                "cost_usd": 0.0046515,
+                "input_tokens": 3148,
+                "output_tokens": 509
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00371175,
+              "charged_tokens": 3499,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 14675,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "32ecdbbec4328c030dcfc08b2e7a72a427fb72fcbe29f1633e3f7885b0ecae3e",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_03aecb7bf2488f4f016aeb4e6dfae887d1a514d73526e5e288",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01640625,
+                "max_tokens": 15875
+              },
+              "simulated": false,
+              "step": 10,
+              "usage": {
+                "cost_usd": 0.00371175,
+                "input_tokens": 3209,
+                "output_tokens": 290
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "list_documents",
+              "arguments": {},
+              "purpose": "Inspect candidate and acquisition status before selecting papers",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "fetch_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629",
+                "version": 1
+              },
+              "purpose": "Acquire the ReAct paper PDF for full-text evidence",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "downloaded",
+                "from_cache": true,
+                "asset": {
+                  "arxiv_id": "2210.03629",
+                  "version": 1,
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "origin": "live_arxiv_pdf"
+                }
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629"
+              },
+              "purpose": "Index the downloaded ReAct paper for text search and page reading",
+              "status": "completed",
+              "duration_ms": 41547.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "fulltext_ready",
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 4,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "training tool use ReAct tool calls experiments training paradigm section page where ReAct introduces prompting and external actions",
+                "top_k": 5
+              },
+              "purpose": "Find the ReAct passages describing whether it is trained and how actions are generated",
+              "status": "completed",
+              "duration_ms": 78.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 5,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "training prompting actions produced tool use ReAct page 2 3 4 5",
+                "top_k": 5
+              },
+              "purpose": "Find full-text evidence in ReAct about prompting, training, and action generation",
+              "status": "completed",
+              "duration_ms": 94.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 6,
+              "tool": "read_pages",
+              "arguments": {
+                "char_start": 0,
+                "document_id": "arxiv--2210.03629--v1",
+                "end_page": 5,
+                "max_chars": 12000,
+                "start_page": 1
+              },
+              "purpose": "Read ReAct first pages for method and comparison details",
+              "status": "completed",
+              "duration_ms": 47.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 7,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "training, prompt, actions, policy, interleaved reasoning and acting, how actions are produced, and whether the approach is trained end-to-end or prompted at inference",
+                "top_k": 5
+              },
+              "purpose": "Locate exact ReAct passages on training vs prompting and action generation",
+              "status": "completed",
+              "duration_ms": 93.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 8,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "ReAct is a prompted paradigm rather than a separately trained tool-use model: the paper presents it as a \"novel prompt-based paradigm\" that combines reasoning and acting for task solving, and it emphasizes that the method is used in a few-shot learning setup rather than via task-specific training [E1]. The paper also describes that actions are interleaved with reasoning traces; for example, the model can decide when external information is needed and then act by searching the Internet or using other environment actions to support the reasoning [E12]. In the reported experiments, ReAct outperforms Act on ALFWorld and WebShop, but the comparison is limited because it is against prompting baselines and controlled trials, not against a fully trained tool-use system; the authors explicitly note limitations of the prompting setup and mention initial finetuning only as a further direction [E1][E6].",
+                "citations": [
+                  {
+                    "evidence_id": "E1",
+                    "quote": "a novel prompt-based paradigm to synergize reasoning and acting in language models for general task solving; (2) we perform extensive experiments across diverse benchmarks to showcase the advantage of ReAct in a few-shot learning setup over prior approaches that perform either reasoning or action generation in isolation; (4) we analyze the limitations ofReAct under the prompting setup"
+                  },
+                  {
+                    "evidence_id": "E12",
+                    "quote": "when external information is needed (“how do I prepare dough? Let me search on the Internet”). We may also act (open a cookbook to read the recipe, open the fridge, check ingredients) to support the reasoning"
+                  },
+                  {
+                    "evidence_id": "E6",
+                    "quote": "ReAct outperforms Act on both ALFWorld (Table 3) and Webshop (Table 4). On ALFWorld, the bestReAct trial achieves an average success rate of 71%, significantly outperforming the best Act (45%) and BUTLER (37%) trials."
+                  }
+                ],
+                "insufficient_evidence": false
+              },
+              "purpose": "Validate answer with visible citations before finishing",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": false,
+              "error": {
+                "code": "citation_validation_failed",
+                "message": "Quotes absent from evidence: E1. Copy exact source text, preserving PDF hyphens and punctuation; reconsider unsupported claims."
+              },
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 9,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "ReAct is presented as a novel prompt-based paradigm that synergizes reasoning and acting in language models for general task solving, and the paper emphasizes a few-shot learning setup rather than training a separate tool-use policy. It also shows that actions are interleaved with reasoning traces to support decisions in interactive environments. [E1] [E12]",
+                "citations": [
+                  {
+                    "evidence_id": "E1",
+                    "quote": "we introduce ReAct, a novel prompt-based paradigm to synergize reasoning and acting in language models for general task solving"
+                  },
+                  {
+                    "evidence_id": "E12",
+                    "quote": "This tight synergy between “acting” and “reasoning” allows humans to learn new tasks quickly and perform robust decision making or reasoning"
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "Verify available ReAct citations and mark remaining gaps",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "valid": true,
+                "insufficient_evidence": true,
+                "asset": {}
+              }
+            }
+          ]
+        }
+      ],
+      "full_case_sha256": "dbbc817cf6cf1d36dedb10df1cbe85c0d5171117148286c5362072c5f6d52335"
+    },
+    {
+      "case_id": "feedback-and-evidence",
+      "input": {
+        "topic": "language model agents ReAct Reflexion",
+        "questions": [
+          "ReAct 与 Reflexion v1 如何利用环境反馈？请比较反馈如何影响后续行动及跨次尝试的信息，并区分论文直接报告的结果和你的解释。证据不足请说明。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "cached_example"
+      },
+      "followup_inputs": [],
+      "execution_status": "executed",
+      "evidence_kind": "real_model_http",
+      "review_status": "not_reviewed",
+      "quality_verdict": null,
+      "accounting": {
+        "charged_tokens": 26658,
+        "charged_or_reserved_usd": 0.0246069,
+        "unknown_reserved_usd": 0,
+        "unknown_usage_calls": 0,
+        "input_tokens": 24990,
+        "output_tokens": 1668,
+        "cached_input_tokens": 2432,
+        "complete": true
+      },
+      "online_network_verified": false,
+      "actual_materials": [
+        {
+          "arxiv_id": "2210.03629",
+          "version": 1,
+          "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+          "origin": "live_arxiv_pdf"
+        }
+      ],
+      "blockers": [
+        "human_review_pending",
+        "reviewer_missing",
+        "review_time_missing",
+        "claims_missing",
+        "rubric_checks_missing",
+        "unobserved_branches_missing",
+        "review_missing_turn:research"
+      ],
+      "rounds": [
+        {
+          "round_id": "research",
+          "stop_reason": "insufficient_evidence",
+          "elapsed_seconds": 55.892367,
+          "charged_tokens": 26658,
+          "charged_or_reserved_usd": 0.0246069,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 24990,
+          "output_tokens": 1668,
+          "cached_input_tokens": 2432,
+          "answer": null,
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 12,
+              "report_reserve_tokens": 2000
+            },
+            "offline": true,
+            "policy_id": "openai-research-v1:a64e3f2558ea7b5882c8a5f17000352befcbf37d7d78c69a068fead3818f59a0",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.1,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.02
+              },
+              "research_questions": [
+                "ReAct 与 Reflexion v1 如何利用环境反馈？请比较反馈如何影响后续行动及跨次尝试的信息，并区分论文直接报告的结果和你的解释。证据不足请说明。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model agents ReAct Reflexion",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "web-20261104T152538-0dcc6472b361"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.00160065,
+              "charged_tokens": 3243,
+              "metadata": {
+                "cached_input_tokens": 2432,
+                "context_compaction": {
+                  "abstracts": 600,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15743,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "9cf4327a70eeaa860f7681217780d53755cce0631824a7c6a18c3fbab694b060",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_03b39845b0e00e8c016aeb4e75993c87d1945103922defeb0c",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01720725,
+                "max_tokens": 16943
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.00160065,
+                "input_tokens": 3027,
+                "output_tokens": 216
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.003297,
+              "charged_tokens": 3306,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15842,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "d8dee87982ef23268ef8a919c5674c0cc24890eacb9d0831e1de84e77f122251",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0827e5fe3729a670016aeb4e782a2087d1a7b8e0967433b2e3",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0172815,
+                "max_tokens": 17042
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.003297,
+                "input_tokens": 3088,
+                "output_tokens": 218
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00332025,
+              "charged_tokens": 3322,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15864,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "11c63fc1de903b983f29748a1646538508009e46f8813d2fa087f5b37675301e",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_048d36a192ce5bf4016aeb4e7a312c87d18d63b755c5075b6a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.017298,
+                "max_tokens": 17064
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.00332025,
+                "input_tokens": 3101,
+                "output_tokens": 221
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0034935,
+              "charged_tokens": 3358,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15808,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "2127e470c5adf60f2c6a11fd5f89d9b78845e774532c2a50232d52901b44551e",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0f2f053d18e4648f016aeb4ea21c7887d197ef8175de1fe230",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.017256,
+                "max_tokens": 17008
+              },
+              "simulated": false,
+              "step": 4,
+              "usage": {
+                "cost_usd": 0.0034935,
+                "input_tokens": 3098,
+                "output_tokens": 260
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0036015,
+              "charged_tokens": 3442,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15686,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "dfbc23be719ed27110446e6a0ccec36573ac2490ea16be830c38f586095651c2",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0ccd4c27f932b9b4016aeb4ea4a31487d1a5a5e02435d28289",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0171645,
+                "max_tokens": 16886
+              },
+              "simulated": false,
+              "step": 5,
+              "usage": {
+                "cost_usd": 0.0036015,
+                "input_tokens": 3170,
+                "output_tokens": 272
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00293775,
+              "charged_tokens": 3282,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 600,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 40,
+                  "titles": 32
+                },
+                "input_token_estimate": 15589,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "4e542afe83adc17940aa07cd6dddecb54cc2a9c31b4ec7830dacc5c7c6ccd214",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0fbbd4ca05f65439016aeb4ea6ff3487d1989cb6f1587529d9",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01709175,
+                "max_tokens": 16789
+              },
+              "simulated": false,
+              "step": 6,
+              "usage": {
+                "cost_usd": 0.00293775,
+                "input_tokens": 3155,
+                "output_tokens": 127
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0033015,
+              "charged_tokens": 3447,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 900,
+                  "evidence_count": 2,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15807,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "683cc02c2ca693526013b21552a28645024a8fc1c080bd700534811060a6c311",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0580fac8c490bd5f016aeb4ea8c3bc87d1a9f601980579dbcd",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01725525,
+                "max_tokens": 17007
+              },
+              "simulated": false,
+              "step": 7,
+              "usage": {
+                "cost_usd": 0.0033015,
+                "input_tokens": 3256,
+                "output_tokens": 191
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00305475,
+              "charged_tokens": 3258,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15421,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "4b38c483884bae5b2d8213f9dcc2bb0c1feadd4d2e1c5f80deaa1bf76dff4844",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_03d4bcbcbe4df167016aeb4eab3f9c87d19f980d29939c21a9",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01696575,
+                "max_tokens": 16621
+              },
+              "simulated": false,
+              "step": 8,
+              "usage": {
+                "cost_usd": 0.00305475,
+                "input_tokens": 3095,
+                "output_tokens": 163
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629"
+              },
+              "purpose": "Prepare first relevant paper for fulltext evidence",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": false,
+              "error": {
+                "code": "not_acquired",
+                "message": "Fetch this paper in the task before indexing it"
+              },
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "fetch_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629",
+                "version": 1
+              },
+              "purpose": "Acquire ReAct paper PDF for evidence",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "downloaded",
+                "from_cache": true,
+                "asset": {
+                  "arxiv_id": "2210.03629",
+                  "version": 1,
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "origin": "live_arxiv_pdf"
+                }
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629"
+              },
+              "purpose": "Index the downloaded ReAct paper for fulltext search",
+              "status": "completed",
+              "duration_ms": 36813.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "fulltext_ready",
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 4,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "environment feedback observation action next step feedback append reflection ReAct paper how feedback affects subsequent actions and trajectories",
+                "top_k": 5
+              },
+              "purpose": "Locate evidence in ReAct full text about environment feedback and subsequent actions",
+              "status": "completed",
+              "duration_ms": 78.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 5,
+              "tool": "read_pages",
+              "arguments": {
+                "char_start": 1210,
+                "document_id": "arxiv--2210.03629--v1",
+                "end_page": 7,
+                "max_chars": 3000,
+                "start_page": 7
+              },
+              "purpose": "Read the suggested ReAct source page to obtain verified full-text evidence",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 6,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "feedback observations actions update subsequent actions trial attempts in ReAct and Reflexion compare with self-reflection memory",
+                "top_k": 5
+              },
+              "purpose": "Search the full text for evidence on feedback mechanisms in ReAct and Reflexion",
+              "status": "completed",
+              "duration_ms": 78.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            }
+          ]
+        }
+      ],
+      "full_case_sha256": "a35f4a9fce588c52ceb5c46de08db03a409fe34104271579d27bc2d9777ca915"
+    },
+    {
+      "case_id": "vision-transfer",
+      "input": {
+        "topic": "visual representation learning CLIP Vision Transformer",
+        "questions": [
+          "比较 Vision Transformer 和 CLIP 的训练监督信号及迁移使用方式。哪些差异有正文实验或方法描述支持？请保留实验条件，避免将不同评测设置下的数字直接排名。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "cached_example"
+      },
+      "followup_inputs": [],
+      "execution_status": "executed",
+      "evidence_kind": "real_model_http",
+      "review_status": "not_reviewed",
+      "quality_verdict": null,
+      "accounting": {
+        "charged_tokens": 20665,
+        "charged_or_reserved_usd": 0.0210834,
+        "unknown_reserved_usd": 0,
+        "unknown_usage_calls": 0,
+        "input_tokens": 18738,
+        "output_tokens": 1927,
+        "cached_input_tokens": 2432,
+        "complete": true
+      },
+      "online_network_verified": false,
+      "actual_materials": [
+        {
+          "arxiv_id": "2010.11929",
+          "version": 1,
+          "source_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+          "origin": "live_arxiv_pdf"
+        }
+      ],
+      "blockers": [
+        "human_review_pending",
+        "reviewer_missing",
+        "review_time_missing",
+        "claims_missing",
+        "rubric_checks_missing",
+        "unobserved_branches_missing",
+        "review_missing_turn:research"
+      ],
+      "rounds": [
+        {
+          "round_id": "research",
+          "stop_reason": "insufficient_evidence",
+          "elapsed_seconds": 50.303719,
+          "charged_tokens": 20665,
+          "charged_or_reserved_usd": 0.0210834,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 18738,
+          "output_tokens": 1927,
+          "cached_input_tokens": 2432,
+          "answer": {
+            "answer": "The visible evidence supports that ViT uses image-specific patch sequence modeling with a standard Transformer encoder and explores self-supervised masked patch prediction, but it does not yet fully support the requested comparison with CLIP’s training supervision and transfer usage. From the available ViT text, the paper states that it is “the direct application of Transformers to image recognition,” that it does “not introduce any image-specific inductive biases,” and that it “interpret[s] an image as a sequence of patches” processed by “a standard Transformer encoder” [E2]. It also says ViT performs downstream evaluation via “fine-tuning accuracy” and “few-shot accuracies” [E1], and that self-supervised pre-training improved ViT-B/16 to 79.9% on ImageNet, but remained below supervised pre-training by 4% [E2]. However, the current evidence set does not include CLIP’s method or transfer details, so the cross-paper comparison cannot be completed from the visible evidence alone.",
+            "citations": [
+              {
+                "evidence_id": "E2",
+                "quote": "the direct application of Transformers to image recognition",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2010.11929v1",
+                  "arxiv_id": "2010.11929",
+                  "document_id": "arxiv--2010.11929--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2010.11929v1",
+                  "source_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+                  "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 1518,
+                    "char_start": 0,
+                    "chunk_id": "arxiv--2010.11929--v1::page-0009::chunk-0001",
+                    "chunk_index": 1,
+                    "document_id": "arxiv--2010.11929--v1",
+                    "filename": "arxiv--2010.11929--v1.pdf",
+                    "page_number": 9,
+                    "retrieval_rank": 2,
+                    "retrieval_score": 0.03036576949620428,
+                    "word_end": 225,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E2",
+                "quote": "we do not introduce any image-specific inductive biases into the architecture. Instead, we interpret an image as a sequence of patches and process it by a standard Transformer encoder",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2010.11929v1",
+                  "arxiv_id": "2010.11929",
+                  "document_id": "arxiv--2010.11929--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2010.11929v1",
+                  "source_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+                  "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 1518,
+                    "char_start": 0,
+                    "chunk_id": "arxiv--2010.11929--v1::page-0009::chunk-0001",
+                    "chunk_index": 1,
+                    "document_id": "arxiv--2010.11929--v1",
+                    "filename": "arxiv--2010.11929--v1.pdf",
+                    "page_number": 9,
+                    "retrieval_rank": 2,
+                    "retrieval_score": 0.03036576949620428,
+                    "word_end": 225,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E1",
+                "quote": "We report results on downstream datasets either through few-shot or fine-tuning accuracy.",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2010.11929v1",
+                  "arxiv_id": "2010.11929",
+                  "document_id": "arxiv--2010.11929--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2010.11929v1",
+                  "source_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+                  "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 3212,
+                    "char_start": 1823,
+                    "chunk_id": "arxiv--2010.11929--v1::page-0005::chunk-0003",
+                    "chunk_index": 3,
+                    "document_id": "arxiv--2010.11929--v1",
+                    "filename": "arxiv--2010.11929--v1.pdf",
+                    "page_number": 5,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.03278688524590164,
+                    "word_end": 216,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E2",
+                "quote": "With self-supervised pre-training, our smaller ViT-B/16 model achieves 79.9% accuracy on ImageNet, a significant improvement of 2% to training from scratch, but still 4% behind supervised pre-training.",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2010.11929v1",
+                  "arxiv_id": "2010.11929",
+                  "document_id": "arxiv--2010.11929--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2010.11929v1",
+                  "source_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+                  "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 1518,
+                    "char_start": 0,
+                    "chunk_id": "arxiv--2010.11929--v1::page-0009::chunk-0001",
+                    "chunk_index": 1,
+                    "document_id": "arxiv--2010.11929--v1",
+                    "filename": "arxiv--2010.11929--v1.pdf",
+                    "page_number": 9,
+                    "retrieval_rank": 2,
+                    "retrieval_score": 0.03036576949620428,
+                    "word_end": 225,
+                    "word_start": 0
+                  }
+                ]
+              }
+            ],
+            "insufficient_evidence": true,
+            "valid": true,
+            "validation_scope": "ID existence, inline/list agreement, literal quote containment; not semantic entailment"
+          },
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 12,
+              "report_reserve_tokens": 2000
+            },
+            "offline": true,
+            "policy_id": "openai-research-v1:a64e3f2558ea7b5882c8a5f17000352befcbf37d7d78c69a068fead3818f59a0",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.1,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.02
+              },
+              "research_questions": [
+                "比较 Vision Transformer 和 CLIP 的训练监督信号及迁移使用方式。哪些差异有正文实验或方法描述支持？请保留实验条件，避免将不同评测设置下的数字直接排名。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "visual representation learning CLIP Vision Transformer",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "web-20261104T152638-054fd9604e5a"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.00177765,
+              "charged_tokens": 3284,
+              "metadata": {
+                "cached_input_tokens": 2432,
+                "context_compaction": {
+                  "abstracts": 600,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15775,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "12f1313cc4f365b5ad5c6da795b2e8e559a3013215ee7c70aa98810e37a3e078",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0956d7188afc842c016aeb4eb1ebf887d194e17b875f9d217b",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01723125,
+                "max_tokens": 16975
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.00177765,
+                "input_tokens": 3029,
+                "output_tokens": 255
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00336075,
+              "charged_tokens": 3231,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 120,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15232,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "db5336a32f7fb564ef420d157f1aa01e1ccb4f362198935f9882fdbc5b32fafd",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0cf32d455d0f9007016aeb4eb58f2487d1a650a817ce5728db",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.016824,
+                "max_tokens": 16432
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.00336075,
+                "input_tokens": 2981,
+                "output_tokens": 250
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00351,
+              "charged_tokens": 3255,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 120,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15160,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "dd0185b88c8dc37f5b243d12eb3f7d5a3353a367c2a1ef734ae27df6da526293",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_029ab547f02c49ba016aeb4ed6f0a087d1991f03a1813e4273",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01677,
+                "max_tokens": 16360
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.00351,
+                "input_tokens": 2970,
+                "output_tokens": 285
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0036735,
+              "charged_tokens": 3478,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15858,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "94ac6f7d9eac5c53dd21515b998e3aaa37ca597dfab308600347640b67402997",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_05f1324126380a45016aeb4ed9bba487d1919cb10e77c4be8e",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0172935,
+                "max_tokens": 17058
+              },
+              "simulated": false,
+              "step": 4,
+              "usage": {
+                "cost_usd": 0.0036735,
+                "input_tokens": 3194,
+                "output_tokens": 284
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0036735,
+              "charged_tokens": 3478,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15859,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "5dabeb5288089b6787cccaa17905a0967563cc867737ba8cc724e090950e8e6f",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_00bc8fdd78b1db71016aeb4edc88b887d1b189d0b1743274c1",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01729425,
+                "max_tokens": 17059
+              },
+              "simulated": false,
+              "step": 5,
+              "usage": {
+                "cost_usd": 0.0036735,
+                "input_tokens": 3194,
+                "output_tokens": 284
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.005088,
+              "charged_tokens": 3939,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15218,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "872c8fc781720c872527ddbf0576b27eb6dda2fef8da2033d7e7fd2ca90a7140",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0cc74ef7e183c798016aeb4edebbb487d187f3505b4dec18fb",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0168135,
+                "max_tokens": 16418
+              },
+              "simulated": false,
+              "step": 6,
+              "usage": {
+                "cost_usd": 0.005088,
+                "input_tokens": 3370,
+                "output_tokens": 569
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "fetch_paper",
+              "arguments": {
+                "arxiv_id": "2010.11929",
+                "version": 1
+              },
+              "purpose": "Acquire first relevant Vision Transformer paper for fulltext review",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "downloaded",
+                "from_cache": true,
+                "asset": {
+                  "arxiv_id": "2010.11929",
+                  "version": 1,
+                  "source_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+                  "origin": "live_arxiv_pdf"
+                }
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2010.11929"
+              },
+              "purpose": "Index downloaded ViT paper for evidence retrieval",
+              "status": "completed",
+              "duration_ms": 31234.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "fulltext_ready",
+                "document_id": "arxiv--2010.11929--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2010.11929--v1"
+                ],
+                "method": "hybrid",
+                "query": "training supervision pre-training ImageNet transfer fine-tuning linear probing supervised self-attention",
+                "top_k": 5
+              },
+              "purpose": "Find ViT evidence on supervision and transfer protocol",
+              "status": "completed",
+              "duration_ms": 93.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 4,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2010.11929--v1"
+                ],
+                "method": "hybrid",
+                "query": "training supervision pre-training ImageNet transfer fine-tuning linear probing supervised self-attention",
+                "top_k": 5
+              },
+              "purpose": "Find ViT evidence on supervision and transfer protocol",
+              "status": "completed",
+              "duration_ms": 93.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 5,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "The visible evidence supports that ViT uses image-specific patch sequence modeling with a standard Transformer encoder and explores self-supervised masked patch prediction, but it does not yet fully support the requested comparison with CLIP’s training supervision and transfer usage. From the available ViT text, the paper states that it is “the direct application of Transformers to image recognition,” that it does “not introduce any image-specific inductive biases,” and that it “interpret[s] an image as a sequence of patches” processed by “a standard Transformer encoder” [E2]. It also says ViT performs downstream evaluation via “fine-tuning accuracy” and “few-shot accuracies” [E1], and that self-supervised pre-training improved ViT-B/16 to 79.9% on ImageNet, but remained below supervised pre-training by 4% [E2]. However, the current evidence set does not include CLIP’s method or transfer details, so the cross-paper comparison cannot be completed from the visible evidence alone.",
+                "citations": [
+                  {
+                    "evidence_id": "E2",
+                    "quote": "the direct application of Transformers to image recognition"
+                  },
+                  {
+                    "evidence_id": "E2",
+                    "quote": "we do not introduce any image-specific inductive biases into the architecture. Instead, we interpret an image as a sequence of patches and process it by a standard Transformer encoder"
+                  },
+                  {
+                    "evidence_id": "E1",
+                    "quote": "We report results on downstream datasets either through few-shot or fine-tuning accuracy."
+                  },
+                  {
+                    "evidence_id": "E2",
+                    "quote": "With self-supervised pre-training, our smaller ViT-B/16 model achieves 79.9% accuracy on ImageNet, a significant improvement of 2% to training from scratch, but still 4% behind supervised pre-training."
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "Validate partial answer with current evidence and mark insufficiency",
+              "status": "completed",
+              "duration_ms": 15.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "valid": true,
+                "insufficient_evidence": true,
+                "asset": {}
+              }
+            }
+          ]
+        }
+      ],
+      "full_case_sha256": "d03df9d8987ba3dcee8f4f46c0087632526b071ae21fbf06be7a45b9fa2b200d"
+    },
+    {
+      "case_id": "contextual-followups",
+      "input": {
+        "topic": "language model agents ReAct Reflexion",
+        "questions": [
+          "阅读 ReAct 与 Reflexion v1，概述它们如何处理交互中的错误及各自局限，给出正文证据。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "cached_example"
+      },
+      "followup_inputs": [
+        {
+          "question": "你刚才提到的后者，与前者相比，哪些处理错误的机制不同？",
+          "request_id": "baseline-13d74cd3b4da4a87a2f43a458133622f",
+          "max_cost_usd": 0.05
+        },
+        {
+          "question": "这些机制的实验结果是否足以支持在所有交互任务中都更好？请指出依据和边界。",
+          "request_id": "baseline-d28362075f624873b65fb4a537ee92ef",
+          "max_cost_usd": 0.05
+        }
+      ],
+      "execution_status": "executed",
+      "evidence_kind": "real_model_http",
+      "review_status": "not_reviewed",
+      "quality_verdict": null,
+      "accounting": {
+        "charged_tokens": 67043,
+        "charged_or_reserved_usd": 0.05936865,
+        "unknown_reserved_usd": 0.0151125,
+        "unknown_usage_calls": 1,
+        "input_tokens": 49389,
+        "output_tokens": 3504,
+        "cached_input_tokens": 12672,
+        "complete": true
+      },
+      "online_network_verified": false,
+      "actual_materials": [
+        {
+          "arxiv_id": "2210.03629",
+          "version": 1,
+          "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+          "origin": "live_arxiv_pdf"
+        }
+      ],
+      "blockers": [
+        "tool_trace_missing",
+        "human_review_pending",
+        "reviewer_missing",
+        "review_time_missing",
+        "claims_missing",
+        "rubric_checks_missing",
+        "unobserved_branches_missing",
+        "review_missing_turn:research",
+        "review_missing_turn:turn-36689c37b74342d2a4c702c0",
+        "review_missing_turn:turn-55d06ff378644be192d1264f"
+      ],
+      "rounds": [
+        {
+          "round_id": "research",
+          "stop_reason": "insufficient_evidence",
+          "elapsed_seconds": 59.222987,
+          "charged_tokens": 27371,
+          "charged_or_reserved_usd": 0.0263754,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 25374,
+          "output_tokens": 1997,
+          "cached_input_tokens": 2432,
+          "answer": {
+            "answer": "ReAct addresses interaction errors by interleaving reasoning with actions and observations, which makes its problem-solving trajectory more grounded, fact-driven, and trustworthy because it can use an external knowledge base. The paper also reports that this structure has a trade-off: it reduces flexibility in reasoning and can lead to more reasoning errors than CoT, including repetitive loops where the model keeps generating previous thoughts and actions. [E1] [E3]\n\nBy contrast, I still do not have visible full-text evidence for Reflexion v1 in the current session, so I cannot give a supported summary of how it handles errors or what its limitations are from the paper text alone.",
+            "citations": [
+              {
+                "evidence_id": "E1",
+                "quote": "the problem solving trajectory of ReAct is more grounded, fact-driven, and trustworthy, thanks to the access of an external knowledge base",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 2511,
+                    "char_start": 871,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0006::chunk-0002",
+                    "chunk_index": 2,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 6,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.03278688524590164,
+                    "word_end": 252,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E3",
+                "quote": "ReAct substantially outperforms IM-style prompting (71 vs. 53 overall success rate), with consistent advantages on five out of six tasks.",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 3590,
+                    "char_start": 2185,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0009::chunk-0004",
+                    "chunk_index": 4,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 9,
+                    "retrieval_rank": 3,
+                    "retrieval_score": 0.03128054740957967,
+                    "word_end": 202,
+                    "word_start": 0
+                  }
+                ]
+              }
+            ],
+            "insufficient_evidence": true,
+            "valid": true,
+            "validation_scope": "ID existence, inline/list agreement, literal quote containment; not semantic entailment"
+          },
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 12,
+              "report_reserve_tokens": 2000
+            },
+            "offline": true,
+            "policy_id": "openai-research-v1:a64e3f2558ea7b5882c8a5f17000352befcbf37d7d78c69a068fead3818f59a0",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.1,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.02
+              },
+              "research_questions": [
+                "阅读 ReAct 与 Reflexion v1，概述它们如何处理交互中的错误及各自局限，给出正文证据。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model agents ReAct Reflexion",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "web-20261104T152732-819125ebb3f0"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.0016899,
+              "charged_tokens": 3252,
+              "metadata": {
+                "cached_input_tokens": 2432,
+                "context_compaction": {
+                  "abstracts": 600,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15662,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "13e81a809b9c66be16704aef7ff2823352237329dc0366ff439a76aac4d0c1e5",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0d4f080cf418f011016aeb4ee8112887d1ac140bada8254632",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0171465,
+                "max_tokens": 16862
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.0016899,
+                "input_tokens": 3014,
+                "output_tokens": 238
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0030165,
+              "charged_tokens": 3262,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15814,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "34f5ddee32aa9f4e000e57efcb42dffabff027cc854435b64b38f57ced3d8030",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_005522d7139dbb32016aeb4eea7d9887d1a3d279a9cc8b8b9a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0172605,
+                "max_tokens": 17014
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.0030165,
+                "input_tokens": 3110,
+                "output_tokens": 152
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00307575,
+              "charged_tokens": 3201,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15426,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "bc85f4fd80fb68b58450c20fd72c478f9bf0702a9d17fd4d6b915848d737db5c",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_01a92e8226d4821d016aeb4f13672487d19f5e77728f87fd5b",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0169695,
+                "max_tokens": 16626
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.00307575,
+                "input_tokens": 3021,
+                "output_tokens": 180
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.003351,
+              "charged_tokens": 3423,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 2,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15983,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "3ae4c58ed264a97bd4ecf1615cf17290f49995ad4bb7a7dc2c49561574af437f",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_00ee66148f0ab776016aeb4f15718887d1a4e89ed626203dd5",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01738725,
+                "max_tokens": 17183
+              },
+              "simulated": false,
+              "step": 4,
+              "usage": {
+                "cost_usd": 0.003351,
+                "input_tokens": 3214,
+                "output_tokens": 209
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0037995,
+              "charged_tokens": 3446,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15806,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "4d86446d374b6f6b200df7941480d99b8fb7b72366f886ccbc6eb4a2839e721c",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_04538fbb3a9b696f016aeb4f182db087d189a9e813cab2bb6a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0172545,
+                "max_tokens": 17006
+              },
+              "simulated": false,
+              "step": 5,
+              "usage": {
+                "cost_usd": 0.0037995,
+                "input_tokens": 3122,
+                "output_tokens": 324
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00307425,
+              "charged_tokens": 3269,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 800,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15681,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "0186cb3f6e2c05df83d9d5a620804a9403999534d298283af7784b7534c85242",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_07723d1a5d996ba0016aeb4f1ac1f487d1900e3110daa4ea83",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01716075,
+                "max_tokens": 16881
+              },
+              "simulated": false,
+              "step": 6,
+              "usage": {
+                "cost_usd": 0.00307425,
+                "input_tokens": 3103,
+                "output_tokens": 166
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0040695,
+              "charged_tokens": 3581,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 13927,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "025fe33fb477705b4ce5b28560b439f8b988e81641155281c322a4d646d2f6d9",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_00c002b4d68fdcd9016aeb4f1cec5087d1b46a37034594ac55",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01584525,
+                "max_tokens": 15127
+              },
+              "simulated": false,
+              "step": 7,
+              "usage": {
+                "cost_usd": 0.0040695,
+                "input_tokens": 3212,
+                "output_tokens": 369
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.004299,
+              "charged_tokens": 3937,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15793,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "35c9ed2527fe702e3da78049068fbe5c2af087089fdf91eed974fc8f5798f3de",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_03c9aa42da7bb321016aeb4f1fcbc887d190e8e1f1d51b5ad6",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01724475,
+                "max_tokens": 16993
+              },
+              "simulated": false,
+              "step": 8,
+              "usage": {
+                "cost_usd": 0.004299,
+                "input_tokens": 3578,
+                "output_tokens": 359
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "fetch_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629",
+                "version": 1
+              },
+              "purpose": "Acquire ReAct v1 full text for evidence",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "downloaded",
+                "from_cache": true,
+                "asset": {
+                  "arxiv_id": "2210.03629",
+                  "version": 1,
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "origin": "live_arxiv_pdf"
+                }
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629"
+              },
+              "purpose": "Ingest downloaded ReAct paper for full-text search",
+              "status": "completed",
+              "duration_ms": 39016.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "fulltext_ready",
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "error limitations reflection failure handling self-correction shortcomings agent trajectories",
+                "top_k": 5
+              },
+              "purpose": "Find evidence on ReAct error handling and limitations",
+              "status": "completed",
+              "duration_ms": 78.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 4,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "ReAct uses interleaved reasoning, action, and observation to keep decisions grounded in external information. The paper says that this structure makes the problem-solving trajectory “more grounded, fact-driven, and trustworthy” because it has access to an external knowledge base, but it also notes a tradeoff: the structural constraint “reduces its flexibility in formulating reasoning steps,” which leads to more reasoning errors than CoT, and a frequent failure mode is repeating previous thoughts and actions instead of choosing the proper next action.",
+                "citations": [
+                  {
+                    "evidence_id": "E1",
+                    "quote": "more grounded, fact-driven, and trustworthy, thanks to the access of an external knowledge base"
+                  },
+                  {
+                    "evidence_id": "E1",
+                    "quote": "reduces its flexibility in formulating reasoning steps, leading to more reasoning error rate than CoT"
+                  },
+                  {
+                    "evidence_id": "E1",
+                    "quote": "the model repetitively generates the previous thoughts and actions"
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "Verify evidence-backed partial answer about ReAct",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": false,
+              "error": {
+                "code": "citation_validation_failed",
+                "message": "Inline evidence IDs and citation list do not agree"
+              },
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 5,
+              "tool": "read_pages",
+              "arguments": {
+                "char_start": 0,
+                "document_id": "arxiv--2303.11366--v1",
+                "end_page": 5,
+                "max_chars": 12000,
+                "start_page": 1
+              },
+              "purpose": "Read Reflexion v1 full text for evidence",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": false,
+              "error": {
+                "code": "invalid_arguments",
+                "message": "Arguments are invalid for the current task state"
+              },
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 6,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "ReAct addresses interaction errors by interleaving reasoning with actions and observations, which makes its problem-solving trajectory more grounded, fact-driven, and trustworthy because it can use an external knowledge base. The paper also reports that this structure has a trade-off: it reduces flexibility in reasoning and can lead to more reasoning errors than CoT, including repetitive loops where the model keeps generating previous thoughts and actions. [E1] [E2]\n\nBy contrast, I do not yet have visible full-text evidence for Reflexion v1 in the current session, so I cannot give a supported summary of how it handles errors or what its limitations are from the paper text alone.",
+                "citations": [
+                  {
+                    "evidence_id": "E1",
+                    "quote": "the problem solving trajectory of ReAct is more grounded, fact-driven, and trustworthy, thanks to the access of an external knowledge base"
+                  },
+                  {
+                    "evidence_id": "E2",
+                    "quote": "While interleaving reasoning, action and observation steps improves ReAct’s groundedness and trustworthiness, such a structural constraint also reduces its flexibility in formulating reasoning steps, leading to more reasoning error rate than CoT"
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "Verify supported answer from visible evidence only",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": false,
+              "error": {
+                "code": "citation_validation_failed",
+                "message": "Quotes absent from evidence: E2. Copy exact source text, preserving PDF hyphens and punctuation; reconsider unsupported claims."
+              },
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 7,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "ReAct addresses interaction errors by interleaving reasoning with actions and observations, which makes its problem-solving trajectory more grounded, fact-driven, and trustworthy because it can use an external knowledge base. The paper also reports that this structure has a trade-off: it reduces flexibility in reasoning and can lead to more reasoning errors than CoT, including repetitive loops where the model keeps generating previous thoughts and actions. [E1] [E3]\n\nBy contrast, I still do not have visible full-text evidence for Reflexion v1 in the current session, so I cannot give a supported summary of how it handles errors or what its limitations are from the paper text alone.",
+                "citations": [
+                  {
+                    "evidence_id": "E1",
+                    "quote": "the problem solving trajectory of ReAct is more grounded, fact-driven, and trustworthy, thanks to the access of an external knowledge base"
+                  },
+                  {
+                    "evidence_id": "E3",
+                    "quote": "ReAct substantially outperforms IM-style prompting (71 vs. 53 overall success rate), with consistent advantages on five out of six tasks."
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "Repair citation with exact visible quotes and note missing Reflexion evidence",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "valid": true,
+                "insufficient_evidence": true,
+                "asset": {}
+              }
+            }
+          ]
+        },
+        {
+          "round_id": "turn-36689c37b74342d2a4c702c0",
+          "stop_reason": "insufficient_evidence",
+          "elapsed_seconds": 35.64100000000326,
+          "charged_tokens": 25522,
+          "charged_or_reserved_usd": 0.01788075,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 24015,
+          "output_tokens": 1507,
+          "cached_input_tokens": 10240,
+          "answer": {
+            "answer": "后者（Reflexion v1）与前者（ReAct）相比，处理错误的机制不同之处在于：ReAct把错误处理嵌在“思考—行动—观察”的交替轨迹里，依赖外部知识库与反馈来纠错；其思维模式是“free-form and unlimited”“abstract and diverse”“sparse”，并且能通过观察结果决定何时再思考 [E1]。不过，仅凭当前入库材料，我只能直接核实 ReAct 的错误恢复与局限，尚未取得 Reflexion v1 的正文证据，因此不能可靠概述后者的具体错误处理机制差异。",
+            "citations": [
+              {
+                "evidence_id": "E1",
+                "quote": "free-form and unlimited",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 4542,
+                    "char_start": 3697,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0008::chunk-0004",
+                    "chunk_index": 4,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 8,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.032266458495966696,
+                    "word_end": 128,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E1",
+                "quote": "abstract and diverse",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 4542,
+                    "char_start": 3697,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0008::chunk-0004",
+                    "chunk_index": 4,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 8,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.032266458495966696,
+                    "word_end": 128,
+                    "word_start": 0
+                  }
+                ]
+              },
+              {
+                "evidence_id": "E1",
+                "quote": "sparse",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2210.03629v1",
+                  "arxiv_id": "2210.03629",
+                  "document_id": "arxiv--2210.03629--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 4542,
+                    "char_start": 3697,
+                    "chunk_id": "arxiv--2210.03629--v1::page-0008::chunk-0004",
+                    "chunk_index": 4,
+                    "document_id": "arxiv--2210.03629--v1",
+                    "filename": "arxiv--2210.03629--v1.pdf",
+                    "page_number": 8,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.032266458495966696,
+                    "word_end": 128,
+                    "word_start": 0
+                  }
+                ]
+              }
+            ],
+            "insufficient_evidence": true,
+            "valid": true,
+            "validation_scope": "ID existence, inline/list agreement, literal quote containment; not semantic entailment"
+          },
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 8,
+              "report_reserve_tokens": 1
+            },
+            "offline": true,
+            "policy_id": "openai-conversation-v1:5391efb430938a67aece73e79139d30bc22ba79535db58a147a6e3636c0454c9",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.05,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.001
+              },
+              "research_questions": [
+                "你刚才提到的后者，与前者相比，哪些处理错误的机制不同？"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model agents ReAct Reflexion",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "turn-36689c37b74342d2a4c702c0"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.0025845,
+              "charged_tokens": 2536,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "profile": "default"
+                },
+                "input_token_estimate": 12085,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "91bc7d5aabacd3e79186177cd2219ca9f21a15c11d435f7cca5ce35fae6db448",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0062792353449a92016aeb4f261ee087d18f898b76278b0166",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01446375,
+                "max_tokens": 13285
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.0025845,
+                "input_tokens": 2354,
+                "output_tokens": 182
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00285225,
+              "charged_tokens": 3193,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15219,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "c588f88f8ad707e556e743dca531737120679ebcbd5ce76edcb8a85a8d90cd06",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_067b52c76797aea4016aeb4f3c4a2487d1b72529da61d1f045",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01681425,
+                "max_tokens": 16419
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.00285225,
+                "input_tokens": 3071,
+                "output_tokens": 122
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0016536,
+              "charged_tokens": 3173,
+              "metadata": {
+                "cached_input_tokens": 2048,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 14915,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "7866bbf1e9b7fdb4aec50f6b795e8576be922d426a3a16b69f74340deff0a648",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0cfe5136c8512930016aeb4f3dd5b887d1b5e55cbe0ff7d715",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01658625,
+                "max_tokens": 16115
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.0016536,
+                "input_tokens": 2998,
+                "output_tokens": 175
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00177285,
+              "charged_tokens": 3337,
+              "metadata": {
+                "cached_input_tokens": 2048,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15774,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "e55e56eb235770934480a3978a2a08297f5443f09ec4d58077378bb1dd199091",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0129ef4df276985e016aeb4f3fa24487d1bdd2d83bc8772617",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0172305,
+                "max_tokens": 16974
+              },
+              "simulated": false,
+              "step": 4,
+              "usage": {
+                "cost_usd": 0.00177285,
+                "input_tokens": 3163,
+                "output_tokens": 174
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0016791,
+              "charged_tokens": 3272,
+              "metadata": {
+                "cached_input_tokens": 2048,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15395,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "0ad2c4a1206af33040735b9e87ac7c78de408afe6b528ae40de61306dd25e251",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_00f0e4cc34fc0e7f016aeb4f41a3f087d1928cd988590980d3",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01694625,
+                "max_tokens": 16595
+              },
+              "simulated": false,
+              "step": 5,
+              "usage": {
+                "cost_usd": 0.0016791,
+                "input_tokens": 3110,
+                "output_tokens": 162
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0017241,
+              "charged_tokens": 3357,
+              "metadata": {
+                "cached_input_tokens": 2048,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15816,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "903facddcb0eedb1b6a7b83020ab266b9553fafddd65beb9c11be81be56626d8",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_048eac006f310aa8016aeb4f434dc087d1b2406b193b0c368a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.017262,
+                "max_tokens": 17016
+              },
+              "simulated": false,
+              "step": 6,
+              "usage": {
+                "cost_usd": 0.0017241,
+                "input_tokens": 3200,
+                "output_tokens": 157
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0024036,
+              "charged_tokens": 3383,
+              "metadata": {
+                "cached_input_tokens": 2048,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 3,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15068,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "97963c6edeb90e53cf696e25021a370c9310c1f4696d0adeeaf8488d2e3ff861",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0520462f83d64568016aeb4f4523ec87d19eec5e86648d7248",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.016701,
+                "max_tokens": 16268
+              },
+              "simulated": false,
+              "step": 7,
+              "usage": {
+                "cost_usd": 0.0024036,
+                "input_tokens": 3050,
+                "output_tokens": 333
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00321075,
+              "charged_tokens": 3271,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 2,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15014,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "2d500cbeed3a457fd22fb920cd8f61802df7f422fc41cca24c95bf53261a8e70",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0c83054557d613f0016aeb4f47892887d1834762f2d7623766",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0166605,
+                "max_tokens": 16214
+              },
+              "simulated": false,
+              "step": 8,
+              "usage": {
+                "cost_usd": 0.00321075,
+                "input_tokens": 3069,
+                "output_tokens": 202
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "Reflexion error handling mechanism limitations compare with ReAct self-reflection error repair trial and error environment feedback loop",
+                "top_k": 5
+              },
+              "purpose": "查找 ReAct/Reflexion 中错误处理机制的正文证据",
+              "status": "completed",
+              "duration_ms": 20016.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "list_documents",
+              "arguments": {},
+              "purpose": "确认当前任务库中可用论文与状态",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "当前证据不足以比较“后者”与“前者”的错误处理机制差异，因为本轮可见证据只来自 ReAct，没有 Reflexion v1 的正文证据。",
+                "citations": [],
+                "insufficient_evidence": true
+              },
+              "purpose": "按要求校验不足回答",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "valid": true,
+                "insufficient_evidence": true,
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 4,
+              "tool": "read_pages",
+              "arguments": {
+                "char_start": 3697,
+                "document_id": "arxiv--2210.03629--v1",
+                "end_page": 8,
+                "max_chars": 3000,
+                "start_page": 8
+              },
+              "purpose": "补读 ReAct 相关页",
+              "status": "completed",
+              "duration_ms": 47.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 5,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "后者（Reflexion v1）与前者（ReAct）相比，处理错误的机制不同之处在于：ReAct把错误处理嵌在“思考—行动—观察”的交替轨迹里，依赖外部知识库与反馈来纠错；其思维模式是“free-form and unlimited”“abstract and diverse”“sparse”，并且能通过观察结果决定何时再思考 [E1]。不过，仅凭当前入库材料，我只能直接核实 ReAct 的错误恢复与局限，尚未取得 Reflexion v1 的正文证据，因此不能可靠概述后者的具体错误处理机制差异。",
+                "citations": [
+                  {
+                    "evidence_id": "E1",
+                    "quote": "free-form and unlimited"
+                  },
+                  {
+                    "evidence_id": "E1",
+                    "quote": "abstract and diverse"
+                  },
+                  {
+                    "evidence_id": "E1",
+                    "quote": "sparse"
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "基于现有证据校验可答部分并明确缺口",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "valid": true,
+                "insufficient_evidence": true,
+                "asset": {}
+              }
+            }
+          ]
+        },
+        {
+          "round_id": "turn-55d06ff378644be192d1264f",
+          "stop_reason": "openai_connection_error",
+          "elapsed_seconds": 0.502534,
+          "charged_tokens": 14150,
+          "charged_or_reserved_usd": 0.0151125,
+          "unknown_reserved_usd": 0.0151125,
+          "unknown_usage_calls": 1,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cached_input_tokens": 0,
+          "answer": null,
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 8,
+              "report_reserve_tokens": 1
+            },
+            "offline": true,
+            "policy_id": "openai-conversation-v1:cbd5ccbef6febe54f6e301cb292989e81dc8cd742359c22dbbd4a043f85e2c6a",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.05,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.001
+              },
+              "research_questions": [
+                "这些机制的实验结果是否足以支持在所有交互任务中都更好？请指出依据和边界。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model agents ReAct Reflexion",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "turn-55d06ff378644be192d1264f"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.0151125,
+              "charged_tokens": 14150,
+              "metadata": {
+                "context_compaction": {
+                  "profile": "default"
+                },
+                "input_token_estimate": 12950,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "request_sha256": "dcc0b907ec060716bcab877f53b6167d5b7c883ff04baa97260aabe7c1ffa7e7",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0151125,
+                "max_tokens": 14150
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": null,
+              "usage_unknown": true
+            }
+          ],
+          "tool_events": []
+        }
+      ],
+      "full_case_sha256": "3fac53058770c58d359e03b413a5f4859270332e4ba6cc51b21c19c023a70068"
+    },
+    {
+      "case_id": "unsupported-business-cost",
+      "input": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "仅根据 ReAct 和 Toolformer 的正文，能否给出在企业部署它们各自每月维护成本的美元金额及核算方法？如果取得的证据不足，请明确说明检索范围与缺口，不要推算不存在的成本数据。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "cached_example"
+      },
+      "followup_inputs": [],
+      "execution_status": "executed",
+      "evidence_kind": "real_model_http",
+      "review_status": "not_reviewed",
+      "quality_verdict": null,
+      "accounting": {
+        "charged_tokens": 26700,
+        "charged_or_reserved_usd": 0.02421465,
+        "unknown_reserved_usd": 0,
+        "unknown_usage_calls": 0,
+        "input_tokens": 25145,
+        "output_tokens": 1555,
+        "cached_input_tokens": 2432,
+        "complete": true
+      },
+      "online_network_verified": false,
+      "actual_materials": [
+        {
+          "arxiv_id": "2210.03629",
+          "version": 1,
+          "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+          "origin": "live_arxiv_pdf"
+        },
+        {
+          "arxiv_id": "2302.04761",
+          "version": 1,
+          "source_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+          "origin": "live_arxiv_pdf"
+        }
+      ],
+      "blockers": [
+        "human_review_pending",
+        "reviewer_missing",
+        "review_time_missing",
+        "claims_missing",
+        "rubric_checks_missing",
+        "unobserved_branches_missing",
+        "review_missing_turn:research"
+      ],
+      "rounds": [
+        {
+          "round_id": "research",
+          "stop_reason": "insufficient_evidence",
+          "elapsed_seconds": 66.362394,
+          "charged_tokens": 26700,
+          "charged_or_reserved_usd": 0.02421465,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 25145,
+          "output_tokens": 1555,
+          "cached_input_tokens": 2432,
+          "answer": {
+            "answer": "The current evidence is insufficient to state any monthly enterprise maintenance cost in dollars for ReAct or Toolformer, or to give a valid cost calculation method. The available evidence only shows that Toolformer reports no perplexity cost from adding API calls: \"Adding API calls comes without a cost in terms of perplexity\" [E6]. However, that is not a dollar-denominated maintenance cost, and no evidence here gives monthly enterprise deployment cost figures or a核算方法 for either paper. Therefore, within the available full-text evidence from these two papers, no monthly maintenance cost amount can be extracted, and the cost methodology remains unstated.",
+            "citations": [
+              {
+                "evidence_id": "E6",
+                "quote": "Adding API calls comes without a cost in terms of perplexity",
+                "source": {
+                  "abstract_url": "https://arxiv.org/abs/2302.04761v1",
+                  "arxiv_id": "2302.04761",
+                  "document_id": "arxiv--2302.04761--v1",
+                  "pdf_url": "https://arxiv.org/pdf/2302.04761v1",
+                  "source_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+                  "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+                  "version": 1
+                },
+                "sources": [
+                  {
+                    "char_end": 2745,
+                    "char_start": 1209,
+                    "chunk_id": "arxiv--2302.04761--v1::page-0008::chunk-0002",
+                    "chunk_index": 2,
+                    "document_id": "arxiv--2302.04761--v1",
+                    "filename": "arxiv--2302.04761--v1.pdf",
+                    "page_number": 8,
+                    "retrieval_rank": 1,
+                    "retrieval_score": 0.032266458495966696,
+                    "word_end": 245,
+                    "word_start": 0
+                  }
+                ]
+              }
+            ],
+            "insufficient_evidence": true,
+            "valid": true,
+            "validation_scope": "ID existence, inline/list agreement, literal quote containment; not semantic entailment"
+          },
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 12,
+              "report_reserve_tokens": 2000
+            },
+            "offline": true,
+            "policy_id": "openai-research-v1:a64e3f2558ea7b5882c8a5f17000352befcbf37d7d78c69a068fead3818f59a0",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.1,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.02
+              },
+              "research_questions": [
+                "仅根据 ReAct 和 Toolformer 的正文，能否给出在企业部署它们各自每月维护成本的美元金额及核算方法？如果取得的证据不足，请明确说明检索范围与缺口，不要推算不存在的成本数据。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model tool use ReAct Toolformer",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "web-20261104T152917-a3bc17f63ce2"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.00169215,
+              "charged_tokens": 3275,
+              "metadata": {
+                "cached_input_tokens": 2432,
+                "context_compaction": {
+                  "abstracts": 600,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15793,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "5e641c7dac298f0acd484af59cca46fb7b6110a673169df21d0538f5cdaf4c37",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_02d2cb1ce4e701d1016aeb4f500bd487d1ab31831f9efd171a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01724475,
+                "max_tokens": 16993
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.00169215,
+                "input_tokens": 3041,
+                "output_tokens": 234
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0033255,
+              "charged_tokens": 3349,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15961,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "f000f914b4477cf4b7babb3d7423ed313fbe9f2e965022467360a7c7658c0f10",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0d6fa49259cd3f7c016aeb4f52c5c887d185b0eaafa44c0b7a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01737075,
+                "max_tokens": 17161
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.0033255,
+                "input_tokens": 3132,
+                "output_tokens": 217
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00318675,
+              "charged_tokens": 3299,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 300,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 60,
+                  "titles": 120
+                },
+                "input_token_estimate": 15859,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "67fa65751e41bba4c463029913e574b2e498cef4283147278a5c5c4d66530a70",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_090288a1b3a37215016aeb4f78e2e087d1a1b4abc2980f937a",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01729425,
+                "max_tokens": 17059
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.00318675,
+                "input_tokens": 3109,
+                "output_tokens": 190
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.003117,
+              "charged_tokens": 3376,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15462,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "56d216660683d3eb07079f06e8cf8c27980506d345efd1037a8a193e2b03c31b",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0c2ac2d7a5ef3a45016aeb4f7b744487d198e4e42061c565ce",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0169965,
+                "max_tokens": 16662
+              },
+              "simulated": false,
+              "step": 4,
+              "usage": {
+                "cost_usd": 0.003117,
+                "input_tokens": 3220,
+                "output_tokens": 156
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00307725,
+              "charged_tokens": 3353,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15335,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "1ad6ca0e74bda6e11aac83a7dcb05482ed57d691760fb5fd56ae3f06606b0feb",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0e974434fb6bd88c016aeb4f7d3df087d18ac2a4ff2419401c",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01690125,
+                "max_tokens": 16535
+              },
+              "simulated": false,
+              "step": 5,
+              "usage": {
+                "cost_usd": 0.00307725,
+                "input_tokens": 3203,
+                "output_tokens": 150
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00327525,
+              "charged_tokens": 3387,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15283,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "c0bb0d0ec33f403c4ade088d681e55792c8ed79ed979ca25ca853a8cb1e7e9cc",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0ed98587cab372ce016aeb4f8aa79487d1a98b248682565d52",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01686225,
+                "max_tokens": 16483
+              },
+              "simulated": false,
+              "step": 6,
+              "usage": {
+                "cost_usd": 0.00327525,
+                "input_tokens": 3191,
+                "output_tokens": 196
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.0034755,
+              "charged_tokens": 3384,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 1200,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 100,
+                  "titles": 80
+                },
+                "input_token_estimate": 15493,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "89a7e43e4a1297ff133c0dc0d45f3a28f5cc36308639ffdd057c37a6f8201f99",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0a8b9b389c61278f016aeb4f8d62c887d1936b17674749d1ef",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01701975,
+                "max_tokens": 16693
+              },
+              "simulated": false,
+              "step": 7,
+              "usage": {
+                "cost_usd": 0.0034755,
+                "input_tokens": 3134,
+                "output_tokens": 250
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00306525,
+              "charged_tokens": 3277,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "abstracts": 0,
+                  "evidence_chars": 600,
+                  "evidence_count": 1,
+                  "history": 0,
+                  "minimal": true,
+                  "notes": 40,
+                  "titles": 32
+                },
+                "input_token_estimate": 15737,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "9561110efdd5b2161fd7c9a7f2f2315bb135583108eb58993c30973fd2dd8611",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_0d67a8d3f8aa5435016aeb4f90243887d1b45cfbd1ced43540",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01720275,
+                "max_tokens": 16937
+              },
+              "simulated": false,
+              "step": 8,
+              "usage": {
+                "cost_usd": 0.00306525,
+                "input_tokens": 3115,
+                "output_tokens": 162
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "fetch_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629",
+                "version": 1
+              },
+              "purpose": "Fetch the ReAct paper for fulltext review",
+              "status": "completed",
+              "duration_ms": 16.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "downloaded",
+                "from_cache": true,
+                "asset": {
+                  "arxiv_id": "2210.03629",
+                  "version": 1,
+                  "source_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+                  "origin": "live_arxiv_pdf"
+                }
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2210.03629"
+              },
+              "purpose": "Ingest ReAct after download to enable fulltext search",
+              "status": "completed",
+              "duration_ms": 35922.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "fulltext_ready",
+                "document_id": "arxiv--2210.03629--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1"
+                ],
+                "method": "hybrid",
+                "query": "monthly maintenance cost enterprise deploy cost dollars maintenance method cost calculation pricing compute API human annotation from the paper",
+                "top_k": 5
+              },
+              "purpose": "Search ReAct full text for any stated deployment or maintenance costs",
+              "status": "completed",
+              "duration_ms": 94.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 4,
+              "tool": "fetch_paper",
+              "arguments": {
+                "arxiv_id": "2302.04761",
+                "version": 1
+              },
+              "purpose": "Acquire Toolformer PDF for fulltext review",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "downloaded",
+                "from_cache": true,
+                "asset": {
+                  "arxiv_id": "2302.04761",
+                  "version": 1,
+                  "source_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+                  "origin": "live_arxiv_pdf"
+                }
+              }
+            },
+            {
+              "event_id": 5,
+              "tool": "ingest_paper",
+              "arguments": {
+                "arxiv_id": "2302.04761"
+              },
+              "purpose": "Index Toolformer after successful download",
+              "status": "completed",
+              "duration_ms": 11485.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "status": "fulltext_ready",
+                "document_id": "arxiv--2302.04761--v1",
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 6,
+              "tool": "search_documents",
+              "arguments": {
+                "document_ids": [
+                  "arxiv--2210.03629--v1",
+                  "arxiv--2302.04761--v1"
+                ],
+                "method": "hybrid",
+                "query": "\"monthly\" OR cost OR maintenance OR enterprise OR deployment OR dollars OR USD OR inference cost OR training cost OR compute cost",
+                "top_k": 10
+              },
+              "purpose": "Search fulltext for any explicit deployment cost or maintenance statements",
+              "status": "completed",
+              "duration_ms": 110.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 7,
+              "tool": "verify_citations",
+              "arguments": {
+                "answer": "The current evidence is insufficient to state any monthly enterprise maintenance cost in dollars for ReAct or Toolformer, or to give a valid cost calculation method. The available evidence only shows that Toolformer reports no perplexity cost from adding API calls: \"Adding API calls comes without a cost in terms of perplexity\" [E6]. However, that is not a dollar-denominated maintenance cost, and no evidence here gives monthly enterprise deployment cost figures or a核算方法 for either paper. Therefore, within the available full-text evidence from these two papers, no monthly maintenance cost amount can be extracted, and the cost methodology remains unstated.",
+                "citations": [
+                  {
+                    "evidence_id": "E6",
+                    "quote": "Adding API calls comes without a cost in terms of perplexity"
+                  }
+                ],
+                "insufficient_evidence": true
+              },
+              "purpose": "Verify that the evidence only supports an insufficiency conclusion",
+              "status": "completed",
+              "duration_ms": 31.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "valid": true,
+                "insufficient_evidence": true,
+                "asset": {}
+              }
+            }
+          ]
+        }
+      ],
+      "full_case_sha256": "b7e6bc06e6724569c872652e2a9cf57623e080537ecc89e4a3d8eb42752f79e9"
+    }
+  ]
+}

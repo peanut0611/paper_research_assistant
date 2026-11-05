@@ -1,0 +1,2 @@
+# Captured response hashes refer to exact bytes, not platform line endings.
+tests/fixtures/arxiv/*.xml -text

@@ -2,7 +2,7 @@
 
 本地中文研究应用：输入研究领域、研究问题及日期范围，让单个 Agent 自主发现 arXiv 论文、筛选固定版本、获取正文、检索与读页、补查证据并形成研究回答。目标为 2–3 篇；材料不足时如实说明范围与缺口。支持独立研究对话、连续追问、引用原文与 PDF 页链接、执行记录、停止及确认删除。
 
-这是受控 Agent 工程项目。模型选择动作并观察工具反馈；宿主负责范围、预算、时限、有限纠正及收尾。RAG 提供论文正文检索能力。**真实五例模型复测及人工结论支持度验收尚未完成，当前没有质量通过率或有效的前后提升结论。** 自动化行为测试、历史单篇实测和当前五例验收分别记录，不能相互替代。
+这是受控 Agent 工程项目。模型选择动作并观察工具反馈；宿主负责范围、预算、时限、有限纠正及收尾。RAG 提供论文正文检索能力。**已保存两版五例真实模型记录，人工结论支持度仍待审；当前没有质量通过率或有效的前后提升结论。** 自动化行为测试、历史单篇实测、真实执行与人工验收分别记录，不能相互替代。
 
 ## 从干净环境启动
 
@@ -11,12 +11,12 @@
 ```bash
 git clone https://github.com/peanut0611/paper_research_assistant.git
 cd paper_research_assistant
-git switch codex/agent-v1-integration
+git switch codex/agent-v1-delivery-20261105
 uv sync --locked
 cp .env.example .env
 ```
 
-本次交付发布在 `codex/agent-v1-integration` 分支；上述命令按该分支复现。
+本次交付使用 `codex/agent-v1-delivery-20261105` 集成分支；上述命令按该分支复现。之前的 `codex/agent-v1-integration` 和基线分支保留用于追溯。
 
 在 `.env` 中填写自己的 `OPENAI_API_KEY`，不要提交或分享密钥。已有同名环境变量优先于 `.env`；空环境变量也会覆盖文件。配置只做本地格式检查，不证明凭证有效。包依赖由 `uv.lock` 锁定；首次安装需要下载依赖。
 
@@ -102,3 +102,7 @@ node --test tests/web/research_client.test.cjs tests/web/conversation_client.tes
 运行数据在 `data/models/`、`data/literature_search/`、`data/paper_cache/`、`data/research_runs/`。不提交密钥、PDF、模型权重、完整私有运行目录或虚拟环境。公开验收记录放在受跟踪的 `eval_data/`，先人工检查脱敏、本机路径和无关内容；不要误把被忽略的 `data/` 当作已交付材料。旧本地资料问答与默认索引已退役，无需准备 `paper/`，旧忽略归档不参与运行。
 
 [命令与开发入口](scripts/README.md) · [测试材料说明](eval_data/README.md)
+
+## 本机集成验证
+
+保留本地工作台布局与 A1 离线检查工具，独立研究对话的新建、切换、删除以 V1 实现为准，取消旧追问重置按钮。运行 `python scripts/check.py` 查看工程检查；真实五例使用冻结预算，人工评审状态单独记录。

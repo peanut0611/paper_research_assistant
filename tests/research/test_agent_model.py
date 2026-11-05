@@ -162,7 +162,8 @@ def test_context_limit_stops_before_http_without_unknown_usage_charge(tmp_path):
 
 @pytest.mark.parametrize("candidate_count", [5, 10])
 @pytest.mark.parametrize("indexed", [False, True])
-def test_real_counter_keeps_candidate_state_and_evidence_within_budget(tmp_path, candidate_count, indexed):
+@pytest.mark.parametrize("selected_count", [1, 3])
+def test_real_counter_keeps_candidate_state_and_evidence_within_budget(tmp_path, candidate_count, indexed, selected_count):
     runner, client = controller(tmp_path, runtime=tools(tmp_path, seed=candidates()))
     view = runner.view()
     template = view["candidates"][0]
@@ -174,11 +175,14 @@ def test_real_counter_keeps_candidate_state_and_evidence_within_budget(tmp_path,
                    abstract="Long candidate abstract about retrieval and hallucination detection. " * 35)
         row["status"] = "fulltext_ready" if indexed and i == 0 else "downloaded" if i == 0 else "abstract_only"
         view["candidates"].append(row)
-        view["selections"][row["arxiv_id"]] = {"selected": i == 0, "reason": "相关性判断理由" * 70}
+        view["selections"][row["arxiv_id"]] = {"selected": i < selected_count, "reason": "相关性判断理由" * 70}
     if indexed:
         view["evidence"] = {f"E{i}": {"text": "原始正文证据。" * 300,
             "source": {"document_id": view["candidates"][0]["document_id"], "arxiv_id": "2401.00010", "version": 2},
             "page_number": i, "char_start": 0, "char_end": 2100} for i in range(1, 7)}
+    from types import SimpleNamespace
+    from paper_assistant.research.coverage import selected_paper_coverage
+    view['completion']['selected_paper_coverage'] = selected_paper_coverage(SimpleNamespace(**view))
     original = digest(view)
     policy = OpenAIDecisionPolicy(client=client)  # Production byte-based estimator, not the fixture's constant counter.
     estimate = policy.estimate(view)

@@ -31,7 +31,7 @@ def prepare_materials(root, out, *, metadata_transport=None, pdf_transport=None,
     """
     root, out = Path(root).resolve(), Path(out).resolve()
     out.mkdir(parents=True, exist_ok=False)
-    book = copy.deepcopy(json.loads((root / 'eval_data/agent_v1/sources.json').read_text()))
+    book = copy.deepcopy(json.loads((root / 'eval_data/agent_v1/sources.json').read_text(encoding='utf-8')))
     report = {'status': 'blocked', 'blockers': [], 'sources': {},
               'model_calls': 0, 'review_status': 'not_reviewed'}
     source_origin = 'live_arxiv_api' if metadata_transport is None else 'injected_transport'
@@ -50,7 +50,7 @@ def prepare_materials(root, out, *, metadata_transport=None, pdf_transport=None,
         if response.content_type.split(';')[0].strip() not in ('application/atom+xml', 'application/xml', 'text/xml'):
             raise LiteratureSearchError('invalid_content_type', 'Expected Atom metadata')
         (out / 'metadata.xml').write_bytes(response.body)
-        suite = json.loads((root / 'eval_data/agent_v1/suite.json').read_text())
+        suite = json.loads((root / 'eval_data/agent_v1/suite.json').read_text(encoding='utf-8'))
         starts = [datetime.fromisoformat(c['web_payload']['start_date']).replace(tzinfo=timezone.utc) for c in suite['cases']]
         ends = [datetime.fromisoformat(c['web_payload']['end_date']).replace(tzinfo=timezone.utc) for c in suite['cases']]
         request = SearchRequest('fixed arXiv versions', max(starts), min(ends), len(identifiers))

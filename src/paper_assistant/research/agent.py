@@ -16,6 +16,7 @@ from paper_assistant.agent.messages import AgentSession
 from paper_assistant.agent.tools import AgentTool, ToolRegistry
 from paper_assistant.research.state import AgentState, ModelEstimate, ModelUsage, RunnerConfig, can_reserve, cost, detached, digest
 from paper_assistant.research.toolset import ResearchTools, _redact
+from paper_assistant.research.coverage import selected_paper_coverage
 
 
 class MockPolicy:
@@ -53,7 +54,7 @@ class ResearchAgent:
         self._mono_base, self._wall_base = monotonic(), self._now()
         binding = {"task_id": tools.workspace.task_id, "task": tools.task.to_dict(),
                    "config": asdict(self.config), "policy_id": policy.policy_id, "simulated": policy.simulated,
-                   "offline": tools.offline, "runner_protocol_version": 6}
+                   "offline": tools.offline, "runner_protocol_version": 7}
         if self.path.exists():
             if not resume:
                 raise ValueError("Runner state exists; explicit resume is required")
@@ -163,6 +164,9 @@ class ResearchAgent:
         result["tool_specs"] = self.tools.tool_specs()
         result["completion"] = {"can_finish_sufficient_evidence": self._has_verified_answer(),
                                 "required_before_sufficient_finish": "verify_citations"}
+        coverage = selected_paper_coverage(self.state)
+        if coverage:
+            result["completion"]["selected_paper_coverage"] = coverage
         if self.state.answer_phase:
             result["completion"].update(answer_required=True, reason=self.state.answer_phase,
                                         allowed_tools=["verify_citations"])
@@ -220,6 +224,54 @@ class ResearchAgent:
         return (self.state.steps < self.config.max_steps
                 and self.tools.limits()["tool_calls"] < self.tools.task.limits.max_tool_calls
                 and can_reserve(self.tools.task, self.config, self.state.usage, reservation))
+
+    def _selected_review(self, reservation):
+        """At most one correction, only when the whole next read + answer fits."""
+        if self.state.answer_phase not in (None, 'no_progress') or any(
+                row.get('error') == 'selected_paper_needs_review' for row in self.state.decisions):
+            return None
+        limits = self.tools.limits()
+        allowed = {spec['name'] for spec in self.tools.tool_specs()}
+        for item in selected_paper_coverage(self.state):
+            tool = item.get('next_tool')
+            if not tool or tool not in allowed:
+                continue
+            calls = item['remaining_calls']
+            if (self.config.max_steps - self.state.steps < calls or
+                    limits['max_tool_calls'] - limits['tool_calls'] < calls):
+                continue
+            if tool == 'fetch_paper' and (limits['fetch_attempts'] >= limits['max_fetch_attempts'] or
+                    limits['downloaded_papers'] >= limits['max_papers']):
+                continue
+            if limits['local_searches'] >= limits['max_local_searches']:
+                continue
+            if can_reserve(self.tools.task, self.config, self.state.usage,
+                    ModelEstimate(reservation.max_tokens * calls, reservation.max_cost_usd * calls)):
+                return item
+        return None
+
+    def _request_selected_review(self, item, call_id=None):
+        code = 'selected_paper_needs_review'
+        if call_id:
+            self.state.decisions[-1]['error'] = code
+        else:
+            self.state.decisions.append({'step': self.state.steps, 'error': code})
+        self.state.answer_phase = None
+        self.state.pending = None
+        arguments = dict(item['arguments'])
+        if item['next_tool'] == 'search_documents':
+            arguments.update(query=' '.join(self.tools.task.research_questions), method='hybrid', top_k=3)
+        self.state.last_error = {'code': code, 'required_tool': item['next_tool'],
+            'suggested_arguments': arguments,
+            'message': 'A relevant selected paper has not been inspected. Use its next acquisition/index/read action instead of repeating the first paper. One bounded correction only. Keep all limits; if unavailable or irrelevant, explain the gap or deselect with a reason. Never invent support or fill a count.'}
+        if call_id:
+            self._tool_message(call_id, {'success': False, 'data': None, 'error': self.state.last_error})
+        else:
+            self.session.emit('host_feedback', turn=self.state.steps, origin='host', success=False,
+                              error=self.state.last_error, summary={})
+        self.state.status = 'ready'
+        self._save()
+        return self.snapshot()
 
     def _request_evidence_review(self, call_id):
         code = "insufficient_evidence_needs_review"
@@ -466,6 +518,22 @@ class ResearchAgent:
             elif self.tools.task.limits.max_tool_calls - self.tools.limits()["tool_calls"] <= 1:
                 self._require_answer("tool_budget")
         try:
+            # No-progress is a heuristic, not a hard budget. Permit one scoped
+            # correction only if the unrestricted reservation still fits.
+            reviewing = (self.state.answer_phase == 'no_progress' and
+                         self._selected_review(ModelEstimate(0, 0)) is not None)
+            if reviewing:
+                self.state.answer_phase = None
+                try:
+                    estimate = self.policy.estimate(self.view())
+                    item = self._selected_review(estimate) if isinstance(estimate, ModelEstimate) else None
+                except DecisionError:
+                    # Full gathering context may no longer fit while the
+                    # restricted answer context still does. Keep that exit.
+                    item = None
+                if item:
+                    return self._request_selected_review(item)
+                self._require_answer('no_progress')
             estimate = self.policy.estimate(self.view())
             if not isinstance(estimate, ModelEstimate):
                 raise ValueError("Missing model reservation")
@@ -531,6 +599,12 @@ class ResearchAgent:
         self.state.last_error = None
         self.state.decisions.append({"step": self.state.steps, "decision": _redact(action)})
         self._update_notes(action)
+        terminal = (action['kind'] == 'finish' and action['reason'] in ('sufficient_evidence', 'insufficient_evidence') or
+                    action['kind'] == 'tool' and action['tool'] == 'verify_citations')
+        if terminal:
+            item = self._selected_review(estimate)
+            if item:
+                return self._request_selected_review(item, call_id)
         if self.state.answer_phase and not (action["kind"] == "tool" and action["tool"] == "verify_citations"):
             return self._reject_non_answer(call_id)
         if action["kind"] == "finish":

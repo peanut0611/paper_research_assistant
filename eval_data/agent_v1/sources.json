@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "metadata_checked_at": "2026-11-04",
-  "metadata_evidence": "Official version-specific arXiv abstract pages, read through the connected web tool. This verifies bibliographic metadata only, not local PDFs, page numbers or substantive claims.",
-  "material_status": "blocked_missing_pdfs_seed_and_page_evidence",
+  "metadata_checked_at": "2026-11-04T15:19:59.201267+00:00",
+  "metadata_evidence": "Exact-version id_list response preserved in preparation attempt; page excerpts require human semantic review.",
+  "material_status": "integrity_ready_human_semantic_review_pending",
   "fixed_seed": {
     "path": "data/literature_search/smoke/20261023.json",
-    "sha256": null,
+    "sha256": "1696bd44cdbedbcf1b331cc0644c35dfa008e128968985ef85c6fccf016db8c8",
     "required_origin": "live_arxiv_api"
   },
   "sources": {
@@ -16,11 +16,19 @@
       "submitted_at": "2022-10-06T01:00:32Z",
       "abstract_url": "https://arxiv.org/abs/2210.03629v1",
       "pdf_url": "https://arxiv.org/pdf/2210.03629v1",
-      "pdf_path": null,
-      "pdf_sha256": null,
-      "page_count": null,
-      "evidence": [],
-      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+      "pdf_path": "data/paper_cache/ddddfc34e37811c8b2f4f05e60e983a074b54bf34756ddbb31186e39786170b2/6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576.pdf",
+      "pdf_sha256": "6ec7c9ba12a5a7462afaaa759b9d4186e522fcb502ef480afd7fa1821960a576",
+      "page_count": 31,
+      "evidence": [
+        {
+          "page_number": 2,
+          "quote": "prompts LLMs to generate both verbal reasoning traces and actions pertaining to a task in an\ninterleaved manner, which allows the model to perform dynamic reasoning to create, maintain, and\nadjust high-level plans for acting (reason to act), while also interact with the external environments\n(e.g. Wikipedia) to incorporate additional information into reasoning (act to reason).",
+          "claim": "ReAct 在提示中结合推理与行动；这里只核对该方法描述的原文位置。",
+          "reviewer": "Codex: AI-assisted source-location check, NOT human acceptance",
+          "review_status": "pending_human_review"
+        }
+      ],
+      "verification_status": "hash_and_literal_location_checked_human_review_pending"
     },
     "toolformer-v1": {
       "arxiv_id": "2302.04761",
@@ -29,11 +37,19 @@
       "submitted_at": "2023-02-09T16:49:57Z",
       "abstract_url": "https://arxiv.org/abs/2302.04761v1",
       "pdf_url": "https://arxiv.org/pdf/2302.04761v1",
-      "pdf_path": null,
-      "pdf_sha256": null,
-      "page_count": null,
-      "evidence": [],
-      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+      "pdf_path": "data/paper_cache/e709d2dfe511d6eb813668c80fa1def32e9b0a159f62d4a583b2e4db72f2bf0e/6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522.pdf",
+      "pdf_sha256": "6d7483d94653008e40c2058a1c22441c92e3713dae278b6361e8efc447c99522",
+      "page_count": 17,
+      "evidence": [
+        {
+          "page_number": 2,
+          "quote": "Finally, we\nﬁnetune the LM itself on the API calls that it con-\nsiders useful.",
+          "claim": "Toolformer 对被判有用的工具调用进行模型微调。",
+          "reviewer": "Codex: AI-assisted source-location check, NOT human acceptance",
+          "review_status": "pending_human_review"
+        }
+      ],
+      "verification_status": "hash_and_literal_location_checked_human_review_pending"
     },
     "reflexion-v1": {
       "arxiv_id": "2303.11366",
@@ -42,11 +58,19 @@
       "submitted_at": "2023-03-20T18:08:50Z",
       "abstract_url": "https://arxiv.org/abs/2303.11366v1",
       "pdf_url": "https://arxiv.org/pdf/2303.11366v1",
-      "pdf_path": null,
-      "pdf_sha256": null,
-      "page_count": null,
-      "evidence": [],
-      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+      "pdf_path": "data/paper_cache/05365dbf2943c97146aeaf236bc0451f621f3098d56d11fd85265a83226c243a/965a720f42e0318facf0de5d1b9d7a135ded227284fc615ca5b3ec1763c46066.pdf",
+      "pdf_sha256": "965a720f42e0318facf0de5d1b9d7a135ded227284fc615ca5b3ec1763c46066",
+      "page_count": 17,
+      "evidence": [
+        {
+          "page_number": 2,
+          "quote": "After every actionat, the agent computes a heuristich, which may\nsuggest self-reﬂection.",
+          "claim": "Reflexion v1 在行动后计算启发式信号以决定是否触发自我反思。",
+          "reviewer": "Codex: AI-assisted source-location check, NOT human acceptance",
+          "review_status": "pending_human_review"
+        }
+      ],
+      "verification_status": "hash_and_literal_location_checked_human_review_pending"
     },
     "vit-v1": {
       "arxiv_id": "2010.11929",
@@ -55,11 +79,19 @@
       "submitted_at": "2020-10-22T17:55:59Z",
       "abstract_url": "https://arxiv.org/abs/2010.11929v1",
       "pdf_url": "https://arxiv.org/pdf/2010.11929v1",
-      "pdf_path": null,
-      "pdf_sha256": null,
-      "page_count": null,
-      "evidence": [],
-      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+      "pdf_path": "data/paper_cache/16dbdbf9d8d0133eb7ea7735107f2806d8819af91fe4a225d575bcca1e10e7d5/d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78.pdf",
+      "pdf_sha256": "d33feb34fcf7aea256439a7f487197dcbb896e31a9d86e30e37d252672c4da78",
+      "page_count": 21,
+      "evidence": [
+        {
+          "page_number": 1,
+          "quote": "When pre-trained on large amounts of\ndata and transferred to multiple mid-sized or small image recognition benchmarks\n(ImageNet, CIFAR-100, VTAB, etc.), Vision Transformer (ViT) attains excellent\nresults compared to state-of-the-art convolutional networks while requiring sub-\nstantially fewer computational resources to train.1\n1 I NTRODUCTION\nSelf-attention-based architectures, in particular Transformers (Vaswani et al., 2017), have become\nthe model of choice in natural language processing (NLP).",
+          "claim": "ViT 的迁移实验结果依赖预训练数据与评测条件。",
+          "reviewer": "Codex: AI-assisted source-location check, NOT human acceptance",
+          "review_status": "pending_human_review"
+        }
+      ],
+      "verification_status": "hash_and_literal_location_checked_human_review_pending"
     },
     "clip-v1": {
       "arxiv_id": "2103.00020",
@@ -68,11 +100,21 @@
       "submitted_at": "2021-02-26T19:04:58Z",
       "abstract_url": "https://arxiv.org/abs/2103.00020v1",
       "pdf_url": "https://arxiv.org/pdf/2103.00020v1",
-      "pdf_path": null,
-      "pdf_sha256": null,
-      "page_count": null,
-      "evidence": [],
-      "verification_status": "metadata_verified_pdf_and_page_evidence_pending"
+      "pdf_path": "data/paper_cache/3f8ac9988c703131efbe2eaf63e51c7dd355dc50a584187fa18241f53908660c/6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5.pdf",
+      "pdf_sha256": "6478b6e571a7d6fcd846d8ef77bfd60c285f1986abb8f475eedc43de403074f5",
+      "page_count": 48,
+      "evidence": [
+        {
+          "page_number": 2,
+          "quote": "CLIP jointly trains an image encoder and a text encoder to predict the correct pairings of a batch of (image, text) training\nexamples.",
+          "claim": "CLIP 联合训练图像与文本编码器以预测匹配。",
+          "reviewer": "Codex: AI-assisted source-location check, NOT human acceptance",
+          "review_status": "pending_human_review"
+        }
+      ],
+      "verification_status": "hash_and_literal_location_checked_human_review_pending"
     }
-  }
+  },
+  "metadata_origin": "live_arxiv_api",
+  "review_note": "Location checks are AI-assisted; no human reviewer or quality pass is claimed. Evidence is scorer-only and never included in Agent input."
 }

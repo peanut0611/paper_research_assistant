@@ -9,16 +9,27 @@
   <script src="/conversation.js" defer></script>
 </head>
 <body>
-  <header class="app-header">
-    <a class="brand" href="/" aria-label="Paper Assistant 首页"><span class="brand-mark">P</span>Paper Assistant</a>
-    <span class="header-label">文献研究 Agent</span>
-  </header>
+  <a class="skip-link" href="#research-panel">跳转到研究工作区</a>
+  <aside class="sidebar" aria-label="工作区导航">
+    <a class="brand" href="/" aria-label="Paper Assistant 首页"><span class="brand-mark">P<span>↗</span></span><span>Paper Assistant<small>论文研究助手</small></span></a>
+    <button id="workspace-new" class="new-research" type="button"><span aria-hidden="true">＋</span> 新建研究</button>
+    <nav class="workspace-nav" aria-label="当前工作区">
+      <span class="nav-label">工作区</span>
+      <a href="#research-editor" id="workspace-settings"><span aria-hidden="true">⌕</span>研究设置</a>
+      <a href="#research-result" id="workspace-current" hidden><span aria-hidden="true">▤</span><span id="workspace-title">当前研究</span></a>
+      <a href="#research-library" id="workspace-sources" hidden><span aria-hidden="true">▥</span>论文与证据</a>
+    </nav>
+    <div class="sidebar-note"><span class="nav-label">研究流程</span><p>发现文献 <span>→</span> 阅读正文<br>检索证据 <span>→</span> 继续讨论</p></div>
+    <div class="sidebar-footer"><span class="local-indicator" aria-hidden="true"></span><div>本地工作区<small>论文与记录保存在本机</small></div></div>
+  </aside>
+  <div class="app-shell" id="workspace">
+  <header class="app-header"><span class="breadcrumb">工作区 <span>/</span> 文献研究</span><a href="#research-library" id="workspace-source-link" class="header-label" hidden>查看研究资料 ↗</a></header>
   <main>
     <div id="research-panel">
-      <header class="page-heading">
-        <span class="eyebrow">研究工作台</span>
-        <h1>查找论文，带着证据回答。</h1>
-        <p>输入研究问题，自动查找文献、阅读正文并核对来源。</p>
+      <header class="page-heading" id="workspace-welcome">
+        <span class="eyebrow"><span aria-hidden="true">✳</span> PAPER RESEARCH</span>
+        <h1>从一个问题，<br>开始你的文献研究。</h1>
+        <p>查找论文，阅读正文，让每一次讨论都有来源可循。</p>
       </header>
       <div id="research-notice" class="notice" role="status" aria-live="polite">正在连接研究服务…</div>
       <div class="conversation-toolbar">
@@ -36,18 +47,20 @@
       <p id="research-dialogue-status" class="muted" role="status"></p>
       <p class="muted">初始研究最多 $0.50、5 分钟；追问每轮最多 $0.10、2 分钟，每段研究对话累计最多 20 轮 / $0.50，总估算上限 $1.00。未知结果保守占用额度。应用估算与服务商实际账单可能不同，不代表账户硬限额。</p>
       <details id="research-editor" class="task-editor" open>
-        <summary>研究设置 <span class="summary-note">主题、问题与日期</span></summary>
+        <summary>研究设置 <span class="summary-note">查看或调整本次研究范围</span></summary>
       <form id="research-form" class="research-form">
-        <div class="section-heading"><h2>新建研究</h2><button id="research-example" type="button" class="text-button">试用示例</button></div>
+        <div class="section-heading"><h2>你想研究什么？</h2><button id="research-example" type="button" class="text-button">填入 RAGTruth 示例 ↗</button></div>
         <label for="research-topic">研究主题</label>
         <input id="research-topic" type="text" maxlength="500" placeholder="例如：检索增强生成中的幻觉检测" required>
         <label for="research-questions">希望回答什么？<span class="label-note">每行一个问题</span></label>
-        <textarea id="research-questions" rows="3" maxlength="8000" placeholder="这些论文解决什么问题？采用了什么方法？" required></textarea>
+        <textarea id="research-questions" rows="3" maxlength="8000" placeholder="描述你希望弄清的问题，例如：现有方法如何检测 RAG 中的幻觉？实验有哪些局限？" required></textarea>
+        <details class="scope-settings" open><summary>研究范围 <span class="summary-note">日期与全文篇数</span></summary>
         <div class="form-grid research-range">
           <div><label for="research-start">起始日期 <span class="label-note">UTC，含当日</span></label><input id="research-start" type="date" required></div>
           <div><label for="research-end">截止日期 <span class="label-note">UTC，不含当日</span></label><input id="research-end" type="date" required></div>
           <div><label for="research-papers">研究篇数</label><select id="research-papers"><option value="1">最多 1 篇</option><option value="2">最多 2 篇</option><option value="3">最多 3 篇</option></select></div>
         </div>
+        </details>
         <details class="settings" id="research-settings">
           <summary>文献来源 <span id="research-settings-summary" class="summary-note">联网发现</span></summary>
           <div class="form-grid">
@@ -55,16 +68,17 @@
           </div>
           <p id="research-source-note" class="muted">从 arXiv 获取论文；模型按调用计费。</p>
         </details>
-        <div class="composer-footer"><span>仅在开始研究后调用模型</span><button id="research-submit" type="submit" disabled>开始研究</button></div>
+        <div class="composer-footer"><span>arXiv 文献 · 点击开始后调用模型</span><button id="research-submit" type="submit" disabled>开始研究</button></div>
       </form>
       </details>
 
       <section id="research-result" class="research-result" hidden aria-label="当前研究任务">
+        <div class="result-main">
         <div class="section-heading result-heading"><h2 id="research-run-title">研究结果</h2><span id="research-status" class="status" role="status" aria-live="polite"></span></div>
         <p id="research-current" class="current-step" role="status" aria-live="polite"></p>
         <div class="run-actions"><button id="research-stop" type="button" class="secondary" disabled>停止研究</button><button id="research-reconnect" type="button" class="secondary" hidden>重新连接</button><button id="research-download" type="button" class="text-button" disabled>下载结果</button></div>
         <p id="research-error" class="error" hidden></p>
-        <div class="answer-card"><h3>回答</h3><div id="research-answer" class="answer">回答将在完成引用核对后显示。</div><div id="research-citations"></div></div>
+        <div class="answer-card"><h3><span class="assistant-icon" aria-hidden="true">✳</span> Paper Assistant <span class="answer-label">研究回答</span></h3><div id="research-answer" class="answer">回答将在完成引用核对后显示。</div><div id="research-citations"></div></div>
         <section id="conversation-panel" class="conversation" hidden aria-label="继续讨论当前论文">
           <div class="section-heading"><h3>继续讨论</h3><button id="conversation-refresh" type="button" class="text-button">重新连接</button></div>
           <div class="conversation-toolbar">
@@ -76,30 +90,37 @@
           <p id="conversation-usage" class="muted"></p>
           <div id="conversation-messages" class="conversation-messages" aria-live="polite"></div>
           <form id="conversation-form" class="conversation-form">
-            <label for="conversation-question">继续提问</label>
-            <textarea id="conversation-question" rows="3" maxlength="1000" placeholder="例如：刚才提到的方法有哪些局限？论文中的实验能否支持这个结论？" required></textarea>
+            <label for="conversation-question" class="sr-only">继续提问</label>
+            <textarea id="conversation-question" rows="2" maxlength="1000" placeholder="继续追问：这些方法有哪些局限？" required></textarea>
             <div class="composer-footer">
               <span class="muted">基于当前论文继续讨论</span>
               <div class="run-actions"><button id="conversation-stop" class="secondary" type="button" hidden>停止追问</button><button id="conversation-submit" type="submit" disabled>发送追问</button></div>
             </div>
           </form>
         </section>
-        <details class="result-section">
-          <summary>参考论文</summary>
+        <p class="footnote">引用已核对字面来源，结论仍需结合原文判断。</p>
+        </div>
+        <aside class="research-inspector" aria-label="研究资料与执行记录">
+        <div class="inspector-heading"><span>研究资料</span><span class="inspector-badge">本任务</span></div>
+        <details class="result-section" id="research-library" open>
+          <summary>参考论文 <span class="summary-note" id="workspace-paper-count">0 篇</span></summary>
           <div id="research-candidates" class="muted">尚未发现候选。</div>
         </details>
         <details class="result-section">
-          <summary>执行详情</summary>
+          <summary>执行详情 <span class="summary-note">工具与用量</span></summary>
           <div id="research-metrics" class="metrics"></div>
           <p id="research-run-id" class="muted"></p>
           <p id="research-run-summary" class="muted"></p>
           <ol id="research-events" class="event-list"></ol>
           <p id="research-gaps" class="muted"></p>
         </details>
-        <p class="footnote">回答基于实际取得的文献，请结合原文核对结论。</p>
+        <p class="inspector-note">仅检索本任务的论文。展开回答下的引用，可查看原文与页码。</p>
+        </aside>
       </section>
+      <div id="workspace-empty-sources" class="welcome-features" aria-label="研究能力"><div><span>01</span><strong>发现相关论文</strong><p>按时间范围检索 arXiv</p></div><div><span>02</span><strong>回到原文证据</strong><p>查看引用片段与页码</p></div><div><span>03</span><strong>围绕论文追问</strong><p>持续讨论方法与局限</p></div></div>
     </div>
 
   </main>
+  </div>
 </body>
 </html>

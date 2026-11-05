@@ -1,0 +1,445 @@
+{
+  "mode": "online",
+  "workspace": {
+    "head": "805c312c30ff320b5aca93c9221840c50f8cdb24",
+    "files": {
+      ".env.example": "cc519bc3f6b9a957eb14f86f158d079f6c30c64c3817f2e3540012c69f55eb30",
+      ".gitignore": "8577ea1eb437f7dd968956b2db16224b105b983cfc54a6bb566c370000391463",
+      "eval_data/agent_v1/baseline/status.json": "0909cad68f4dfd7d61cc7d681de622472aa4a13cda3eaea1ca18f9dd2b0a8b62",
+      "eval_data/agent_v1/baseline/workspace-before.json": "04e1af5977dd3f639f60b104cfa7268e12bfaabadc90e80895b10f7c2295d6dc",
+      "eval_data/agent_v1/README.md": "128d6343050526a798a11db2d2092f74a68131de9b1a32400850b3f11fcf0a86",
+      "eval_data/agent_v1/rubric.md": "7120c6b78db3578d19b3cf4a780d02978c13c23816d9ce72a30726dcd42c515e",
+      "eval_data/agent_v1/sources.json": "7beb3ef372a607b9a1117e1a1f61406bef9c4d62a6b6380faa6a37902d39ded8",
+      "eval_data/agent_v1/suite.json": "359c816481b070979bb09c9cb0bd827f6254dd4972f7be67dee98ba2c4398765",
+      "eval_data/README.md": "0f5bcf8d2954ef6231075b07fa362d5035616ba0860d1a14706c854ac41a759e",
+      "eval_data/research/CONVERSATION_TESTS.md": "c014ecc893f1e4decca22ec6eb821dec49d8e93b10d9eab80a93f38492933e1a",
+      "eval_data/research/E2E_VALIDATION_20261028.md": "bc0e38e62c387c4eb543f55be941d3293f3c5f0282d296593038c0a5a42b4d72",
+      "eval_data/research/manual_cases.json": "39a9b7ded3da0f42cba39f619d51efc3f41623c94228eed6059e1b4413c5a7d4",
+      "eval_data/research/MANUAL_TESTS.md": "323c0a382aed71181da41f4675cc5dfceacca97b43f71bfe9f396b93ebebddc7",
+      "eval_data/research/README.md": "ec354b2bea37fab1e84f524d1382ebd4ce426f1de49d17a31add7131a02813a0",
+      "eval_data/research/synthetic_candidates.json": "182d7559bf728ad11a19a20de7a48d0cc96fbfe1374c87b4358037ff9bbed6c9",
+      "eval_data/research/tasks.jsonl": "7436c61aefc5d8a685544c11e76410781c458a6d332367ffee05e843232029e7",
+      "eval_data/research/tool_calls_example.jsonl": "a139367c2313bb58d7f1b6f107b6b6533400797ba73142968c6f1117a1028d03",
+      "pyproject.toml": "f985ae697271f56861cfdafe9663a9faab12d1974ba14c4a29fcaa03e273aa94",
+      "README.md": "dfd1803cb587848ae75c8f292d07473f86832cac82023827459206fccda20db4",
+      "scripts/app.py": "299c92738f4f144aa21c575ee84671106ae1a1c1cc689a8703b633b35407f014",
+      "scripts/dev/fetch_papers.py": "f344b0d17630d5cb1028a7abf8c1deee541c42c31e531ac340a8d0e26005c46b",
+      "scripts/dev/ingest_research_papers.py": "119f85792d9b93d760d3e814a856fedad227bd61414507702269ccb932a62325",
+      "scripts/dev/run_mock_research.py": "8753accc77fba206fa4d2fb701b567dfcb117f956bca2f454a909c399d3f5ab2",
+      "scripts/dev/run_tool_calls.py": "8b8bad7248323fd1929fe5f1629122b3df891c9ebc11f6ba0aa7d33ab6113577",
+      "scripts/dev/search_literature.py": "a07a64aa99e542f0c378f8c78c29923d0dbdfbaf38c6bf55a4a40fae9e2eeccc",
+      "scripts/README.md": "328e70b03dcf36918f9528f7b48a37706d24611a47f40b84996b74b3514db773",
+      "scripts/run_research.py": "2526b7bbd4d3335b37f82fe2efb85de8fdcbff29737d3334adecc785f182e481",
+      "src/paper_assistant/__init__.py": "e68caa02afb597c3757546a6f03de1cada8eefde5826c9b8635ea1de13a5096d",
+      "src/paper_assistant/__main__.py": "38039ba845101ca52e0994ffcabaf6de794866c11646c0d4b00ab9465d77ff6b",
+      "src/paper_assistant/agent/__init__.py": "ebd0cbf8a3f32a65be08d66d8940ee22f2113b08baaebb96bd5fff6ceae49054",
+      "src/paper_assistant/agent/loop.py": "454ab50b7c366212e1b8520b8b0e7a81ac757abdfb53758bbdb65a15f4b38abf",
+      "src/paper_assistant/agent/messages.py": "091c8680322de87263d438747b07e93d2bfb0aa471e3a5bdd126ded91ff73d96",
+      "src/paper_assistant/agent/tools.py": "7b2192ef00e9ac7bfb45e38bd8de27aa79a4f6da73a56455890f01ed23691705",
+      "src/paper_assistant/ai/__init__.py": "9bf98375150ac2f344fb97a534cf47601fdce81cec3eac87d0662fd63fa7a323",
+      "src/paper_assistant/ai/openai.py": "3ee9865ec415bb18288aca2eb3b1e7067215eaab830f7a0f0ca9ddcf3c77a202",
+      "src/paper_assistant/ai/types.py": "694b803349d2c219c44f1714e3aedcea05415657c86eb8017ea63140c91459dd",
+      "src/paper_assistant/config.py": "58e9cc26de61e116eb0d40a69df5c7e1b908214294002957480751083c6fa851",
+      "src/paper_assistant/evaluation.py": "c8629e997ab5ab9345bf3eefd41658978f03f11cf01b7ddffa7f506729a7b868",
+      "src/paper_assistant/research/__init__.py": "e4997f767e0668cef78a840b5bfd529dcaa92f8893e75be4b1afd3df6e64ea18",
+      "src/paper_assistant/research/agent.py": "c58e3877101a05a5c674baca1b161d118f931c75f753700042ac5551e567299e",
+      "src/paper_assistant/research/citations.py": "b572544071cc091289e00f7425e29e6a71923e00538450bc97dfaed3131f83d2",
+      "src/paper_assistant/research/cli.py": "d35a5734a7816b243ad0f7952f69f61b11ca509f2c24e0629b553179f61c9462",
+      "src/paper_assistant/research/context.py": "eb39a08dba5c118b81907f6fed3f7fcbd36d94b8ad10b9a5f99b76ffd6dfc2c6",
+      "src/paper_assistant/research/conversation.py": "09470275cdabb433851f23fda88aea09fd40f5a368f568245d2ae5ac8c3be7e4",
+      "src/paper_assistant/research/model.py": "3c827bda05d81fd075962be42b5ad33dbbe331719b62cf80749ae207b4bbc2ec",
+      "src/paper_assistant/research/state.py": "21bdc532e5064f5de7986b259f978394662a9ebdb2477673ac7dca6e753a435c",
+      "src/paper_assistant/research/task.py": "e46f3ad9fec32cebdad4ec65af5cac15b1e17275125685bad84d8e1647820f0f",
+      "src/paper_assistant/research/toolset.py": "df36d218bc6bc7b5e2d86147ea4e20d6a8be919d0a45a18961e1b5bdd90db786",
+      "src/paper_assistant/research/workspace.py": "7f861461caf6ef601162682317fcdfcf74cd641413eb03907c35e5386a993a43",
+      "src/paper_assistant/storage.py": "ca3075c90987d47125e7eae62d662a2bd9fea536ae10c574b443bab7276a37d2",
+      "src/paper_assistant/tools/__init__.py": "ed414daf97dc01100646789637d39e55259da77b2198c9dbc240f6f1b0fcceb5",
+      "src/paper_assistant/tools/arxiv/__init__.py": "5c858587451e1ddff81cd779ce350e6def716c3efe84912fcb647f9d97d2760f",
+      "src/paper_assistant/tools/arxiv/fetch.py": "617d499cd0675b42adafee9ed66ca0978c4038cf5d3067e23ef9fb9809f5fad8",
+      "src/paper_assistant/tools/arxiv/search.py": "7c92820b78513355c7717c71f44fed6fde44890b9fb7b79f934483e6f75d0cac",
+      "src/paper_assistant/tools/knowledge/__init__.py": "bb1ebed1b1cd321e7c27ffd176f7c5dd1af6152836cef9d65ed59595178fbe8a",
+      "src/paper_assistant/tools/knowledge/chunking.py": "33abe0622de336c0444434ef893227dbb7fb3512d1aa40c4be0fb3a6592bdaf3",
+      "src/paper_assistant/tools/knowledge/embedding.py": "c8916251010f620a3acbcf16d8dfe0e572f60d11108fcdc97c42e0423a6d665c",
+      "src/paper_assistant/tools/knowledge/ingestion.py": "4914c1bbc28f569ede5741d1d7706ce8a8f9a20bccb5652fbe7d319c0e6b6cac",
+      "src/paper_assistant/tools/knowledge/lexical.py": "8edc0dd7648a9fcdbfce592aa4998ad4f7e9899bab0f196cd26f6cba9b8f6489",
+      "src/paper_assistant/tools/knowledge/pdf_parser.py": "f95243e1a37a7d11d844d6638b804de9a3bf5b32ed81fdd341e522b4ca892778",
+      "src/paper_assistant/tools/knowledge/pdf_worker.py": "efe6cd255a5da9f905118f998282b68d14e9093a0fbc68049fe9451dcd238081",
+      "src/paper_assistant/tools/knowledge/scope.py": "3b2518fdb11e79a0ab2848d63424a6a960dad8bcd2733beb7a06f3c52f55e467",
+      "src/paper_assistant/tools/knowledge/store.py": "8fc18b2a492de1532af3513c134fc8e2ee7896697bf9b1107e0577a42bed26e1",
+      "src/paper_assistant/tools/knowledge/text_cleaner.py": "b2983afd56da743db71a60d32e4c257898e8a68f1157d3f89bc40dec10081d9d",
+      "src/paper_assistant/web/__init__.py": "2bc0c499b1c0104494b88748f9964d113b29432866eea4017c90a305491d7476",
+      "src/paper_assistant/web/cli.py": "ac81464d8e3a37fc28c7e38be9a1eeeb8c39a46274ed8bc4431d51290167f05d",
+      "src/paper_assistant/web/jobs.py": "d10b2501d980e87f134fc37bfc9d15b7ec46160b752c989f4ef9435d3b8ed222",
+      "src/paper_assistant/web/server.py": "2a73584cc5cd39b05623a5cd9f7c5dde7c35bc81b5cd2a7b2882e1cb7a5d9698",
+      "src/paper_assistant/web/static/conversation.js": "cc6199f1cc8c96ef2a82868f00906ff0da1044ddeae7af508a9c552d01af302a",
+      "src/paper_assistant/web/static/index.html": "54cd849c44742568f17dee6b922cf947ab587a253be620e08a3f9251f01a9839",
+      "src/paper_assistant/web/static/research.js": "1a150d56c8061f42bd6c6dfce872c3e18655b25aeac068567912a3462790bad3",
+      "src/paper_assistant/web/static/style.css": "2f2f1701627bb837d6d924486ca211cbcf0443987a5d30e9f56601336fa57073",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/agent/test_agent_core.py": "21acb60b5b2877201f2b1fccae0dc9eb40d7e1a84a6145ca33ac5635c502a9fe",
+      "tests/agent/test_architecture.py": "037a3eafb46f2da746d943fff0fbcbde01e2fbc7a4e2966bcb2b6a3a0cf121fa",
+      "tests/ai/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/ai/test_openai_client.py": "7b5195fe18f30b0b9323fdfca8a7958215dec7c8ce2576de671a90c6248b6b2a",
+      "tests/conftest.py": "ec2fc23870ae17e7eeb564eafce4bb382856190a12b2dd34c9ce21ad331addea",
+      "tests/fixtures/arxiv/live_20261023.meta.json": "eb482b1756db4a982cd47e2a555476e88e7a9757c183694755a043b6488a649d",
+      "tests/fixtures/arxiv/live_20261023.xml": "ed59bcbe0ebc865129b20922f4ce022ea8127c185fd067b17b0baa88b826d1e7",
+      "tests/fixtures/arxiv/README.md": "0e5e765269b76d7e2d9bc97e97fa4e13db9b7b6358abfe0456f662bff18da63d",
+      "tests/fixtures/arxiv/synthetic_feed.xml": "4b21abc611b6d90a26d354da20643bc1e14380ff3e949e3df409c26db1b694d9",
+      "tests/research/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/research/test_agent_model.py": "a40b2c56b7ec11bc8d7dfbadd0bba712ce0bbb19f52cfef21f50d307a35b5c49",
+      "tests/research/test_agent_runner.py": "785fa65d378d3cd0bb0efa3deaf7f3d065043b04722a233757e9fd92f7bf24b0",
+      "tests/research/test_agent_tools.py": "126e7b65eee3c69e731fe92daf2ee858e54064413c5a79b7a295ce926d90b3df",
+      "tests/research/test_agent_transcript.py": "ffa535fbc9c3e185acd589191e6a877c5ecaa05bdbcff6ea24acd3385426a235",
+      "tests/research/test_answer_phase.py": "0c54e1e7e7468f8c404c20833e2dbc1e43465b8a01ea1781ed61e4a8986fcbc5",
+      "tests/research/test_citations.py": "cddff7c5e38a9b4584f6f8aadcce4fa68b7c7b43a5aab55103235cfadfc752b7",
+      "tests/research/test_conversation.py": "677a54b89aad0447f44786ba6797ad6961ca364c25b0ee3f4455ccf71d5f12ba",
+      "tests/research/test_research_task.py": "75fdfd330b1bd530cca7a3e1daa4cdea7a143e914276fbe68c88afddcc63e41d",
+      "tests/research/test_research_workspace.py": "e805edc2c5a93bd95258bcca5eff11565456eb734d5cbde058c24053d98b4868",
+      "tests/retrieval_fixtures.py": "664164b4d070809e2773c2de84691af6f5f6ca1d16a90c22fae6f65c1c8302e0",
+      "tests/test_cli.py": "8ebae8eb5101564ade022af22ad4c39f3e81f39eddaaf05c969af53689847cbf",
+      "tests/test_config.py": "6df5613993372d25ad7606a10b309dabf37c638948d9382232bbad6c47c1d1e1",
+      "tests/test_storage.py": "642c6f25db5fe43cfc5c3cc28810a40bb59ee4350c2202119cfd0c7158ac8a04",
+      "tests/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/tools/test_chunking.py": "d447712dfb0750b6bb4ba787e7e2bad15a40ba09ed3485e235d2b6de1c6fc5b0",
+      "tests/tools/test_corpus_ingestion.py": "4f9f1d092f4a0e9265f5bac15dc2260eab5cfbfa8e8856df7180be0bf9a1f231",
+      "tests/tools/test_document_store.py": "95b260d6e02205a53b4d520587528467d30b92ff594cbcb994ce4f93b4234dfd",
+      "tests/tools/test_embedding.py": "7be9251ce30afab2f997b68b44b26d642a4e1c3e8b2cdace004d13e7471f12f0",
+      "tests/tools/test_lexical_retrieval.py": "38f5666155f2eccf52dba5a4e14da45b15e9f7c600d16eec17a6b0facbbc89fa",
+      "tests/tools/test_literature_search.py": "cfb73610867275b459894438b984afa0b4c54e9c4bf5a490f5f9862eebcac4cd",
+      "tests/tools/test_paper_fetcher.py": "2bef298b66068790a925980069f82258d785f225c4805af0d2a25c99976b1365",
+      "tests/tools/test_pdf_parser.py": "cf876304d90088312dd97215d619778eb533d7460059f0b47e8253124460d282",
+      "tests/tools/test_retrieval_scope.py": "799b873a1097596298e3926d4f17291a37ec7950f61fc6927466f68c85c29d58",
+      "tests/tools/test_text_cleaner.py": "95835f32a55a6c41b6745615886b28c01cb5515a850852091c68d2949f652d02",
+      "tests/tools/test_token_chunking.py": "a56f0bb8ab105f3c074f707f75ef75491e42aa9316c9c187e3da990c707f6bc0",
+      "tests/web/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/web/conversation_client.test.cjs": "4504ff9df3dd6785301990721b27a20119f55332135b50f9f764a1d37a29eaa0",
+      "tests/web/research_client.test.cjs": "cef0471c561809fd7f23b6e95d7546cdbf1b724384bb513ed6eab5df8b70245c",
+      "tests/web/test_baseline_capture.py": "e5ae5722d438ad1081d1dcf802f64e73533df9a752df31b6ccbfdacf74948f6e",
+      "tests/web/test_conversation_web.py": "55e4f216fa87a09d10d041a389da02b6e6ff29de50805be57c3432e7a4b510e5",
+      "tests/web/test_research_web.py": "92305e29ebfc8b5cfc3824258035eca7f18e439abf5b3bf55241a5e5b11c6d3c",
+      "tests/web/test_web_app.py": "c11854cb4be727fa9471fb4d2cbdae5238ce7cc913c30315e0b21b8a84698cb2",
+      "uv.lock": "cf52721de1b581f3af3fa80c951d63c8f5d92a29d53c80f2764f9c6b07aded99"
+    },
+    "untracked_files": [],
+    "tracked_diff_sha256": "66af9e38f2c91d113f71e9073bffdfa6791b7a02f5df4a545b9d7d8abdc07228",
+    "workspace_sha256": "11ba29b859c37da97e1807e1f00d039c9963c842faa043712e5cc2b8b8380908",
+    "exclusions": [
+      "credentials",
+      "virtual environments",
+      "data and model caches",
+      ".git",
+      "third-party skill bodies"
+    ]
+  },
+  "model_config": {
+    "model": "gpt-5.4-mini",
+    "max_input_tokens": 16000,
+    "max_output_tokens": 1200,
+    "timeout_seconds": 45,
+    "trust_env": true
+  },
+  "rates": {
+    "input": 0.75,
+    "cached_input": 0.075,
+    "output": 4.5
+  },
+  "price_checked_at": "2026-10-23",
+  "frozen_inputs": {
+    "frozen_at": "2026-11-04T15:38:10.994221+00:00",
+    "sha256": {
+      "suite.json": "a1051032549b9fcb35005453fb9827768b6a8ea5af31d9c8ffb9ba36c0b3acb9",
+      "sources.json": "ae529159149fbee15b14e0a75799dc469dc04e32f713ade0bde4f7ed821d49da",
+      "rubric.md": "7120c6b78db3578d19b3cf4a780d02978c13c23816d9ce72a30726dcd42c515e",
+      "workspace.json": "22c7bd5c24d0c8c4b4849ea1ecef270ec64e887c9a90e8cfa3564ad03c95ce9d"
+    }
+  },
+  "raw_report_sha256": "e191ff9297b9d8b701a2583937ad02c27b6998a59bda5d259b4a139a71344a73",
+  "cases": [
+    {
+      "case_id": "tool-use-comparison",
+      "input": {
+        "topic": "language model tool use ReAct Toolformer",
+        "questions": [
+          "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+        ],
+        "start_date": "2020-01-01",
+        "end_date": "2024-01-01",
+        "target_papers": 2,
+        "max_cost_usd": 0.1,
+        "source_mode": "online"
+      },
+      "followup_inputs": [],
+      "execution_status": "executed",
+      "evidence_kind": "real_model_http",
+      "review_status": "not_reviewed",
+      "quality_verdict": null,
+      "accounting": {
+        "charged_tokens": 7621,
+        "charged_or_reserved_usd": 0.00714825,
+        "unknown_reserved_usd": 0,
+        "unknown_usage_calls": 0,
+        "input_tokens": 7239,
+        "output_tokens": 382,
+        "cached_input_tokens": 0,
+        "complete": true
+      },
+      "online_network_verified": false,
+      "actual_materials": [],
+      "blockers": [
+        "online_search_and_download_not_verified",
+        "human_review_pending",
+        "reviewer_missing",
+        "review_time_missing",
+        "claims_missing",
+        "rubric_checks_missing",
+        "unobserved_branches_missing",
+        "review_missing_turn:research"
+      ],
+      "rounds": [
+        {
+          "round_id": "research",
+          "stop_reason": "no_progress",
+          "elapsed_seconds": 8.64000000001397,
+          "charged_tokens": 7621,
+          "charged_or_reserved_usd": 0.00714825,
+          "unknown_reserved_usd": 0,
+          "unknown_usage_calls": 0,
+          "input_tokens": 7239,
+          "output_tokens": 382,
+          "cached_input_tokens": 0,
+          "answer": null,
+          "binding": {
+            "config": {
+              "max_invalid_decisions": 2,
+              "max_model_tokens": 60000,
+              "max_no_progress": 3,
+              "max_repeat_calls": 2,
+              "max_steps": 12,
+              "report_reserve_tokens": 2000
+            },
+            "offline": false,
+            "policy_id": "openai-research-v1:a64e3f2558ea7b5882c8a5f17000352befcbf37d7d78c69a068fead3818f59a0",
+            "runner_protocol_version": 6,
+            "simulated": false,
+            "task": {
+              "end_at": "2024-01-01T00:00:00+00:00",
+              "limits": {
+                "first_search_candidates": 5,
+                "max_candidates": 10,
+                "max_fetch_attempts": 5,
+                "max_fulltext_papers": 3,
+                "max_local_searches": 4,
+                "max_model_cost_usd": 0.1,
+                "max_pages_per_read": 5,
+                "max_pdf_bytes": 20000000,
+                "max_read_chars": 12000,
+                "max_runtime_seconds": 300,
+                "max_search_rounds": 2,
+                "max_tool_calls": 24,
+                "report_reserve_usd": 0.02
+              },
+              "research_questions": [
+                "比较 ReAct 和 Toolformer 如何让语言模型使用工具。分别说明是否需要训练、工具调用如何产生，以及实验条件对比较结论的限制。请引用实际读到的正文与页码。"
+              ],
+              "source": "arxiv",
+              "start_at": "2020-01-01T00:00:00+00:00",
+              "target_papers": 2,
+              "topic": "language model tool use ReAct Toolformer",
+              "utc_window": {
+                "boundary": "start_inclusive_end_exclusive",
+                "date_field": "submitted",
+                "end_at": "2024-01-01T00:00:00+00:00",
+                "start_at": "2020-01-01T00:00:00+00:00"
+              }
+            },
+            "task_id": "web-20261104T153849-5bf52dde0d04"
+          },
+          "workspace_identity": null,
+          "model_events": [
+            {
+              "charged_cost_usd": 0.00248325,
+              "charged_tokens": 2361,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "profile": "default"
+                },
+                "input_token_estimate": 11452,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "5bbadfb124cfb13f95bdb8e8e7f33e62644c563950c78f4f608940361b1719cd",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_04cdda640200d91f016aeb518cc1a087d1ad87b3caa6123c9e",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.013989,
+                "max_tokens": 12652
+              },
+              "simulated": false,
+              "step": 1,
+              "usage": {
+                "cost_usd": 0.00248325,
+                "input_tokens": 2171,
+                "output_tokens": 190
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00229575,
+              "charged_tokens": 2576,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "profile": "default"
+                },
+                "input_token_estimate": 13074,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "34285f1deb725e8a63a10ab4bdf14fcec8825e37e6f1ee46d700d4e2ca922cfd",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_09c94b370bf64c02016aeb518f9b7087d1a6693467c1014cf8",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.0152055,
+                "max_tokens": 14274
+              },
+              "simulated": false,
+              "step": 2,
+              "usage": {
+                "cost_usd": 0.00229575,
+                "input_tokens": 2479,
+                "output_tokens": 97
+              },
+              "usage_unknown": false
+            },
+            {
+              "charged_cost_usd": 0.00236925,
+              "charged_tokens": 2684,
+              "metadata": {
+                "cached_input_tokens": 0,
+                "context_compaction": {
+                  "profile": "default"
+                },
+                "input_token_estimate": 13625,
+                "price_checked_at": "2026-10-23",
+                "price_source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+                "rates_usd_per_million": {
+                  "cached_input": 0.075,
+                  "input": 0.75,
+                  "output": 4.5
+                },
+                "reasoning_tokens": 0,
+                "request_sha256": "4743c4f10633a9d5cab8c760aeaa0ae6f4dc31adffa439ff9edd689c5337983d",
+                "request_submitted": true,
+                "requested_model": "gpt-5.4-mini",
+                "response_id": "resp_06ae5718adf4f376016aeb5193546487d18452e80e1a8138cb",
+                "response_status": "completed",
+                "returned_model": "gpt-5.4-mini-2026-03-17",
+                "token_counter": "serialized_utf8_bytes_plus_256_conservative_not_exact"
+              },
+              "phase": "decision",
+              "reservation": {
+                "max_cost_usd": 0.01561875,
+                "max_tokens": 14825
+              },
+              "simulated": false,
+              "step": 3,
+              "usage": {
+                "cost_usd": 0.00236925,
+                "input_tokens": 2589,
+                "output_tokens": 95
+              },
+              "usage_unknown": false
+            }
+          ],
+          "tool_events": [
+            {
+              "event_id": 1,
+              "tool": "search_literature",
+              "arguments": {
+                "max_results": 5,
+                "query": "ReAct Toolformer language model tool use",
+                "sort_by": "submittedDate"
+              },
+              "purpose": "Find candidate arXiv papers on ReAct and Toolformer for comparison",
+              "status": "completed",
+              "duration_ms": 734.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "from_cache": false,
+                "snapshot_origin": "live_arxiv_api",
+                "total_results": 0,
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 2,
+              "tool": "search_literature",
+              "arguments": {
+                "max_results": 5,
+                "query": "ReAct Toolformer tool use language model",
+                "sort_by": "submittedDate"
+              },
+              "purpose": "Find arXiv papers on ReAct and Toolformer for comparison",
+              "status": "completed",
+              "duration_ms": 2203.0,
+              "success": true,
+              "error": null,
+              "summary": {
+                "from_cache": false,
+                "snapshot_origin": "live_arxiv_api",
+                "total_results": 0,
+                "asset": {}
+              }
+            },
+            {
+              "event_id": 3,
+              "tool": "search_literature",
+              "arguments": {
+                "max_results": 5,
+                "query": "ReAct language model reasoning acting arxiv Toolformer tool use",
+                "sort_by": "submittedDate"
+              },
+              "purpose": "Broaden keyword search for relevant papers",
+              "status": "completed",
+              "duration_ms": 0,
+              "success": false,
+              "error": {
+                "code": "search_budget_exhausted",
+                "message": "Task search rounds are exhausted"
+              },
+              "summary": {
+                "asset": {}
+              }
+            }
+          ]
+        }
+      ],
+      "full_case_sha256": "fdc599b32eab08140484da029c786e1435b6f9d06473c7c9e1d9990f9a317bcf"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 """Deletion behavior at the existing local HTTP boundary, without paid calls."""
 import json
+import pytest
 from types import SimpleNamespace
 
 from paper_assistant.web.jobs import ResearchJobService
@@ -61,7 +62,7 @@ def test_running_research_must_finish_after_stop_before_deletion(jobs):
     assert not (service.root / task_id).exists() and len(calls) == 1
 
 
-def test_delete_rejects_foreign_ids_and_symlinked_dialogue_or_root(jobs, tmp_path):
+def test_delete_rejects_foreign_ids(jobs):
     service, _, release, _ = jobs
     release.set()
     target = service.start(payload())["job"]["task_id"]
@@ -70,8 +71,23 @@ def test_delete_rejects_foreign_ids_and_symlinked_dialogue_or_root(jobs, tmp_pat
     wait_finished(service, other)
     for identifier in ("../", target + "/../" + other, "%2e%2e", "not-a-web-job"):
         assert http(service, identifier, {"confirmed": True})[0] == 404
+    assert service.snapshot(other)["job"]["request"]["topic"] == "Keep this"
+
+
+def test_delete_rejects_symlinked_dialogue_or_root(jobs, tmp_path):
+    service, _, release, _ = jobs
+    release.set()
+    target = service.start(payload())["job"]["task_id"]
+    wait_finished(service, target)
+    other = service.start(payload(topic="Keep this"))["job"]["task_id"]
+    wait_finished(service, other)
     alias = "web-20261027T000000-bbbbbbbbbbbb"
-    (service.root / alias).symlink_to(service.root / other, target_is_directory=True)
+    try:
+        (service.root / alias).symlink_to(service.root / other, target_is_directory=True)
+    except OSError as error:
+        if getattr(error, "winerror", None) == 1314:
+            pytest.skip("Creating symlinks requires Windows Developer Mode or platform privileges")
+        raise
     assert http(service, alias, {"confirmed": True})[0] == 404
     # Links inside owned data are removed as links, never traversed into shared data.
     (service.root / target / "shared-link").symlink_to(service.root / other, target_is_directory=True)

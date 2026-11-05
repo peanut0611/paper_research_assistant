@@ -192,7 +192,7 @@ class OpenAIDecisionPolicy:
         self._prepared = None
         # Changes to configuration, instructions or recorded rates cannot silently resume.
         self.policy_id = "openai-research-v1:" + digest({"config": asdict(self.config), "instructions": self.instructions,
-            "rates": RATES, "price_checked_at": PRICE_CHECKED_AT, "context_projection_version": 8})
+            "rates": RATES, "price_checked_at": PRICE_CHECKED_AT, "context_projection_version": 9})
 
     def _count(self, request):
         # Byte-level tokenizers cannot need more text tokens than UTF-8 bytes.
@@ -229,6 +229,10 @@ class OpenAIDecisionPolicy:
                          for count, chars in ((3, 1200), (2, 1200), (2, 900), (1, 1200), (1, 800))]
             profiles += [{"abstracts": 0, "evidence_chars": 600, "evidence_count": 1,
                           "notes": 40, "titles": 32, "history": 0, "minimal": True}]
+            # Keep all selected-paper next actions within the existing input
+            # ceiling before retaining a longer redundant evidence window.
+            profiles += [{"abstracts": 0, "evidence_chars": 400, "evidence_count": 1,
+                          "notes": 20, "titles": 24, "history": 0, "minimal": True}]
         else:
             # During selection, retain useful abstracts before redundant history.
             profiles += [{"abstracts": size, "notes": 60, "titles": 120, "history": 0, "minimal": True}

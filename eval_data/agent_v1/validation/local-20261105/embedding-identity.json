@@ -1,0 +1,9 @@
+{
+  "model_name": "intfloat/multilingual-e5-small",
+  "revision": "sha256:7c923c026a61369cb1a855b848cb99fd34d094900228641c16f6526f8b08cd56",
+  "tokenizer_sha256": "350f256fb75a192eb6efbe148055be5bb4c2b5f2188213f8a7ee8db4429ec6d0",
+  "max_sequence_length": 512,
+  "dimension": 384,
+  "document_prefix": "passage: ",
+  "query_prefix": "query: "
+}

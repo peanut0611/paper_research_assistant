@@ -250,9 +250,9 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     try:
-        candidate = json.loads((args.candidate / "report.json").read_text())
+        candidate = json.loads((args.candidate / "report.json").read_text(encoding="utf-8"))
         if args.reviews:
-            reviews = json.loads(args.reviews.read_text())
+            reviews = json.loads(args.reviews.read_text(encoding="utf-8"))
             unknown = set(reviews) - {c["case_id"] for c in candidate["cases"]}
             if unknown:
                 raise ValueError("Review case IDs absent from capture")
@@ -266,8 +266,8 @@ def main():
             return
         if not args.baseline:
             raise ValueError("compare requires --baseline")
-        baseline = json.loads((args.baseline / "report.json").read_text())
-        report = compare_reports(baseline, candidate, json.loads(args.suite.read_text()))
+        baseline = json.loads((args.baseline / "report.json").read_text(encoding="utf-8"))
+        report = compare_reports(baseline, candidate, json.loads(args.suite.read_text(encoding="utf-8")))
         expected_suite = file_hash(args.suite)
         if any(r.get("frozen_inputs", {}).get("sha256", {}).get("suite.json") != expected_suite for r in (baseline, candidate)):
             report.update(status="blocked", quality_pass_rate=None, baseline_quality_pass_rate=None)

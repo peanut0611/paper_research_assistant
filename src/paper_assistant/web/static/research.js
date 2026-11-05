@@ -36,6 +36,7 @@
     get("research-dialogue-delete").disabled = !jobId || latest?.job.task_id !== jobId || active || discussionBusy || submitting || Boolean(pending) || Boolean(deleteTarget) || deleting;
     get("research-delete-confirm").disabled = deleting || active || discussionBusy;
     get("research-delete-cancel").disabled = deleting;
+    get("workspace-new").disabled = get("research-dialogue-new").disabled;
   }
   function note(text, error = false) {
     get("research-notice").textContent = text;
@@ -165,6 +166,12 @@
       get("research-editor").open = false;
     }
     get("research-result").hidden = false;
+    get("workspace").classList.toggle("has-research", true);
+    get("workspace-welcome").hidden = true;
+    get("workspace-empty-sources").hidden = true;
+    get("workspace-title").textContent = latest?.job.request.topic || "当前研究";
+    ["workspace-current", "workspace-sources", "workspace-source-link"].forEach(id => { get(id).hidden = false; });
+    get("workspace-paper-count").textContent = `${latest?.state?.candidates?.length || 0} 篇`;
     get("research-run-title").textContent = data.job.request.topic;
     get("research-run-id").textContent = `任务 ${jobId} · ${data.job.request.start_date} 至 ${data.job.request.end_date}（UTC，截止日不含）`;
     const state = data.state;
@@ -225,6 +232,8 @@
     }
   }
   get("research-source").addEventListener("change", sourceNote);
+  get("workspace-settings").addEventListener("click", () => { get("research-editor").open = true; });
+  get("workspace-new").addEventListener("click", () => get("research-dialogue-new").click());
   get("research-form").addEventListener("invalid", event => {
     get("research-editor").open = true;
   }, true);
@@ -304,6 +313,10 @@
     for (const id of ["research-topic", "research-questions", "research-start", "research-end"]) get(id).value = "";
     get("research-source").value = "online"; get("research-papers").value = "2"; sourceNote();
     get("research-editor").open = true; get("research-result").hidden = true;
+    get("workspace").classList.toggle("has-research", false);
+    get("workspace-welcome").hidden = false;
+    get("workspace-empty-sources").hidden = false;
+    ["workspace-current", "workspace-sources", "workspace-source-link"].forEach(id => { get(id).hidden = true; });
     get("research-dialogue-select").value = "";
     globalThis.paperResearchClear?.();
     try { localStorage.removeItem("paper-assistant-research-job"); } catch (_) {}
