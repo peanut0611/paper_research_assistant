@@ -4,6 +4,8 @@
 
 这是受控 Agent 工程项目。模型选择动作并观察工具反馈；宿主负责范围、预算、时限、有限纠正及收尾。RAG 提供论文正文检索能力。**已保存两版五例真实模型记录，人工结论支持度仍待审；当前没有质量通过率或有效的前后提升结论。** 自动化行为测试、历史单篇实测、真实执行与人工验收分别记录，不能相互替代。
 
+修复后的五例与两轮追问已执行，结果及失败见 [最新真实复测](eval_data/agent_v1/validation/retest-20261105/README.md)。人工评分与完整在线搜索至 PDF 链路仍待验收。
+
 ## 从干净环境启动
 
 需要 Python 3.11+、[uv](https://docs.astral.sh/uv/getting-started/installation/)、Git。Node.js 20+ 用于前端自动测试，应用运行不需要 Node。以下命令在 Bash 执行；PowerShell 可用 `Copy-Item .env.example .env` 代替 `cp`。

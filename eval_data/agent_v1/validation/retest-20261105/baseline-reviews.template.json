@@ -1,0 +1,199 @@
+{
+  "tool-use-comparison": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 3,
+        "quote": "we introduce ReAct, a novel prompt-based paradigm to synergize reasoning and acting in language models for general task solving",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 1,
+        "quote": "This tight synergy between “acting” and “reasoning” allows humans to learn new tasks quickly and perform robust decision making or reasoning",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "feedback-and-evidence": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": []
+  },
+  "vision-transfer": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 9,
+        "quote": "the direct application of Transformers to image recognition",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 9,
+        "quote": "we do not introduce any image-specific inductive biases into the architecture. Instead, we interpret an image as a sequence of patches and process it by a standard Transformer encoder",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 5,
+        "quote": "We report results on downstream datasets either through few-shot or fine-tuning accuracy.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 9,
+        "quote": "With self-supervised pre-training, our smaller ViT-B/16 model achieves 79.9% accuracy on ImageNet, a significant improvement of 2% to training from scratch, but still 4% behind supervised pre-training.",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "contextual-followups": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 6,
+        "quote": "the problem solving trajectory of ReAct is more grounded, fact-driven, and trustworthy, thanks to the access of an external knowledge base",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 9,
+        "quote": "ReAct substantially outperforms IM-style prompting (71 vs. 53 overall success rate), with consistent advantages on five out of six tasks.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-36689c37b74342d2a4c702c0",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 8,
+        "quote": "free-form and unlimited",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-36689c37b74342d2a4c702c0",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 8,
+        "quote": "abstract and diverse",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-36689c37b74342d2a4c702c0",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 8,
+        "quote": "sparse",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "unsupported-business-cost": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2302.04761v1",
+        "page_number": 8,
+        "quote": "Adding API calls comes without a cost in terms of perplexity",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "tool-use-comparison": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 1,
+        "quote": "we explore the use of LLMs to generate both reasoning traces and task-specific actions in an interleaved manner, allowing for greater synergy between the two: reasoning traces help the model induce, track, and update action plans as well as handle exceptions, while actions allow it to interface with and gather additional information from external sources such as knowledge bases or environments.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 1,
+        "quote": "on question answering (HotpotQA) and fact verification (Fever), ReAct overcomes prevalent issues of hallucination and error propagation in chain-of-thought reasoning by interacting with a simple Wikipedia API",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "feedback-and-evidence": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2303.11366v1",
+        "page_number": 3,
+        "quote": "In text-based environments,st considersct, which is the context given to the agent based on its current state and trajectory history, consisting of past observations and actions.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2303.11366v1",
+        "page_number": 6,
+        "quote": "if the agent provided an incorrect answer, the agent was given a chance to self-reflect on its past searches, lookups, observations, working memory, and final answer, reset the environment, and try again with a new working memory.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2303.11366v1",
+        "page_number": 7,
+        "quote": "other hand, the Reflexion agent was able to improve on its performance not only between trials 1 and 2 but between every consecutive trial, demonstrating that the growing, dynamic working memory promoted learning through trial.",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "vision-transfer": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 1,
+        "quote": "a pure transformer applied directly to sequences of image patches can perform very well on image classification tasks",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 1,
+        "quote": "When pre-trained on large amounts of data and transferred to multiple mid-sized or small image recognition benchmarks (ImageNet, CIFAR-100, VTAB, etc.), Vision Transformer (ViT) attains excellent results",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 2,
+        "quote": "When pre-trained on the public ImageNet-21k dataset or the in-house JFT-300M dataset, ViT approaches or beats state of the art on multiple image recognition benchmarks.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2010.11929v1",
+        "page_number": 2,
+        "quote": "the best model reaches the accuracy of 88.55% on ImageNet, 90.72% on ImageNet-ReaL, 94.55% on CIFAR-100, and 77.63% on the VTAB suite of 19 tasks.",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "contextual-followups": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": [
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 6,
+        "quote": "the problem solving trajectory of ReActis more grounded, fact-driven, and trustworthy, thanks to the access of an external knowledge base. • While interleaving reasoning, action and observation steps improvesReAct’s groundedness and trustworthiness, such a structural constraint also reduces its flexibility in formulating reasoning steps, leading to more reasoning error rate than CoT",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 6,
+        "quote": "there is one frequent error pattern specific to ReAct, in which the model repetitively generates the previous thoughts and actions",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "research",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 5,
+        "quote": "Hallucination is a serious problem for CoT, resulting in much higher false positive rate than ReAct (14% vs. 6%) in success mode, and make up its major failure mode (56%).",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-f0cfe2c3947a4d558f0ad197",
+        "claim": "",
+        "source_version": "2303.11366v1",
+        "page_number": 1,
+        "quote": "dynamic memory and self-reflection capabilities to enhance its existing reasoning trace and task-specific action choice abilities. To achieve full automation, we introduce a straightforward yet effective heuristic that enables the agent to pinpoint hallucination instances, avoid repetition in action sequences",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-f0cfe2c3947a4d558f0ad197",
+        "claim": "",
+        "source_version": "2303.11366v1",
+        "page_number": 2,
+        "quote": "we equip an LLM-based agent with a self-reflective LLM and a simple heuristic for detecting hallucination and inefficient action execution",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-f0cfe2c3947a4d558f0ad197",
+        "claim": "",
+        "source_version": "2303.11366v1",
+        "page_number": 7,
+        "quote": "The agent succeeds after 2 trials, or 1 reflection. In the ReAct-only approach, the agent solves the task on the 6th trial.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-dfac21a94dbd440b97f412c6",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 10,
+        "quote": "Through a diverse set of experiments on multi-hop question-answering, fact checking, and interactive decision-making tasks, we show that ReAct leads to superior performance with interpretable decision traces.",
+        "support": null,
+        "reason": ""
+      },
+      {
+        "turn_id": "turn-dfac21a94dbd440b97f412c6",
+        "claim": "",
+        "source_version": "2210.03629v1",
+        "page_number": 6,
+        "quote": "While interleaving reasoning, action and observation steps improvesReAct’s groundedness and trustworthiness, such a structural constraint also reduces its flexibility in formulating reasoning steps, leading to more reasoning error rate than CoT.",
+        "support": null,
+        "reason": ""
+      }
+    ]
+  },
+  "unsupported-business-cost": {
+    "reviewer": "",
+    "reviewed_at": "",
+    "verdict": "not_reviewed",
+    "failure_reasons": [],
+    "checks": {
+      "task": "pending",
+      "agent_behavior": "pending",
+      "traceability": "pending",
+      "support": "pending",
+      "execution_boundaries": "pending"
+    },
+    "unobserved_branches": [
+      "请依据真实轨迹填写；不得为未触发分支宣称覆盖"
+    ],
+    "claims": []
+  }
+}

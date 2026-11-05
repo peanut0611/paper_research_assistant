@@ -1,0 +1,19 @@
+{
+  "status": "pending_human_review",
+  "run_id": "candidate-fixed-20261105-002",
+  "source_commit": "6f12ed60e1058ddbac15bb9e0c38e950a256219e",
+  "quality_pass_rate": null,
+  "human_reviews_completed": 0,
+  "research_usd": 0.1,
+  "followup_usd": 0.05,
+  "declared_batch_ceiling_usd": 0.6,
+  "cases": 5,
+  "followups": 2,
+  "charged_or_reserved_usd": 0.19662135,
+  "unknown_reserved_usd": 0,
+  "charged_tokens_including_unknown": 192293,
+  "unknown_paid_requests_replayed": 0,
+  "online_runs_in_this_batch": 0,
+  "comparison_status": "blocked",
+  "model_request_events": 56
+}

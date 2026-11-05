@@ -1,0 +1,98 @@
+[
+  {
+    "case_id": "tool-use-comparison",
+    "initial_fulltext_documents": 2,
+    "initial_evidence_documents": [
+      "arxiv--2210.03629--v1",
+      "arxiv--2302.04761--v1"
+    ],
+    "initial_stop_reason": "insufficient_evidence",
+    "rounds": [
+      {
+        "round_id": "research",
+        "stop_reason": "insufficient_evidence",
+        "charged_or_reserved_usd": 0.03259875,
+        "unknown_reserved_usd": 0
+      }
+    ]
+  },
+  {
+    "case_id": "feedback-and-evidence",
+    "initial_fulltext_documents": 2,
+    "initial_evidence_documents": [
+      "arxiv--2210.03629--v1",
+      "arxiv--2303.11366--v1"
+    ],
+    "initial_stop_reason": "sufficient_evidence",
+    "rounds": [
+      {
+        "round_id": "research",
+        "stop_reason": "sufficient_evidence",
+        "charged_or_reserved_usd": 0.0320085,
+        "unknown_reserved_usd": 0
+      }
+    ]
+  },
+  {
+    "case_id": "vision-transfer",
+    "initial_fulltext_documents": 1,
+    "initial_evidence_documents": [
+      "arxiv--2010.11929--v1"
+    ],
+    "initial_stop_reason": "insufficient_evidence",
+    "rounds": [
+      {
+        "round_id": "research",
+        "stop_reason": "insufficient_evidence",
+        "charged_or_reserved_usd": 0.03407025,
+        "unknown_reserved_usd": 0
+      }
+    ]
+  },
+  {
+    "case_id": "contextual-followups",
+    "initial_fulltext_documents": 2,
+    "initial_evidence_documents": [
+      "arxiv--2210.03629--v1",
+      "arxiv--2303.11366--v1"
+    ],
+    "initial_stop_reason": "insufficient_evidence",
+    "rounds": [
+      {
+        "round_id": "research",
+        "stop_reason": "insufficient_evidence",
+        "charged_or_reserved_usd": 0.0342855,
+        "unknown_reserved_usd": 0
+      },
+      {
+        "round_id": "turn-f0cfe2c3947a4d558f0ad197",
+        "stop_reason": "sufficient_evidence",
+        "charged_or_reserved_usd": 0.01218135,
+        "unknown_reserved_usd": 0
+      },
+      {
+        "round_id": "turn-dfac21a94dbd440b97f412c6",
+        "stop_reason": "sufficient_evidence",
+        "charged_or_reserved_usd": 0.02074125,
+        "unknown_reserved_usd": 0
+      }
+    ]
+  },
+  {
+    "case_id": "unsupported-business-cost",
+    "initial_fulltext_documents": 2,
+    "initial_evidence_documents": [
+      "arxiv--2210.03629--v1",
+      "arxiv--2302.04761--v1"
+    ],
+    "initial_stop_reason": "invalid_decision_limit",
+    "rounds": [
+      {
+        "round_id": "research",
+        "stop_reason": "invalid_decision_limit",
+        "charged_or_reserved_usd": 0.03073575,
+        "unknown_reserved_usd": 0
+      }
+    ]
+  }
+]
